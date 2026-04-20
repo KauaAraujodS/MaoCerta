@@ -2,22 +2,51 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
 
-export default function Entrar() {
+export default function EntrarScreen() {
+  const router = useRouter()
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
   const [mostrarSenha, setMostrarSenha] = useState(false)
+  const [erro, setErro] = useState('')
+  const [carregando, setCarregando] = useState(false)
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    // lógica de login vai aqui
+    setErro('')
+    setCarregando(true)
+
+    const supabase = createClient()
+
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password: senha })
+
+    if (error) {
+      setErro('E-mail ou senha incorretos.')
+      setCarregando(false)
+      return
+    }
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('tipo')
+      .eq('id', data.user.id)
+      .single()
+
+    if (profile?.tipo === 'admin') {
+      router.push('/admin/inicio')
+    } else if (profile?.tipo === 'profissional') {
+      router.push('/profissional/inicio')
+    } else {
+      router.push('/cliente/inicio')
+    }
   }
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-purple-700 via-indigo-600 to-blue-400 flex flex-col items-center justify-center p-6">
       <div className="w-full max-w-xs space-y-6">
 
-        {/* Cabeçalho */}
         <div className="flex items-center gap-3">
           <Link href="/" className="w-9 h-9 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white text-xl transition-colors">
             ‹
@@ -29,7 +58,6 @@ export default function Entrar() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-
           <div className="space-y-3">
             <div className="space-y-1">
               <label className="text-white/80 text-xs font-medium">E-mail</label>
@@ -70,11 +98,16 @@ export default function Entrar() {
             </div>
           </div>
 
+          {erro && (
+            <p className="text-red-300 text-xs text-center">{erro}</p>
+          )}
+
           <button
             type="submit"
-            className="w-full bg-white text-purple-700 font-semibold py-3 rounded-2xl text-sm hover:bg-white/90 transition-colors"
+            disabled={carregando}
+            className="w-full bg-white text-purple-700 font-semibold py-3 rounded-2xl text-sm hover:bg-white/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Entrar
+            {carregando ? 'Entrando...' : 'Entrar'}
           </button>
         </form>
 

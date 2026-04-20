@@ -2,22 +2,58 @@
 
 import { useState, Suspense } from 'react'
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
 
 type Tipo = 'cliente' | 'profissional'
 
 function FormularioCadastro() {
   const params = useSearchParams()
+  const router = useRouter()
   const tipoParam = params.get('tipo') as Tipo | null
+
   const [tipo, setTipo] = useState<Tipo | null>(tipoParam)
   const [nome, setNome] = useState('')
+  const [telefone, setTelefone] = useState('')
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
   const [mostrarSenha, setMostrarSenha] = useState(false)
+  const [erro, setErro] = useState('')
+  const [carregando, setCarregando] = useState(false)
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    // lógica de cadastro vai aqui
+    if (!tipo) return
+
+    setErro('')
+    setCarregando(true)
+
+    const supabase = createClient()
+
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password: senha,
+      options: {
+        data: { nome, telefone, tipo },
+      },
+    })
+
+    if (error) {
+      setErro(error.message)
+      setCarregando(false)
+      return
+    }
+
+    if (data.user) {
+      await supabase.from('profiles').insert({
+        id: data.user.id,
+        nome,
+        telefone,
+        tipo,
+      })
+    }
+
+    router.push(`/verificar?email=${encodeURIComponent(email)}`)
   }
 
   return (
@@ -112,6 +148,18 @@ function FormularioCadastro() {
             </div>
 
             <div className="space-y-1">
+              <label className="text-white/80 text-xs font-medium">Telefone</label>
+              <input
+                type="tel"
+                placeholder="(00) 00000-0000"
+                value={telefone}
+                onChange={(e) => setTelefone(e.target.value)}
+                required
+                className="w-full bg-white/15 text-white placeholder-white/40 rounded-2xl px-4 py-3 text-sm outline-none focus:bg-white/25 transition-colors"
+              />
+            </div>
+
+            <div className="space-y-1">
               <label className="text-white/80 text-xs font-medium">E-mail</label>
               <input
                 type="email"
@@ -146,17 +194,19 @@ function FormularioCadastro() {
             </div>
           </div>
 
-          {/* Botão */}
+          {erro && (
+            <p className="text-red-300 text-xs text-center">{erro}</p>
+          )}
+
           <button
             type="submit"
-            disabled={!tipo}
+            disabled={!tipo || carregando}
             className="w-full bg-white text-purple-700 font-semibold py-3 rounded-2xl text-sm hover:bg-white/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Criar minha conta
+            {carregando ? 'Criando conta...' : 'Criar minha conta'}
           </button>
         </form>
 
-        {/* Rodapé */}
         <p className="text-white/50 text-xs text-center">
           Já tem conta?{' '}
           <Link href="/entrar" className="text-white font-medium hover:underline">
@@ -169,7 +219,7 @@ function FormularioCadastro() {
   )
 }
 
-export default function Cadastro() {
+export default function CadastroScreen() {
   return (
     <Suspense>
       <FormularioCadastro />

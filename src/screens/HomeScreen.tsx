@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 const passos = {
   cliente: [
@@ -88,6 +89,7 @@ function ModalComoFunciona({ onFechar }: { onFechar: () => void }) {
 }
 
 export default function Home() {
+  const router = useRouter()
   const [tipo, setTipo] = useState<'cliente' | 'profissional'>('cliente')
   const [modalAberto, setModalAberto] = useState(false)
 
@@ -221,13 +223,22 @@ export default function Home() {
           <p className="text-white text-xs font-semibold text-center">Acesso rápido (demonstração)</p>
           <p className="text-white/50 text-xs text-center">Use uma conta de teste para explorar o app</p>
           <div className="flex gap-2">
-            <button className="flex-1 flex items-center justify-center gap-1 bg-white/20 hover:bg-white/30 text-white text-xs py-2 rounded-xl transition-colors">
+            <button
+              onClick={() => router.push('/cliente/inicio')}
+              className="flex-1 flex items-center justify-center gap-1 bg-white/20 hover:bg-white/30 text-white text-xs py-2 rounded-xl transition-colors"
+            >
               <span>👤</span> Cliente
             </button>
-            <button className="flex-1 flex items-center justify-center gap-1 bg-white/20 hover:bg-white/30 text-white text-xs py-2 rounded-xl transition-colors">
+            <button
+              onClick={() => router.push('/profissional/inicio')}
+              className="flex-1 flex items-center justify-center gap-1 bg-white/20 hover:bg-white/30 text-white text-xs py-2 rounded-xl transition-colors"
+            >
               <span>💼</span> Profissional
             </button>
-            <button className="flex-1 flex items-center justify-center gap-1 bg-white/20 hover:bg-white/30 text-white text-xs py-2 rounded-xl transition-colors">
+            <button
+              onClick={() => router.push('/admin/inicio')}
+              className="flex-1 flex items-center justify-center gap-1 bg-white/20 hover:bg-white/30 text-white text-xs py-2 rounded-xl transition-colors"
+            >
               <span>⚙️</span> Admin
             </button>
           </div>
