@@ -28,7 +28,7 @@ export async function middleware(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
 
   // Rotas liberadas para demonstração (remover em produção)
-  const rotasDemo = ['/cliente/inicio', '/profissional/inicio', '/admin/inicio']
+  const rotasDemo = ['/cliente/', '/profissional/', '/admin/']
   const acessandoRotaDemo = rotasDemo.some(rota =>
     request.nextUrl.pathname.startsWith(rota)
   )
@@ -43,14 +43,25 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/entrar', request.url))
   }
 
-  // Se já está logado, não deixa acessar login/cadastro
+  // Se já está logado, redireciona login/cadastro para a área do tipo do usuário
   const rotasDeAuth = ['/entrar', '/cadastro']
   const acessandoRotaDeAuth = rotasDeAuth.some(rota =>
     request.nextUrl.pathname.startsWith(rota)
   )
 
   if (acessandoRotaDeAuth && user) {
-    return NextResponse.redirect(new URL('/inicio', request.url))
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('tipo')
+      .eq('id', user.id)
+      .single()
+
+    const destino =
+      profile?.tipo === 'administrador' ? '/admin/inicio'
+      : profile?.tipo === 'profissional' ? '/profissional/inicio'
+      : '/cliente/inicio'
+
+    return NextResponse.redirect(new URL(destino, request.url))
   }
 
   return supabaseResponse
