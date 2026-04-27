@@ -6,8 +6,8 @@ import { usePathname } from 'next/navigation'
 const abas = [
   { href: '/profissional/inicio', icone: '🏠', label: 'Início' },
   { href: '/profissional/demandas', icone: '📋', label: 'Demandas' },
-  { href: '/profissional/atendimentos', icone: '🤝', label: 'Atendimentos' },
-  { href: '/profissional/agenda', icone: '📅', label: 'Agenda' },
+  { href: '/profissional/atendimentos', icone: '🤝', label: 'Pedidos' },
+  { href: '/profissional/agenda', icone: '📆', label: 'Agenda' },
   { href: '/profissional/configuracoes', icone: '⚙️', label: 'Ajustes' },
 ]
 
@@ -19,6 +19,7 @@ export default function MenuInferiorProfissional() {
       <div className="max-w-md mx-auto flex items-center justify-around px-2 py-2">
         {abas.map((aba) => {
           const ativo = pathname === aba.href
+
           return (
             <Link
               key={aba.href}

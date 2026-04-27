@@ -1,8 +1,8 @@
 'use client'
 
+import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 
 type Profile = {
@@ -24,7 +24,13 @@ const itens = [
     href: '/profissional/configuracoes/conta',
     icone: '👤',
     titulo: 'Conta',
-    descricao: 'Editar perfil e dados profissionais',
+    descricao: 'Perfil, experiência, categorias e serviços',
+  },
+  {
+    href: '/profissional/configuracoes/documentos',
+    icone: '🪪',
+    titulo: 'Documentos',
+    descricao: 'Envio e validação da sua documentação',
   },
   {
     href: '/profissional/configuracoes/plano',
@@ -57,7 +63,7 @@ function pegarIniciais(nome: string) {
     .split(' ')
     .filter(Boolean)
     .slice(0, 2)
-    .map(p => p[0]?.toUpperCase())
+    .map((parte) => parte[0]?.toUpperCase())
     .join('')
 }
 
@@ -95,6 +101,7 @@ export default function ProfissionalConfiguracoesScreen() {
         avatarUrl: data?.avatar_url || null,
       })
     }
+
     carregar()
   }, [])
 
@@ -131,14 +138,14 @@ export default function ProfissionalConfiguracoesScreen() {
             <p className="font-bold">{NOME_PLANO[profile?.plano || 'free'] || 'Free'}</p>
           </div>
           <div className="text-right">
-            <p className="text-white/60 text-[10px] font-medium">Avaliação</p>
-            <p className="font-bold">— ⭐</p>
+            <p className="text-white/60 text-[10px] font-medium">Status</p>
+            <p className="font-bold">Perfil profissional</p>
           </div>
         </div>
       </div>
 
       <div className="space-y-2">
-        {itens.map(item => (
+        {itens.map((item) => (
           <Link
             key={item.href}
             href={item.href}
