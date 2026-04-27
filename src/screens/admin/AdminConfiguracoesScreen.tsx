@@ -8,47 +8,27 @@ import { createClient } from '@/lib/supabase/client'
 type Profile = {
   nome: string
   email: string
-  tipo: string
-  plano: string
   avatarUrl: string | null
-}
-
-const NOME_PLANO: Record<string, string> = {
-  free: 'Free',
-  basico: 'Básico',
-  premium: 'Premium Plus',
 }
 
 const itens = [
   {
-    href: '/cliente/configuracoes/conta',
+    href: '/admin/configuracoes/conta',
     icone: '👤',
     titulo: 'Conta',
-    descricao: 'Editar perfil e dados pessoais',
+    descricao: 'Editar dados pessoais',
   },
   {
-    href: '/cliente/configuracoes/plano',
-    icone: '💳',
-    titulo: 'Plano',
-    descricao: 'Gerenciar assinatura e benefícios',
-  },
-  {
-    href: '/cliente/configuracoes/reputacao',
-    icone: '⭐',
-    titulo: 'Reputação',
-    descricao: 'Avaliações e histórico',
-  },
-  {
-    href: '/cliente/configuracoes/seguranca',
+    href: '/admin/configuracoes/seguranca',
     icone: '🛡️',
     titulo: 'Privacidade e Segurança',
-    descricao: '2FA, bloqueios e dados',
+    descricao: '2FA e log de acesso',
   },
   {
-    href: '/cliente/configuracoes/suporte',
+    href: '/admin/configuracoes/suporte',
     icone: '❓',
     titulo: 'Suporte',
-    descricao: 'Central de ajuda e contato',
+    descricao: 'Procedimentos internos e contatos',
   },
 ]
 
@@ -61,7 +41,7 @@ function pegarIniciais(nome: string) {
     .join('')
 }
 
-export default function ClienteConfiguracoesScreen() {
+export default function AdminConfiguracoesScreen() {
   const router = useRouter()
   const [profile, setProfile] = useState<Profile | null>(null)
 
@@ -72,10 +52,8 @@ export default function ClienteConfiguracoesScreen() {
 
       if (!user) {
         setProfile({
-          nome: 'Visitante Demo',
-          email: 'demo@maocerta.com',
-          tipo: 'cliente',
-          plano: 'free',
+          nome: 'Administrador',
+          email: 'admin@maocerta.com',
           avatarUrl: null,
         })
         return
@@ -83,15 +61,13 @@ export default function ClienteConfiguracoesScreen() {
 
       const { data } = await supabase
         .from('profiles')
-        .select('nome, tipo, plano, avatar_url')
+        .select('nome, avatar_url')
         .eq('id', user.id)
-        .single()
+        .maybeSingle()
 
       setProfile({
-        nome: data?.nome || user.email?.split('@')[0] || 'Usuário',
+        nome: data?.nome || user.email?.split('@')[0] || 'Administrador',
         email: user.email || '',
-        tipo: data?.tipo || 'cliente',
-        plano: data?.plano || 'free',
         avatarUrl: data?.avatar_url || null,
       })
     }
@@ -109,8 +85,7 @@ export default function ClienteConfiguracoesScreen() {
     <main className="p-4 space-y-4">
       <h1 className="text-2xl font-bold text-gray-900 px-2 pt-2">Ajustes</h1>
 
-      {/* Card de perfil */}
-      <div className="bg-gradient-to-br from-purple-700 via-indigo-600 to-blue-500 rounded-3xl p-5 text-white space-y-4">
+      <div className="bg-gradient-to-br from-slate-800 via-slate-700 to-slate-900 rounded-3xl p-5 text-white space-y-4">
         <div className="flex items-center gap-4">
           <div className="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-lg font-bold overflow-hidden">
             {profile?.avatarUrl ? (
@@ -128,17 +103,15 @@ export default function ClienteConfiguracoesScreen() {
 
         <div className="bg-white/15 rounded-2xl p-3 flex items-center justify-between">
           <div>
-            <p className="text-white/60 text-[10px] font-medium">Plano atual</p>
-            <p className="font-bold">{NOME_PLANO[profile?.plano || 'free'] || 'Free'}</p>
+            <p className="text-white/60 text-[10px] font-medium">Nível de acesso</p>
+            <p className="font-bold">Administrador</p>
           </div>
-          <div className="text-right">
-            <p className="text-white/60 text-[10px] font-medium">Avaliação</p>
-            <p className="font-bold">— ⭐</p>
-          </div>
+          <span className="bg-white/20 text-white text-[10px] font-semibold px-2 py-1 rounded-full">
+            🛡️ INTERNO
+          </span>
         </div>
       </div>
 
-      {/* Lista de seções */}
       <div className="space-y-2">
         {itens.map(item => (
           <Link
@@ -158,7 +131,6 @@ export default function ClienteConfiguracoesScreen() {
         ))}
       </div>
 
-      {/* Sair */}
       <button
         onClick={sair}
         className="w-full bg-red-50 text-red-600 font-semibold py-3 rounded-2xl text-sm hover:bg-red-100 transition-colors flex items-center justify-center gap-2"

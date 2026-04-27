@@ -15,37 +15,37 @@ type Profile = {
 
 const NOME_PLANO: Record<string, string> = {
   free: 'Free',
-  basico: 'Básico',
-  premium: 'Premium Plus',
+  basico: 'Pro',
+  premium: 'Premium Pro',
 }
 
 const itens = [
   {
-    href: '/cliente/configuracoes/conta',
+    href: '/profissional/configuracoes/conta',
     icone: '👤',
     titulo: 'Conta',
-    descricao: 'Editar perfil e dados pessoais',
+    descricao: 'Editar perfil e dados profissionais',
   },
   {
-    href: '/cliente/configuracoes/plano',
+    href: '/profissional/configuracoes/plano',
     icone: '💳',
     titulo: 'Plano',
-    descricao: 'Gerenciar assinatura e benefícios',
+    descricao: 'Visibilidade e benefícios',
   },
   {
-    href: '/cliente/configuracoes/reputacao',
+    href: '/profissional/configuracoes/reputacao',
     icone: '⭐',
     titulo: 'Reputação',
-    descricao: 'Avaliações e histórico',
+    descricao: 'Avaliações dos clientes',
   },
   {
-    href: '/cliente/configuracoes/seguranca',
+    href: '/profissional/configuracoes/seguranca',
     icone: '🛡️',
     titulo: 'Privacidade e Segurança',
     descricao: '2FA, bloqueios e dados',
   },
   {
-    href: '/cliente/configuracoes/suporte',
+    href: '/profissional/configuracoes/suporte',
     icone: '❓',
     titulo: 'Suporte',
     descricao: 'Central de ajuda e contato',
@@ -61,7 +61,7 @@ function pegarIniciais(nome: string) {
     .join('')
 }
 
-export default function ClienteConfiguracoesScreen() {
+export default function ProfissionalConfiguracoesScreen() {
   const router = useRouter()
   const [profile, setProfile] = useState<Profile | null>(null)
 
@@ -72,9 +72,9 @@ export default function ClienteConfiguracoesScreen() {
 
       if (!user) {
         setProfile({
-          nome: 'Visitante Demo',
+          nome: 'Prestador Demo',
           email: 'demo@maocerta.com',
-          tipo: 'cliente',
+          tipo: 'profissional',
           plano: 'free',
           avatarUrl: null,
         })
@@ -85,12 +85,12 @@ export default function ClienteConfiguracoesScreen() {
         .from('profiles')
         .select('nome, tipo, plano, avatar_url')
         .eq('id', user.id)
-        .single()
+        .maybeSingle()
 
       setProfile({
-        nome: data?.nome || user.email?.split('@')[0] || 'Usuário',
+        nome: data?.nome || user.email?.split('@')[0] || 'Prestador',
         email: user.email || '',
-        tipo: data?.tipo || 'cliente',
+        tipo: data?.tipo || 'profissional',
         plano: data?.plano || 'free',
         avatarUrl: data?.avatar_url || null,
       })
@@ -109,8 +109,7 @@ export default function ClienteConfiguracoesScreen() {
     <main className="p-4 space-y-4">
       <h1 className="text-2xl font-bold text-gray-900 px-2 pt-2">Ajustes</h1>
 
-      {/* Card de perfil */}
-      <div className="bg-gradient-to-br from-purple-700 via-indigo-600 to-blue-500 rounded-3xl p-5 text-white space-y-4">
+      <div className="bg-gradient-to-br from-emerald-700 via-teal-600 to-cyan-500 rounded-3xl p-5 text-white space-y-4">
         <div className="flex items-center gap-4">
           <div className="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-lg font-bold overflow-hidden">
             {profile?.avatarUrl ? (
@@ -138,7 +137,6 @@ export default function ClienteConfiguracoesScreen() {
         </div>
       </div>
 
-      {/* Lista de seções */}
       <div className="space-y-2">
         {itens.map(item => (
           <Link
@@ -158,7 +156,6 @@ export default function ClienteConfiguracoesScreen() {
         ))}
       </div>
 
-      {/* Sair */}
       <button
         onClick={sair}
         className="w-full bg-red-50 text-red-600 font-semibold py-3 rounded-2xl text-sm hover:bg-red-100 transition-colors flex items-center justify-center gap-2"
