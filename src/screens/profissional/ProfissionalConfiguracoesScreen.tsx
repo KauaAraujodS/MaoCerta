@@ -33,6 +33,12 @@ const itens = [
     descricao: 'Visibilidade e benefícios',
   },
   {
+    href: '/profissional/configuracoes/validacao',
+    icone: '🪪',
+    titulo: 'Validação',
+    descricao: 'Envio de documentos e selo verificado',
+  },
+  {
     href: '/profissional/configuracoes/reputacao',
     icone: '⭐',
     titulo: 'Reputação',

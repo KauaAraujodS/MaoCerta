@@ -9,9 +9,11 @@ type Form = {
   telefone: string
   cidade: string
   bio: string
+  experienciaAnos: string
+  historicoProfissional: string
 }
 
-const VAZIO: Form = { nome: '', telefone: '', cidade: '', bio: '' }
+const VAZIO: Form = { nome: '', telefone: '', cidade: '', bio: '', experienciaAnos: '', historicoProfissional: '' }
 const TAMANHO_MAX_MB = 2
 
 function pegarIniciais(nome: string) {
@@ -40,7 +42,7 @@ export default function ContaProfissionalScreen() {
 
       if (!user) {
         setEmail('demo@maocerta.com')
-        setForm({ nome: 'Prestador Demo', telefone: '', cidade: '', bio: '' })
+        setForm({ nome: 'Prestador Demo', telefone: '', cidade: '', bio: '', experienciaAnos: '', historicoProfissional: '' })
         setCarregando(false)
         return
       }
@@ -49,7 +51,7 @@ export default function ContaProfissionalScreen() {
 
       const { data, error } = await supabase
         .from('profiles')
-        .select('nome, telefone, cidade, bio, avatar_url')
+        .select('nome, telefone, cidade, bio, avatar_url, experiencia_anos, historico_profissional')
         .eq('id', user.id)
         .maybeSingle()
 
@@ -58,13 +60,22 @@ export default function ContaProfissionalScreen() {
         setAviso({ tipo: 'erro', texto: `Carregar: ${error.message}` })
       } else if (!data) {
         const meta = user.user_metadata as { nome?: string; telefone?: string }
-        setForm({ nome: meta?.nome || '', telefone: meta?.telefone || '', cidade: '', bio: '' })
+        setForm({
+          nome: meta?.nome || '',
+          telefone: meta?.telefone || '',
+          cidade: '',
+          bio: '',
+          experienciaAnos: '',
+          historicoProfissional: '',
+        })
       } else {
         setForm({
           nome: data.nome || '',
           telefone: data.telefone || '',
           cidade: data.cidade || '',
           bio: data.bio || '',
+          experienciaAnos: data.experiencia_anos ? String(data.experiencia_anos) : '',
+          historicoProfissional: data.historico_profissional || '',
         })
         setAvatarUrl(data.avatar_url || null)
       }
@@ -192,6 +203,8 @@ export default function ContaProfissionalScreen() {
         telefone: form.telefone,
         cidade: form.cidade,
         bio: form.bio,
+        experiencia_anos: form.experienciaAnos.trim() ? Number(form.experienciaAnos) : null,
+        historico_profissional: form.historicoProfissional.trim() || null,
         tipo: tipoUsuario,
       })
 
@@ -305,6 +318,20 @@ export default function ContaProfissionalScreen() {
             placeholder="Conte sua experiência, especialidades e diferenciais"
             disabled={carregando}
             onChange={v => alterar('bio', v)}
+          />
+          <Campo
+            label="Anos de experiência"
+            valor={form.experienciaAnos}
+            placeholder="Ex.: 7"
+            disabled={carregando}
+            onChange={v => alterar('experienciaAnos', v.replace(/\D/g, ''))}
+          />
+          <CampoTexto
+            label="Histórico profissional"
+            valor={form.historicoProfissional}
+            placeholder="Conte resumo de trabalhos, certificações e principais clientes"
+            disabled={carregando}
+            onChange={v => alterar('historicoProfissional', v)}
           />
         </section>
 
