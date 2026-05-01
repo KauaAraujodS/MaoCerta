@@ -45,12 +45,15 @@ function FormularioCadastro() {
     }
 
     if (data.user) {
-      await supabase.from('profiles').insert({
-        id: data.user.id,
-        nome,
-        telefone,
-        tipo,
-      })
+      await supabase.from('profiles').upsert(
+        {
+          id: data.user.id,
+          nome,
+          telefone,
+          tipo,
+        },
+        { onConflict: 'id' }
+      )
     }
 
     router.push(`/verificar?email=${encodeURIComponent(email)}`)

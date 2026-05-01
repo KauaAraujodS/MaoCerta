@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { SOLICITACOES_DEMONSTRACAO } from '@/lib/demo-marketplace'
+import { formatarDataPt, formatarRelativoPt } from '@/lib/formatar-data'
 
 type Solicitacao = {
   id: string
@@ -9,6 +11,13 @@ type Solicitacao = {
   descricao: string
   status: string
   created_at: string
+}
+
+function badgeStatus(status: string) {
+  const s = status.toLowerCase()
+  if (s === 'aceita') return { label: 'Aceita', className: 'bg-emerald-100 text-emerald-800 border-emerald-200' }
+  if (s === 'recusada') return { label: 'Recusada', className: 'bg-red-50 text-red-700 border-red-100' }
+  return { label: 'Pendente', className: 'bg-amber-50 text-amber-900 border-amber-200' }
 }
 
 export default function ProfissionalSolicitacoesScreen() {
@@ -52,51 +61,113 @@ export default function ProfissionalSolicitacoesScreen() {
   }
 
   return (
-    <main className="p-4 space-y-4">
-      <header className="px-1">
-        <h1 className="text-2xl font-bold text-gray-900">Solicitações recebidas</h1>
-        <p className="text-sm text-gray-500 mt-1">Pedidos diretos enviados por clientes ao seu perfil.</p>
+    <main className="min-h-screen bg-gradient-to-b from-violet-50/40 via-white to-white pb-10">
+      <header className="bg-gradient-to-r from-violet-700 via-indigo-600 to-blue-600 text-white px-4 pt-8 pb-10 rounded-b-[2rem] shadow-lg">
+        <div className="max-w-lg mx-auto space-y-2">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/65">Inbox</p>
+          <h1 className="text-2xl font-bold">Solicitações recebidas</h1>
+          <p className="text-sm text-white/88 leading-relaxed">
+            Pedidos diretos de clientes que encontraram seu perfil. Responda rápido para aumentar a taxa de fechamento.
+          </p>
+        </div>
       </header>
 
-      {carregando && <p className="text-sm text-gray-500">Carregando...</p>}
-
-      {!carregando && solicitacoes.length === 0 && (
-        <section className="bg-white rounded-2xl p-4">
-          <p className="text-sm text-gray-500">Você ainda não recebeu solicitações.</p>
-        </section>
-      )}
-
-      {solicitacoes.map((item) => (
-        <section key={item.id} className="bg-white rounded-2xl p-4 space-y-3">
-          <div>
-            <p className="font-semibold text-gray-900">{item.titulo}</p>
-            <p className="text-sm text-gray-600 mt-1">{item.descricao}</p>
+      <div className="max-w-lg mx-auto px-4 -mt-6 space-y-4 relative z-10">
+        {carregando && (
+          <div className="bg-white rounded-2xl p-6 shadow border border-gray-100 flex items-center gap-3">
+            <span className="inline-block w-5 h-5 border-2 border-violet-600 border-t-transparent rounded-full animate-spin" />
+            <p className="text-sm text-gray-600">Carregando solicitações...</p>
           </div>
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wide text-gray-500">Status: {item.status}</span>
-            {item.status === 'pendente' && (
-              <div className="flex gap-2">
-                <button
-                  type="button"
-                  onClick={() => atualizarStatus(item.id, 'aceita')}
-                  className="text-xs font-semibold bg-emerald-100 text-emerald-700 px-3 py-1.5 rounded-full"
-                >
-                  Aceitar
-                </button>
-                <button
-                  type="button"
-                  onClick={() => atualizarStatus(item.id, 'recusada')}
-                  className="text-xs font-semibold bg-red-100 text-red-700 px-3 py-1.5 rounded-full"
-                >
-                  Recusar
-                </button>
+        )}
+
+        {!carregando &&
+          solicitacoes.map((item) => {
+            const badge = badgeStatus(item.status)
+            return (
+              <article
+                key={item.id}
+                className="bg-white rounded-2xl border border-gray-100 shadow-md overflow-hidden"
+              >
+                <div className="h-1 bg-gradient-to-r from-violet-500 via-indigo-500 to-blue-500" />
+                <div className="p-5 space-y-3">
+                  <div className="flex flex-wrap items-center gap-2 justify-between">
+                    <span
+                      className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border ${badge.className}`}
+                    >
+                      {badge.label}
+                    </span>
+                    <time className="text-[11px] text-gray-400" dateTime={item.created_at}>
+                      {formatarRelativoPt(item.created_at)} · {formatarDataPt(item.created_at)}
+                    </time>
+                  </div>
+                  <h2 className="text-base font-bold text-gray-900 leading-snug">{item.titulo}</h2>
+                  <p className="text-sm text-gray-600 leading-relaxed">{item.descricao}</p>
+                  {item.status === 'pendente' && (
+                    <div className="flex flex-wrap gap-2 pt-1">
+                      <button
+                        type="button"
+                        onClick={() => atualizarStatus(item.id, 'aceita')}
+                        className="flex-1 min-w-[120px] text-sm font-semibold bg-emerald-600 text-white py-2.5 rounded-xl hover:bg-emerald-700 transition-colors"
+                      >
+                        Aceitar
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => atualizarStatus(item.id, 'recusada')}
+                        className="flex-1 min-w-[120px] text-sm font-semibold bg-white border border-gray-200 text-gray-700 py-2.5 rounded-xl hover:bg-gray-50"
+                      >
+                        Recusar
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </article>
+            )
+          })}
+
+        {!carregando && solicitacoes.length === 0 && (
+          <>
+            <section className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm text-center space-y-2">
+              <p className="text-4xl">📬</p>
+              <p className="text-sm font-semibold text-gray-800">Nenhuma solicitação real ainda</p>
+              <p className="text-xs text-gray-500 leading-relaxed max-w-sm mx-auto">
+                Quando clientes usarem <strong>Buscar e solicitar</strong> com o seu ID de perfil, os pedidos aparecem aqui com status pendente.
+              </p>
+            </section>
+
+            <section className="space-y-2">
+              <div className="flex items-center gap-2 px-1">
+                <span className="h-px flex-1 bg-gradient-to-r from-transparent via-violet-200 to-transparent" />
+                <h2 className="text-xs font-bold uppercase tracking-widest text-violet-400">Prévia de como fica</h2>
+                <span className="h-px flex-1 bg-gradient-to-r from-transparent via-violet-200 to-transparent" />
               </div>
-            )}
-          </div>
-        </section>
-      ))}
+              {SOLICITACOES_DEMONSTRACAO.map((item) => {
+                const badge = badgeStatus(item.status)
+                return (
+                  <article
+                    key={item.id}
+                    className="rounded-2xl border border-dashed border-violet-200 bg-violet-50/30 p-4 space-y-2 opacity-95"
+                  >
+                    <div className="flex flex-wrap items-center gap-2 justify-between">
+                      <span
+                        className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border ${badge.className}`}
+                      >
+                        {badge.label}
+                      </span>
+                      <time className="text-[11px] text-gray-400">{formatarRelativoPt(item.created_at)}</time>
+                    </div>
+                    <h3 className="text-sm font-bold text-gray-900">{item.titulo}</h3>
+                    <p className="text-xs text-gray-600 leading-relaxed">{item.descricao}</p>
+                    <p className="text-[10px] text-violet-600 font-medium">Exemplo fictício</p>
+                  </article>
+                )
+              })}
+            </section>
+          </>
+        )}
 
-      {aviso && <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-xl p-3">{aviso}</p>}
+        {aviso && <p className="text-xs text-amber-900 bg-amber-50 border border-amber-200 rounded-xl p-3 font-medium">{aviso}</p>}
+      </div>
     </main>
   )
 }

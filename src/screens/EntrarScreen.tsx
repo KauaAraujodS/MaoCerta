@@ -34,7 +34,7 @@ export default function EntrarScreen() {
       .eq('id', data.user.id)
       .single()
 
-    if (profile?.tipo === 'admin') {
+    if (profile?.tipo === 'administrador') {
       router.push('/admin/inicio')
     } else if (profile?.tipo === 'profissional') {
       router.push('/profissional/inicio')

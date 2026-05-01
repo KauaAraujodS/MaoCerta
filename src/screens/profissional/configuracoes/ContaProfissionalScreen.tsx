@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useRef, useState, ChangeEvent, FormEvent } from 'react'
+import { useEffect, useRef, useState, ChangeEvent, FormEvent, useMemo } from 'react'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import CabecalhoAjuste from '@/screens/configuracoes/CabecalhoAjuste'
 
@@ -221,11 +222,45 @@ export default function ContaProfissionalScreen() {
     setForm(anterior => ({ ...anterior, [campo]: valor }))
   }
 
+  const completudePerfil = useMemo(() => {
+    const checks = [
+      form.nome.trim().length >= 3,
+      form.telefone.trim().length >= 8,
+      form.cidade.trim().length >= 2,
+      form.bio.trim().length >= 20,
+      form.experienciaAnos.trim().length >= 1,
+      form.historicoProfissional.trim().length >= 20,
+      Boolean(avatarUrl),
+    ]
+    const ok = checks.filter(Boolean).length
+    return Math.round((ok / checks.length) * 100)
+  }, [form, avatarUrl])
+
   return (
-    <main className="p-4 space-y-4">
+    <main className="min-h-screen bg-gradient-to-b from-slate-50 to-white pb-10">
       <CabecalhoAjuste titulo="Conta" subtitulo="Edite seus dados pessoais e profissionais" voltarHref="/profissional/configuracoes" />
 
-      <section className="bg-white rounded-2xl p-5 flex flex-col items-center gap-3">
+      <div className="px-4 max-w-lg mx-auto space-y-4">
+      <section className="rounded-2xl bg-gradient-to-r from-emerald-700 to-teal-600 text-white p-4 shadow-lg border border-emerald-600/30">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-widest text-white/70">Perfil</p>
+            <p className="text-lg font-bold">Completude {completudePerfil}%</p>
+            <p className="text-xs text-white/85 mt-1">Perfis completos recebem mais solicitações diretas.</p>
+          </div>
+          <div className="w-14 h-14 rounded-full border-4 border-white/30 flex items-center justify-center text-sm font-bold bg-white/10">
+            {completudePerfil}%
+          </div>
+        </div>
+        <div className="mt-3 h-2 rounded-full bg-black/20 overflow-hidden">
+          <div
+            className="h-full rounded-full bg-white transition-all duration-500"
+            style={{ width: `${completudePerfil}%` }}
+          />
+        </div>
+      </section>
+
+      <section className="bg-white rounded-2xl p-5 flex flex-col items-center gap-3 shadow-sm border border-gray-100">
         <div className="relative">
           <div className="w-24 h-24 rounded-full bg-gradient-to-br from-emerald-600 to-teal-500 text-white text-2xl font-bold flex items-center justify-center overflow-hidden">
             {avatarUrl ? (
@@ -335,13 +370,19 @@ export default function ContaProfissionalScreen() {
           />
         </section>
 
-        <section className="bg-blue-50 border border-blue-100 rounded-2xl p-4 flex items-start gap-3">
-          <span className="text-lg">ℹ️</span>
-          <div>
-            <p className="text-sm font-semibold text-blue-900">Categorias e portfólio em breve</p>
-            <p className="text-xs text-blue-800/80 mt-1">
-              A definição de categorias atendidas, raio de atuação e portfólio de fotos será liberada em uma próxima atualização.
+        <section className="bg-emerald-50 border border-emerald-100 rounded-2xl p-4 flex items-start gap-3">
+          <span className="text-lg" aria-hidden>🛠️</span>
+          <div className="min-w-0">
+            <p className="text-sm font-semibold text-emerald-900">Categorias e serviços</p>
+            <p className="text-xs text-emerald-900/80 mt-1 leading-relaxed">
+              Defina em quais áreas você atua e cadastre seus pacotes de serviço — isso alimenta buscas e demandas públicas.
             </p>
+            <Link
+              href="/profissional/servicos"
+              className="inline-block mt-2 text-xs font-bold text-emerald-800 underline-offset-2 hover:underline"
+            >
+              Abrir categorias e serviços →
+            </Link>
           </div>
         </section>
 
@@ -358,11 +399,12 @@ export default function ContaProfissionalScreen() {
         <button
           type="submit"
           disabled={salvando || carregando}
-          className="w-full bg-emerald-700 text-white font-semibold py-3 rounded-2xl text-sm hover:bg-emerald-800 transition-colors disabled:opacity-50"
+          className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-semibold py-3 rounded-2xl text-sm shadow-md hover:from-emerald-700 hover:to-teal-700 transition-colors disabled:opacity-50"
         >
           {salvando ? 'Salvando...' : 'Salvar alterações'}
         </button>
       </form>
+      </div>
     </main>
   )
 }

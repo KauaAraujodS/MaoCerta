@@ -1,10 +1,20 @@
 'use client'
 
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useEffect, useMemo, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { iconeCategoria } from '@/lib/categorias-ui'
+import { formatarRelativoPt } from '@/lib/formatar-data'
 
 type Categoria = { id: number; nome: string }
-type Demanda = { id: string; titulo: string; descricao: string; status: string }
+type Demanda = { id: string; titulo: string; descricao: string; status: string; created_at?: string }
+
+const MODELOS_TITULO = [
+  'Reforma de banheiro completa',
+  'Instalar 3 tomadas 220V na garagem',
+  'Limpeza profunda antes de mudança',
+  'Montar guarda-roupa 6 portas',
+  'Manutenção em 2 ar-condicionado split',
+]
 
 export default function ClienteDemandasScreen() {
   const [categorias, setCategorias] = useState<Categoria[]>([])
@@ -14,6 +24,15 @@ export default function ClienteDemandasScreen() {
   const [descricao, setDescricao] = useState('')
   const [salvando, setSalvando] = useState(false)
   const [aviso, setAviso] = useState<string | null>(null)
+  const [buscaCat, setBuscaCat] = useState('')
+
+  const categoriasFiltradas = useMemo(() => {
+    const q = buscaCat.trim().toLowerCase()
+    if (!q) return categorias
+    return categorias.filter((c) => c.nome.toLowerCase().includes(q))
+  }, [categorias, buscaCat])
+
+  const destaques = useMemo(() => categorias.slice(0, 10), [categorias])
 
   useEffect(() => {
     async function carregar() {
@@ -26,7 +45,7 @@ export default function ClienteDemandasScreen() {
 
       const { data } = await supabase
         .from('demandas')
-        .select('id, titulo, descricao, status')
+        .select('id, titulo, descricao, status, created_at')
         .eq('cliente_id', auth.user.id)
         .order('created_at', { ascending: false })
       setDemandas((data as Demanda[] | null) || [])
@@ -56,7 +75,7 @@ export default function ClienteDemandasScreen() {
         titulo: titulo.trim(),
         descricao: descricao.trim(),
       })
-      .select('id, titulo, descricao, status')
+      .select('id, titulo, descricao, status, created_at')
       .single()
 
     setSalvando(false)
@@ -72,59 +91,150 @@ export default function ClienteDemandasScreen() {
   }
 
   return (
-    <main className="p-4 space-y-4">
-      <header className="px-1">
-        <h1 className="text-2xl font-bold text-gray-900">Demandas</h1>
-        <p className="text-sm text-gray-500 mt-1">Publique sua necessidade e receba propostas de profissionais.</p>
+    <main className="min-h-screen bg-gradient-to-b from-indigo-50/50 via-white to-white pb-10">
+      <header className="bg-gradient-to-r from-indigo-700 via-violet-600 to-fuchsia-600 text-white px-4 pt-8 pb-10 rounded-b-[2rem] shadow-lg">
+        <div className="max-w-lg mx-auto space-y-2">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/65">Cliente</p>
+          <h1 className="text-2xl font-bold">Suas demandas</h1>
+          <p className="text-sm text-white/88">
+            Descreva o que precisa com calma: profissionais da categoria vão enviar propostas com valor e prazo.
+          </p>
+        </div>
       </header>
 
-      <section className="bg-white rounded-2xl p-4 space-y-3">
-        <p className="text-xs font-bold text-gray-500 uppercase tracking-wide">Nova demanda</p>
-        <form onSubmit={publicarDemanda} className="space-y-2">
-          <select
-            value={categoriaId}
-            onChange={(e) => setCategoriaId(e.target.value ? Number(e.target.value) : '')}
-            className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-sm"
-          >
-            <option value="">Selecione a categoria</option>
-            {categorias.map((cat) => (
-              <option key={cat.id} value={cat.id}>
-                {cat.nome}
-              </option>
-            ))}
-          </select>
-          <input
-            value={titulo}
-            onChange={(e) => setTitulo(e.target.value)}
-            placeholder="Título da demanda"
-            className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-sm"
-          />
-          <textarea
-            rows={3}
-            value={descricao}
-            onChange={(e) => setDescricao(e.target.value)}
-            placeholder="Descreva o que você precisa"
-            className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-sm"
-          />
-          <button type="submit" disabled={salvando} className="w-full bg-indigo-600 text-white py-3 rounded-xl text-sm font-semibold">
-            {salvando ? 'Publicando...' : 'Publicar demanda'}
-          </button>
-        </form>
-      </section>
+      <div className="max-w-lg mx-auto px-4 -mt-6 space-y-4 relative z-10">
+        <section className="bg-white rounded-2xl p-5 shadow-md border border-gray-100 space-y-4">
+          <h2 className="text-xs font-bold text-gray-500 uppercase tracking-wide">Nova demanda pública</h2>
 
-      <section className="bg-white rounded-2xl p-4 space-y-3">
-        <p className="text-xs font-bold text-gray-500 uppercase tracking-wide">Minhas demandas</p>
-        {demandas.length === 0 && <p className="text-sm text-gray-500">Você ainda não publicou demandas.</p>}
-        {demandas.map((item) => (
-          <div key={item.id} className="border border-gray-100 rounded-xl p-3">
-            <p className="text-sm font-semibold text-gray-900">{item.titulo}</p>
-            <p className="text-sm text-gray-600 mt-1">{item.descricao}</p>
-            <p className="text-xs text-gray-500 mt-2">Status: {item.status}</p>
+          <div>
+            <p className="text-[11px] font-semibold text-gray-500 mb-2">Atalho — categorias populares</p>
+            <div className="flex flex-wrap gap-2">
+              {destaques.map((cat) => (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => setCategoriaId(cat.id)}
+                  className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-1.5 rounded-lg border transition-all ${
+                    categoriaId === cat.id
+                      ? 'border-indigo-600 bg-indigo-600 text-white shadow'
+                      : 'border-gray-200 bg-gray-50 text-gray-700 hover:border-indigo-300'
+                  }`}
+                >
+                  <span>{iconeCategoria(cat.nome)}</span>
+                  {cat.nome}
+                </button>
+              ))}
+            </div>
           </div>
-        ))}
-      </section>
 
-      {aviso && <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-xl p-3">{aviso}</p>}
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">🔎</span>
+            <input
+              value={buscaCat}
+              onChange={(e) => setBuscaCat(e.target.value)}
+              placeholder="Buscar em todas as categorias..."
+              className="w-full rounded-xl border border-gray-200 bg-gray-50 pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/25"
+            />
+          </div>
+
+          <form onSubmit={publicarDemanda} className="space-y-3">
+            <label className="block">
+              <span className="text-xs font-semibold text-gray-600">Categoria</span>
+              <select
+                value={categoriaId}
+                onChange={(e) => setCategoriaId(e.target.value ? Number(e.target.value) : '')}
+                className="mt-1 w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/25"
+              >
+                <option value="">Selecione a categoria</option>
+                {categoriasFiltradas.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.nome}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <div>
+              <span className="text-xs font-semibold text-gray-600">Ideias de título</span>
+              <div className="mt-1 flex flex-wrap gap-1.5">
+                {MODELOS_TITULO.map((m) => (
+                  <button
+                    key={m}
+                    type="button"
+                    onClick={() => setTitulo(m)}
+                    className="text-[10px] font-medium px-2 py-1 rounded-md bg-indigo-50 text-indigo-800 hover:bg-indigo-100 border border-indigo-100"
+                  >
+                    {m}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <label className="block">
+              <span className="text-xs font-semibold text-gray-600">Título</span>
+              <input
+                value={titulo}
+                onChange={(e) => setTitulo(e.target.value)}
+                placeholder="Resumo em uma linha"
+                className="mt-1 w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/25"
+              />
+            </label>
+            <label className="block">
+              <span className="text-xs font-semibold text-gray-600">Descrição</span>
+              <textarea
+                rows={4}
+                value={descricao}
+                onChange={(e) => setDescricao(e.target.value)}
+                placeholder="Local, urgência, materiais que você já tem, horários para visita, fotos se quiser descrever..."
+                className="mt-1 w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/25 resize-none"
+              />
+            </label>
+            <button
+              type="submit"
+              disabled={salvando}
+              className="w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white py-3 rounded-xl text-sm font-semibold shadow-md disabled:opacity-50"
+            >
+              {salvando ? 'Publicando...' : 'Publicar demanda'}
+            </button>
+          </form>
+        </section>
+
+        <section className="bg-white rounded-2xl p-5 shadow-md border border-gray-100 space-y-3">
+          <h2 className="text-xs font-bold text-gray-500 uppercase tracking-wide">Minhas demandas</h2>
+          {demandas.length === 0 && (
+            <p className="text-sm text-gray-500">Você ainda não publicou. Use os atalhos acima para ir mais rápido.</p>
+          )}
+          <ul className="space-y-3">
+            {demandas.map((item) => (
+              <li
+                key={item.id}
+                className="rounded-xl border border-gray-100 p-4 bg-gradient-to-br from-white to-slate-50/80"
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <p className="text-sm font-bold text-gray-900 leading-snug">{item.titulo}</p>
+                  <span
+                    className={`text-[10px] font-bold uppercase shrink-0 px-2 py-0.5 rounded-full ${
+                      item.status === 'aberta'
+                        ? 'bg-emerald-50 text-emerald-800'
+                        : item.status === 'em_andamento'
+                          ? 'bg-blue-50 text-blue-800'
+                          : 'bg-gray-100 text-gray-600'
+                    }`}
+                  >
+                    {item.status.replace(/_/g, ' ')}
+                  </span>
+                </div>
+                <p className="text-sm text-gray-600 mt-2 leading-relaxed">{item.descricao}</p>
+                {item.created_at && (
+                  <p className="text-[11px] text-gray-400 mt-2">{formatarRelativoPt(item.created_at)}</p>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        {aviso && <p className="text-xs text-amber-900 bg-amber-50 border border-amber-200 rounded-xl p-3 font-medium">{aviso}</p>}
+      </div>
     </main>
   )
 }
