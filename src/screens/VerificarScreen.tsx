@@ -50,19 +50,39 @@ function FormularioVerificar() {
 
     const supabase = createClient()
 
-    const { error } = await supabase.auth.verifyOtp({
+    const { data, error } = await supabase.auth.verifyOtp({
       email,
       token,
       type: 'email',
     })
 
-    if (error) {
+    if (error || !data.user) {
       setErro('Código inválido ou expirado. Tente novamente.')
       setCarregando(false)
       return
     }
 
-    router.push('/inicio')
+    // Pega o tipo do usuário pra redirecionar pra área correta.
+    // Tenta primeiro pelo profile (caso o trigger já tenha criado a linha);
+    // se não, cai no metadata salvo no signUp.
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('tipo')
+      .eq('id', data.user.id)
+      .maybeSingle()
+
+    const tipo =
+      profile?.tipo ||
+      (data.user.user_metadata as { tipo?: string } | null)?.tipo ||
+      'cliente'
+
+    if (tipo === 'administrador') {
+      router.replace('/admin/inicio')
+    } else if (tipo === 'profissional') {
+      router.replace('/profissional/inicio')
+    } else {
+      router.replace('/cliente/inicio')
+    }
   }
 
   async function reenviarCodigo() {
