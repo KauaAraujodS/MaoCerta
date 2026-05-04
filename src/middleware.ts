@@ -9,16 +9,6 @@ function copiarCookies(origem: NextResponse, destino: NextResponse) {
 }
 
 export async function middleware(request: NextRequest) {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim()
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim()
-
-  if (!supabaseUrl || !supabaseKey) {
-    console.error(
-      '[middleware] Defina NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_ANON_KEY no painel da Vercel (Settings → Environment Variables).'
-    )
-    return NextResponse.next({ request })
-  }
-
   let supabaseResponse = NextResponse.next({ request })
 
   try {
@@ -46,33 +36,32 @@ export async function middleware(request: NextRequest) {
       data: { user },
     } = await supabase.auth.getUser()
 
-    const rotasDemo = ['/cliente/', '/profissional/', '/admin/']
-    const acessandoRotaDemo = rotasDemo.some((rota) =>
-      request.nextUrl.pathname.startsWith(rota)
-    )
+  // Rotas liberadas para demonstração (remover em produção)
+  const rotasDemo = ['/cliente/', '/profissional/', '/admin/']
+  const acessandoRotaDemo = rotasDemo.some(rota =>
+    request.nextUrl.pathname.startsWith(rota)
+  )
 
     const rotasProtegidas = ['/cliente/', '/profissional/', '/admin/']
     const acessandoRotaProtegida = rotasProtegidas.some((rota) =>
       request.nextUrl.pathname.startsWith(rota)
     )
 
-    if (acessandoRotaProtegida && !acessandoRotaDemo && !user) {
-      const redir = NextResponse.redirect(new URL('/entrar', request.url))
-      copiarCookies(supabaseResponse, redir)
-      return redir
-    }
+  if (acessandoRotaProtegida && !acessandoRotaDemo && !user) {
+    return NextResponse.redirect(new URL('/entrar', request.url))
+  }
 
     const rotasDeAuth = ['/entrar', '/cadastro']
     const acessandoRotaDeAuth = rotasDeAuth.some((rota) =>
       request.nextUrl.pathname.startsWith(rota)
     )
 
-    if (acessandoRotaDeAuth && user) {
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('tipo')
-        .eq('id', user.id)
-        .single()
+  if (acessandoRotaDeAuth && user) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('tipo')
+      .eq('id', user.id)
+      .single()
 
       const destino =
         profile?.tipo === 'administrador'
