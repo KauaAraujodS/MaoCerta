@@ -1,14 +1,14 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
 type Perfil = {
   id: string
   nome: string
   tipo: string
-  telefone: string | null
   cidade: string | null
+  estado: string | null
   bio: string | null
   avatar_url: string | null
   created_at: string
@@ -21,6 +21,8 @@ type Props = {
   aberto: boolean
   onFechar: () => void
   rotulo?: 'Cliente' | 'Prestador' | 'Perfil'
+  /** Quando true, mostra os botões "Denunciar" e "Bloquear" (default: true para prestador) */
+  mostrarAcoes?: boolean
 }
 
 function pegarIniciais(nome: string) {
@@ -32,36 +34,95 @@ function pegarIniciais(nome: string) {
     .join('')
 }
 
-export default function PerfilModal({ perfilId, aberto, onFechar, rotulo = 'Perfil' }: Props) {
+export default function PerfilModal({ perfilId, aberto, onFechar, rotulo = 'Perfil', mostrarAcoes }: Props) {
   const [perfil, setPerfil] = useState<Perfil | null>(null)
   const [carregando, setCarregando] = useState(false)
   const [erro, setErro] = useState<string | null>(null)
 
+  // métricas
+  const [notaMedia, setNotaMedia] = useState<number | null>(null)
+  const [qtdAvaliacoes, setQtdAvaliacoes] = useState(0)
+  const [demandasFeitas, setDemandasFeitas] = useState(0)
+  const [denuncias, setDenuncias] = useState(0)
+  const [bloqueado, setBloqueado] = useState(false)
+
+  // ações
+  const [meuId, setMeuId] = useState<string | null>(null)
+  const [bloqueioInProgress, setBloqueioInProgress] = useState(false)
+  const [denunciaAberta, setDenunciaAberta] = useState(false)
+  const [denunciaMotivo, setDenunciaMotivo] = useState('')
+  const [denunciaDescricao, setDenunciaDescricao] = useState('')
+  const [enviandoDenuncia, setEnviandoDenuncia] = useState(false)
+  const [aviso, setAviso] = useState<{ tipo: 'ok' | 'erro'; texto: string } | null>(null)
+
   useEffect(() => {
-    if (!aberto) return
+    if (!aberto || !perfilId) return
 
     let cancelado = false
     setCarregando(true)
     setErro(null)
     setPerfil(null)
+    setNotaMedia(null)
+    setQtdAvaliacoes(0)
+    setDemandasFeitas(0)
+    setDenuncias(0)
+    setBloqueado(false)
+    setAviso(null)
+    setDenunciaAberta(false)
 
     async function carregar() {
       const supabase = createClient()
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('id, nome, tipo, telefone, cidade, bio, avatar_url, created_at, experiencia_anos, historico_profissional')
-        .eq('id', perfilId)
-        .maybeSingle()
+      const { data: auth } = await supabase.auth.getUser()
+      if (!cancelado) setMeuId(auth.user?.id || null)
+
+      const [perfilRes, avalRes, atendRes, denRes, blocRes] = await Promise.all([
+        supabase
+          .from('profiles')
+          .select('id, nome, tipo, cidade, estado, bio, avatar_url, created_at, experiencia_anos, historico_profissional')
+          .eq('id', perfilId)
+          .maybeSingle(),
+        supabase
+          .from('avaliacoes')
+          .select('nota')
+          .eq('avaliado_id', perfilId),
+        supabase
+          .from('solicitacoes')
+          .select('id', { count: 'exact', head: true })
+          .or(`profissional_id.eq.${perfilId},cliente_id.eq.${perfilId}`)
+          .eq('status', 'concluida'),
+        supabase
+          .from('denuncias')
+          .select('id', { count: 'exact', head: true })
+          .eq('denunciado_id', perfilId),
+        auth.user?.id
+          ? supabase
+              .from('bloqueios')
+              .select('bloqueado_id')
+              .eq('bloqueador_id', auth.user.id)
+              .eq('bloqueado_id', perfilId)
+              .maybeSingle()
+          : Promise.resolve({ data: null }),
+      ])
 
       if (cancelado) return
 
-      if (error) {
-        setErro(`Não foi possível carregar o perfil: ${error.message}`)
-      } else if (!data) {
+      if (perfilRes.error) {
+        setErro(`Não foi possível carregar o perfil: ${perfilRes.error.message}`)
+      } else if (!perfilRes.data) {
         setErro('Perfil não encontrado.')
       } else {
-        setPerfil(data as Perfil)
+        setPerfil(perfilRes.data as Perfil)
       }
+
+      const notas = (avalRes.data as { nota: number }[] | null) || []
+      if (notas.length > 0) {
+        const soma = notas.reduce((acc, a) => acc + Number(a.nota), 0)
+        setNotaMedia(soma / notas.length)
+      }
+      setQtdAvaliacoes(notas.length)
+      setDemandasFeitas(atendRes.count ?? 0)
+      setDenuncias(denRes.count ?? 0)
+      setBloqueado(!!blocRes.data)
       setCarregando(false)
     }
 
@@ -85,9 +146,66 @@ export default function PerfilModal({ perfilId, aberto, onFechar, rotulo = 'Perf
     }
   }, [aberto, onFechar])
 
+  async function alternarBloqueio() {
+    if (!meuId || !perfilId || meuId === perfilId) return
+    setBloqueioInProgress(true)
+    setAviso(null)
+    const supabase = createClient()
+    if (bloqueado) {
+      const { error } = await supabase
+        .from('bloqueios')
+        .delete()
+        .eq('bloqueador_id', meuId)
+        .eq('bloqueado_id', perfilId)
+      if (error) {
+        setAviso({ tipo: 'erro', texto: `Falha ao desbloquear: ${error.message}` })
+      } else {
+        setBloqueado(false)
+        setAviso({ tipo: 'ok', texto: 'Desbloqueado.' })
+      }
+    } else {
+      const { error } = await supabase
+        .from('bloqueios')
+        .insert({ bloqueador_id: meuId, bloqueado_id: perfilId })
+      if (error) {
+        setAviso({ tipo: 'erro', texto: `Falha ao bloquear: ${error.message}` })
+      } else {
+        setBloqueado(true)
+        setAviso({ tipo: 'ok', texto: 'Bloqueado. Não vai mais aparecer pra você.' })
+      }
+    }
+    setBloqueioInProgress(false)
+  }
+
+  async function enviarDenuncia(e: FormEvent) {
+    e.preventDefault()
+    if (!meuId || !perfilId || !denunciaMotivo.trim()) return
+    setEnviandoDenuncia(true)
+    setAviso(null)
+    const supabase = createClient()
+    const { error } = await supabase.from('denuncias').insert({
+      denunciante_id: meuId,
+      denunciado_id: perfilId,
+      motivo: denunciaMotivo.trim(),
+      descricao: denunciaDescricao.trim() || null,
+    })
+    setEnviandoDenuncia(false)
+    if (error) {
+      setAviso({ tipo: 'erro', texto: `Falha ao denunciar: ${error.message}` })
+      return
+    }
+    setAviso({ tipo: 'ok', texto: 'Denúncia enviada. A equipe vai analisar.' })
+    setDenunciaAberta(false)
+    setDenunciaMotivo('')
+    setDenunciaDescricao('')
+    setDenuncias((d) => d + 1)
+  }
+
   if (!aberto) return null
 
   const ehProfissional = perfil?.tipo === 'profissional'
+  const podeAgir = !!(meuId && perfil && meuId !== perfil.id && (mostrarAcoes ?? ehProfissional))
+  const localExibido = [perfil?.cidade, perfil?.estado].filter(Boolean).join(' - ')
 
   return (
     <div
@@ -95,10 +213,10 @@ export default function PerfilModal({ perfilId, aberto, onFechar, rotulo = 'Perf
       onClick={onFechar}
     >
       <div
-        className="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-md max-h-[90vh] overflow-y-auto shadow-2xl"
+        className="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-md max-h-[92vh] overflow-y-auto shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-100 px-4 py-3 flex items-center justify-between">
+        <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-100 px-4 py-3 flex items-center justify-between rounded-t-3xl">
           <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">{rotulo}</p>
           <button
             type="button"
@@ -118,13 +236,13 @@ export default function PerfilModal({ perfilId, aberto, onFechar, rotulo = 'Perf
         )}
 
         {erro && (
-          <p className="m-4 text-sm text-red-700 bg-red-50 border border-red-100 rounded-xl p-3">{erro}</p>
+          <p className="m-4 text-sm text-red-700 bg-red-50 border border-red-100 rounded-2xl p-3">{erro}</p>
         )}
 
         {perfil && (
           <div className="p-5 space-y-5">
             <div className="flex items-center gap-4">
-              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-200 to-teal-200 flex items-center justify-center text-2xl font-bold text-emerald-900 overflow-hidden shadow-md">
+              <div className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-200 to-indigo-200 flex items-center justify-center text-2xl font-bold text-purple-900 overflow-hidden shadow-md">
                 {perfil.avatar_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={perfil.avatar_url} alt={perfil.nome} className="w-full h-full object-cover" />
@@ -135,56 +253,167 @@ export default function PerfilModal({ perfilId, aberto, onFechar, rotulo = 'Perf
               <div className="flex-1 min-w-0">
                 <h2 className="text-lg font-bold text-gray-900 truncate">{perfil.nome}</h2>
                 <p className="text-xs text-gray-500 capitalize">{perfil.tipo}</p>
-                {perfil.cidade && <p className="text-xs text-gray-600 mt-1">📍 {perfil.cidade}</p>}
+                {localExibido && <p className="text-xs text-gray-600 mt-1">📍 {localExibido}</p>}
               </div>
             </div>
 
-            {perfil.bio && (
-              <section className="space-y-1">
-                <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Sobre</p>
-                <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{perfil.bio}</p>
-              </section>
-            )}
-
-            {ehProfissional && (perfil.experiencia_anos != null || perfil.historico_profissional) && (
-              <section className="space-y-1 bg-emerald-50 border border-emerald-100 rounded-2xl p-3">
-                <p className="text-[11px] font-bold text-emerald-800 uppercase tracking-wider">
-                  Experiência profissional
-                </p>
-                {perfil.experiencia_anos != null && (
-                  <p className="text-sm text-gray-800">
-                    <strong>{perfil.experiencia_anos}</strong> ano(s) de atuação
-                  </p>
-                )}
-                {perfil.historico_profissional && (
-                  <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">
-                    {perfil.historico_profissional}
-                  </p>
-                )}
-              </section>
-            )}
-
-            <section className="space-y-2">
-              <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Contato</p>
-              {perfil.telefone ? (
-                <a
-                  href={`tel:${perfil.telefone}`}
-                  className="flex items-center gap-3 bg-gray-50 hover:bg-gray-100 rounded-xl px-3 py-2.5 text-sm text-gray-800"
-                >
-                  <span>📞</span>
-                  <span className="font-medium">{perfil.telefone}</span>
-                </a>
-              ) : (
-                <p className="text-xs text-gray-400">Telefone não informado</p>
-              )}
+            {/* Métricas */}
+            <section className="grid grid-cols-3 gap-2 text-center">
+              <CardMetrica
+                titulo="Avaliação"
+                valor={notaMedia != null ? `${notaMedia.toFixed(1)}★` : '—'}
+                dica={qtdAvaliacoes > 0 ? `${qtdAvaliacoes} avaliações` : 'Sem avaliações'}
+                cor="text-amber-600"
+              />
+              <CardMetrica
+                titulo={ehProfissional ? 'Atendimentos' : 'Contratações'}
+                valor={`${demandasFeitas}`}
+                dica="Concluídos"
+                cor="text-emerald-700"
+              />
+              <CardMetrica
+                titulo="Denúncias"
+                valor={`${denuncias}`}
+                dica={denuncias === 0 ? 'Limpo' : 'Recebidas'}
+                cor={denuncias === 0 ? 'text-gray-500' : 'text-red-600'}
+              />
             </section>
 
-            <p className="text-[11px] text-gray-400 text-center pt-2">
-              Membro desde {new Date(perfil.created_at).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}
+            {/* Currículo / Bio */}
+            {(perfil.bio || perfil.experiencia_anos != null || perfil.historico_profissional) && (
+              <section className="space-y-2">
+                <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+                  {ehProfissional ? 'Currículo' : 'Sobre'}
+                </p>
+                {perfil.bio && (
+                  <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{perfil.bio}</p>
+                )}
+                {perfil.experiencia_anos != null && (
+                  <div className="bg-emerald-50 border border-emerald-100 rounded-2xl px-3 py-2">
+                    <p className="text-sm text-gray-800">
+                      <strong>{perfil.experiencia_anos}</strong> ano(s) de experiência profissional
+                    </p>
+                  </div>
+                )}
+                {perfil.historico_profissional && (
+                  <div className="bg-gray-50 rounded-2xl p-3">
+                    <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1">
+                      Histórico
+                    </p>
+                    <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">
+                      {perfil.historico_profissional}
+                    </p>
+                  </div>
+                )}
+              </section>
+            )}
+
+            <p className="text-[11px] text-gray-400 text-center">
+              Membro desde{' '}
+              {new Date(perfil.created_at).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}
             </p>
+
+            {/* Aviso */}
+            {aviso && (
+              <p
+                className={`text-xs rounded-2xl p-3 font-medium ${
+                  aviso.tipo === 'ok' ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'
+                }`}
+              >
+                {aviso.texto}
+              </p>
+            )}
+
+            {/* Form de denúncia */}
+            {denunciaAberta && (
+              <form onSubmit={enviarDenuncia} className="bg-amber-50 border border-amber-200 rounded-2xl p-3 space-y-2">
+                <p className="text-xs font-bold text-amber-900 uppercase tracking-wider">Nova denúncia</p>
+                <select
+                  value={denunciaMotivo}
+                  onChange={(e) => setDenunciaMotivo(e.target.value)}
+                  required
+                  className="w-full bg-white border border-amber-200 rounded-2xl px-3 py-2 text-sm"
+                >
+                  <option value="">Selecione um motivo</option>
+                  <option value="comportamento_inadequado">Comportamento inadequado</option>
+                  <option value="servico_nao_cumprido">Serviço não cumprido</option>
+                  <option value="cobranca_indevida">Cobrança indevida</option>
+                  <option value="perfil_falso">Perfil falso</option>
+                  <option value="outro">Outro</option>
+                </select>
+                <textarea
+                  value={denunciaDescricao}
+                  onChange={(e) => setDenunciaDescricao(e.target.value)}
+                  placeholder="Descreva o ocorrido (opcional)"
+                  rows={3}
+                  className="w-full bg-white border border-amber-200 rounded-2xl px-3 py-2 text-sm resize-none"
+                />
+                <div className="flex gap-2">
+                  <button
+                    type="submit"
+                    disabled={enviandoDenuncia || !denunciaMotivo}
+                    className="flex-1 bg-red-600 text-white font-semibold py-2 rounded-2xl text-xs hover:bg-red-700 disabled:opacity-50"
+                  >
+                    {enviandoDenuncia ? 'Enviando...' : 'Enviar denúncia'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setDenunciaAberta(false)}
+                    className="px-3 bg-white border border-gray-200 text-gray-700 font-semibold rounded-2xl text-xs hover:bg-gray-50"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {/* Ações */}
+            {podeAgir && !denunciaAberta && (
+              <section className="grid grid-cols-2 gap-2 pt-2 border-t border-gray-100">
+                <button
+                  type="button"
+                  onClick={() => setDenunciaAberta(true)}
+                  className="text-xs font-semibold py-2.5 rounded-2xl border border-amber-200 text-amber-800 bg-amber-50 hover:bg-amber-100"
+                >
+                  🚩 Denunciar
+                </button>
+                <button
+                  type="button"
+                  onClick={alternarBloqueio}
+                  disabled={bloqueioInProgress}
+                  className={`text-xs font-semibold py-2.5 rounded-2xl border ${
+                    bloqueado
+                      ? 'border-gray-200 text-gray-700 bg-gray-50 hover:bg-gray-100'
+                      : 'border-red-200 text-red-700 bg-red-50 hover:bg-red-100'
+                  } disabled:opacity-50`}
+                >
+                  {bloqueado ? '✓ Bloqueado · desbloquear' : '🚫 Bloquear'}
+                </button>
+              </section>
+            )}
           </div>
         )}
       </div>
+    </div>
+  )
+}
+
+function CardMetrica({
+  titulo,
+  valor,
+  dica,
+  cor,
+}: {
+  titulo: string
+  valor: string
+  dica: string
+  cor: string
+}) {
+  return (
+    <div className="bg-white border border-gray-100 rounded-2xl p-3 shadow-sm">
+      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{titulo}</p>
+      <p className={`text-base font-bold mt-0.5 ${cor}`}>{valor}</p>
+      <p className="text-[10px] text-gray-400 mt-0.5">{dica}</p>
     </div>
   )
 }
