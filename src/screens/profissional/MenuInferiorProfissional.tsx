@@ -5,9 +5,9 @@ import { usePathname } from 'next/navigation'
 
 const abas = [
   { href: '/profissional/inicio', icone: '🏠', label: 'Início' },
-  { href: '/profissional/servicos', icone: '🛠️', label: 'Serviços' },
-  { href: '/profissional/demandas', icone: '📋', label: 'Demandas' },
+  { href: '/profissional/atendimentos', icone: '🤝', label: 'Atendimentos' },
   { href: '/profissional/solicitacoes', icone: '📥', label: 'Pedidos' },
+  { href: '/profissional/carteira', icone: '💰', label: 'Carteira' },
   { href: '/profissional/configuracoes', icone: '⚙️', label: 'Ajustes' },
 ]
 

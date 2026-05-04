@@ -18,6 +18,8 @@ type Resumo = {
   nSolicitacoesTotal: number
   nPropostas: number
   nDemandasAbertas: number
+  nAtendimentosAtivos: number
+  saldoCarteira: number
 }
 
 function iniciais(nome: string) {
@@ -29,7 +31,28 @@ function iniciais(nome: string) {
     .join('')
 }
 
+function formatarReais(v: number) {
+  return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+}
+
 const linksPainel = [
+  {
+    href: '/profissional/atendimentos',
+    titulo: 'Atendimentos',
+    descricao: 'Acompanhe os trabalhos aceitos e em andamento',
+    icone: '🤝',
+    dica: (r: Resumo) =>
+      r.nAtendimentosAtivos === 0
+        ? 'Nenhum atendimento ativo no momento'
+        : `${r.nAtendimentosAtivos} atendimento(s) em andamento`,
+  },
+  {
+    href: '/profissional/carteira',
+    titulo: 'Carteira interna',
+    descricao: 'Saldo, movimentações e solicitação de saque',
+    icone: '💰',
+    dica: (r: Resumo) => `Saldo atual: ${formatarReais(r.saldoCarteira)}`,
+  },
   {
     href: '/profissional/servicos',
     titulo: 'Categorias e serviços',
@@ -84,6 +107,8 @@ const resumoVazio: Resumo = {
   nSolicitacoesTotal: 0,
   nPropostas: 0,
   nDemandasAbertas: 0,
+  nAtendimentosAtivos: 0,
+  saldoCarteira: 0,
 }
 
 export default function ProfissionalInicioScreen() {
@@ -98,20 +123,7 @@ export default function ProfissionalInicioScreen() {
       const user = auth.user
 
       if (!user) {
-        setResumo({
-          userId: null,
-          nome: 'Profissional',
-          avatarUrl: null,
-          plano: 'free',
-          cidade: null,
-          bio: null,
-          nCategorias: 0,
-          nServicos: 0,
-          nSolicitacoesPendentes: 0,
-          nSolicitacoesTotal: 0,
-          nPropostas: 0,
-          nDemandasAbertas: 0,
-        })
+        setResumo({ ...resumoVazio, nome: 'Profissional' })
         setCarregando(false)
         return
       }
@@ -124,6 +136,8 @@ export default function ProfissionalInicioScreen() {
         solTotRes,
         propRes,
         demRes,
+        atendAtivosRes,
+        walletRes,
       ] = await Promise.all([
         supabase
           .from('profiles')
@@ -140,6 +154,12 @@ export default function ProfissionalInicioScreen() {
         supabase.from('solicitacoes').select('id', { count: 'exact', head: true }).eq('profissional_id', user.id),
         supabase.from('propostas').select('id', { count: 'exact', head: true }).eq('profissional_id', user.id),
         supabase.from('demandas').select('id', { count: 'exact', head: true }).eq('status', 'aberta'),
+        supabase
+          .from('solicitacoes')
+          .select('id', { count: 'exact', head: true })
+          .eq('profissional_id', user.id)
+          .in('status', ['aceita', 'em_andamento']),
+        supabase.from('wallets').select('saldo').eq('user_id', user.id).maybeSingle(),
       ])
 
       const p = perfilRes.data
@@ -156,6 +176,8 @@ export default function ProfissionalInicioScreen() {
         nSolicitacoesTotal: solTotRes.count ?? 0,
         nPropostas: propRes.count ?? 0,
         nDemandasAbertas: demRes.count ?? 0,
+        nAtendimentosAtivos: atendAtivosRes.count ?? 0,
+        saldoCarteira: Number(walletRes.data?.saldo ?? 0),
       })
       setCarregando(false)
     }
