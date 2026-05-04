@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { prestadorService, type Atendimento } from '@/lib/supabase/prestador'
@@ -28,7 +29,6 @@ export default function ProfissionalAtendimentosScreen() {
   const [historico, setHistorico] = useState<Atendimento[]>([])
   const [carregando, setCarregando] = useState(true)
   const [aviso, setAviso] = useState<string | null>(null)
-  const [acaoEmCurso, setAcaoEmCurso] = useState<string | null>(null)
 
   useEffect(() => {
     carregar()
@@ -55,32 +55,6 @@ export default function ProfissionalAtendimentosScreen() {
       setAviso('Não foi possível carregar atendimentos. Verifique se as migrações estão aplicadas.')
     } finally {
       setCarregando(false)
-    }
-  }
-
-  async function iniciar(id: string) {
-    setAcaoEmCurso(id)
-    try {
-      await prestadorService.iniciarAtendimento(id)
-      await carregar()
-    } catch (e) {
-      console.error(e)
-      setAviso('Falha ao iniciar atendimento.')
-    } finally {
-      setAcaoEmCurso(null)
-    }
-  }
-
-  async function concluir(id: string) {
-    setAcaoEmCurso(id)
-    try {
-      await prestadorService.concluirAtendimento(id)
-      await carregar()
-    } catch (e) {
-      console.error(e)
-      setAviso('Falha ao concluir atendimento.')
-    } finally {
-      setAcaoEmCurso(null)
     }
   }
 
@@ -120,11 +94,9 @@ export default function ProfissionalAtendimentosScreen() {
           lista.map((item) => {
             const badge = badgeStatus(item.status)
             const cliente = item.cliente
-            return (
-              <article
-                key={item.id}
-                className="bg-white rounded-2xl border border-gray-100 shadow-md overflow-hidden"
-              >
+            const ehAndamento = aba === 'andamento'
+            const conteudo = (
+              <>
                 <div className="h-1 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500" />
                 <div className="p-5 space-y-3">
                   <div className="flex flex-wrap items-center gap-2 justify-between">
@@ -138,7 +110,7 @@ export default function ProfissionalAtendimentosScreen() {
                     </time>
                   </div>
                   <h2 className="text-base font-bold text-gray-900 leading-snug">{item.titulo}</h2>
-                  <p className="text-sm text-gray-600 leading-relaxed">{item.descricao}</p>
+                  <p className="text-sm text-gray-600 leading-relaxed line-clamp-2">{item.descricao}</p>
 
                   {cliente && (
                     <div className="flex items-center gap-3 pt-2 border-t border-gray-100">
@@ -151,44 +123,32 @@ export default function ProfissionalAtendimentosScreen() {
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
+                        <p className="text-xs text-gray-500">Cliente</p>
                         <p className="text-sm font-semibold text-gray-900 truncate">{cliente.nome}</p>
-                        {cliente.telefone && (
-                          <a
-                            href={`tel:${cliente.telefone}`}
-                            className="text-[11px] text-emerald-700 font-medium hover:underline"
-                          >
-                            {cliente.telefone}
-                          </a>
-                        )}
                       </div>
-                    </div>
-                  )}
-
-                  {aba === 'andamento' && (
-                    <div className="flex flex-wrap gap-2 pt-1">
-                      {item.status === 'aceita' && (
-                        <button
-                          type="button"
-                          onClick={() => iniciar(item.id)}
-                          disabled={acaoEmCurso === item.id}
-                          className="flex-1 min-w-[120px] text-sm font-semibold bg-blue-600 text-white py-2.5 rounded-xl hover:bg-blue-700 disabled:opacity-60 transition-colors"
-                        >
-                          {acaoEmCurso === item.id ? 'Atualizando...' : 'Iniciar atendimento'}
-                        </button>
-                      )}
-                      {item.status === 'em_andamento' && (
-                        <button
-                          type="button"
-                          onClick={() => concluir(item.id)}
-                          disabled={acaoEmCurso === item.id}
-                          className="flex-1 min-w-[120px] text-sm font-semibold bg-emerald-600 text-white py-2.5 rounded-xl hover:bg-emerald-700 disabled:opacity-60 transition-colors"
-                        >
-                          {acaoEmCurso === item.id ? 'Atualizando...' : 'Concluir'}
-                        </button>
+                      {ehAndamento && (
+                        <span className="text-emerald-700 text-xs font-semibold shrink-0">Abrir conversa ›</span>
                       )}
                     </div>
                   )}
                 </div>
+              </>
+            )
+
+            return ehAndamento ? (
+              <Link
+                key={item.id}
+                href={`/profissional/atendimentos/${item.id}`}
+                className="block bg-white rounded-2xl border border-gray-100 shadow-md overflow-hidden hover:border-emerald-200 transition-colors"
+              >
+                {conteudo}
+              </Link>
+            ) : (
+              <article
+                key={item.id}
+                className="bg-white rounded-2xl border border-gray-100 shadow-md overflow-hidden"
+              >
+                {conteudo}
               </article>
             )
           })}
