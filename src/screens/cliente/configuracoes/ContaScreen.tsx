@@ -3,15 +3,17 @@
 import { useEffect, useRef, useState, ChangeEvent, FormEvent } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import CabecalhoAjuste from '@/screens/configuracoes/CabecalhoAjuste'
+import CidadeEstadoSelect from '@/components/CidadeEstadoSelect'
 
 type Form = {
   nome: string
   telefone: string
+  estado: string
   cidade: string
   bio: string
 }
 
-const VAZIO: Form = { nome: '', telefone: '', cidade: '', bio: '' }
+const VAZIO: Form = { nome: '', telefone: '', estado: '', cidade: '', bio: '' }
 const TAMANHO_MAX_MB = 2
 
 function pegarIniciais(nome: string) {
@@ -40,7 +42,7 @@ export default function ContaScreen() {
 
       if (!user) {
         setEmail('demo@maocerta.com')
-        setForm({ nome: 'Visitante Demo', telefone: '', cidade: '', bio: '' })
+        setForm({ nome: 'Visitante Demo', telefone: '', estado: '', cidade: '', bio: '' })
         setCarregando(false)
         return
       }
@@ -49,7 +51,7 @@ export default function ContaScreen() {
 
       const { data, error } = await supabase
         .from('profiles')
-        .select('nome, telefone, cidade, bio, avatar_url')
+        .select('nome, telefone, cidade, estado, bio, avatar_url')
         .eq('id', user.id)
         .maybeSingle()
 
@@ -61,6 +63,7 @@ export default function ContaScreen() {
         setForm({
           nome: (user.user_metadata as { nome?: string })?.nome || '',
           telefone: (user.user_metadata as { telefone?: string })?.telefone || '',
+          estado: '',
           cidade: '',
           bio: '',
         })
@@ -68,6 +71,7 @@ export default function ContaScreen() {
         setForm({
           nome: data.nome || '',
           telefone: data.telefone || '',
+          estado: data.estado || '',
           cidade: data.cidade || '',
           bio: data.bio || '',
         })
@@ -195,7 +199,8 @@ export default function ContaScreen() {
         id: user.id,
         nome: form.nome,
         telefone: form.telefone,
-        cidade: form.cidade,
+        estado: form.estado || null,
+        cidade: form.cidade || null,
         bio: form.bio,
         tipo: tipoUsuario,
       })
@@ -289,12 +294,13 @@ export default function ContaScreen() {
             disabled={carregando}
             onChange={v => alterar('telefone', v)}
           />
-          <Campo
-            label="Cidade"
-            valor={form.cidade}
-            placeholder="Cidade onde você costuma contratar"
+          <CidadeEstadoSelect
+            estado={form.estado || null}
+            cidade={form.cidade || null}
             disabled={carregando}
-            onChange={v => alterar('cidade', v)}
+            onChange={({ estado, cidade }) =>
+              setForm((anterior) => ({ ...anterior, estado: estado || '', cidade: cidade || '' }))
+            }
           />
           <CampoTexto
             label="Sobre você"

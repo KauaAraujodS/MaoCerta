@@ -4,17 +4,19 @@ import { useEffect, useRef, useState, ChangeEvent, FormEvent, useMemo } from 're
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import CabecalhoAjuste from '@/screens/configuracoes/CabecalhoAjuste'
+import CidadeEstadoSelect from '@/components/CidadeEstadoSelect'
 
 type Form = {
   nome: string
   telefone: string
+  estado: string
   cidade: string
   bio: string
   experienciaAnos: string
   historicoProfissional: string
 }
 
-const VAZIO: Form = { nome: '', telefone: '', cidade: '', bio: '', experienciaAnos: '', historicoProfissional: '' }
+const VAZIO: Form = { nome: '', telefone: '', estado: '', cidade: '', bio: '', experienciaAnos: '', historicoProfissional: '' }
 const TAMANHO_MAX_MB = 2
 
 function pegarIniciais(nome: string) {
@@ -43,7 +45,7 @@ export default function ContaProfissionalScreen() {
 
       if (!user) {
         setEmail('demo@maocerta.com')
-        setForm({ nome: 'Prestador Demo', telefone: '', cidade: '', bio: '', experienciaAnos: '', historicoProfissional: '' })
+        setForm({ nome: 'Prestador Demo', telefone: '', estado: '', cidade: '', bio: '', experienciaAnos: '', historicoProfissional: '' })
         setCarregando(false)
         return
       }
@@ -52,7 +54,7 @@ export default function ContaProfissionalScreen() {
 
       const { data, error } = await supabase
         .from('profiles')
-        .select('nome, telefone, cidade, bio, avatar_url, experiencia_anos, historico_profissional')
+        .select('nome, telefone, cidade, estado, bio, avatar_url, experiencia_anos, historico_profissional')
         .eq('id', user.id)
         .maybeSingle()
 
@@ -64,6 +66,7 @@ export default function ContaProfissionalScreen() {
         setForm({
           nome: meta?.nome || '',
           telefone: meta?.telefone || '',
+          estado: '',
           cidade: '',
           bio: '',
           experienciaAnos: '',
@@ -73,6 +76,7 @@ export default function ContaProfissionalScreen() {
         setForm({
           nome: data.nome || '',
           telefone: data.telefone || '',
+          estado: data.estado || '',
           cidade: data.cidade || '',
           bio: data.bio || '',
           experienciaAnos: data.experiencia_anos ? String(data.experiencia_anos) : '',
@@ -202,7 +206,8 @@ export default function ContaProfissionalScreen() {
         id: user.id,
         nome: form.nome,
         telefone: form.telefone,
-        cidade: form.cidade,
+        estado: form.estado || null,
+        cidade: form.cidade || null,
         bio: form.bio,
         experiencia_anos: form.experienciaAnos.trim() ? Number(form.experienciaAnos) : null,
         historico_profissional: form.historicoProfissional.trim() || null,
@@ -333,12 +338,14 @@ export default function ContaProfissionalScreen() {
             disabled={carregando}
             onChange={v => alterar('telefone', v)}
           />
-          <Campo
-            label="Cidade onde atende"
-            valor={form.cidade}
-            placeholder="Ex.: Vitória - ES"
+          <CidadeEstadoSelect
+            estado={form.estado || null}
+            cidade={form.cidade || null}
             disabled={carregando}
-            onChange={v => alterar('cidade', v)}
+            rotuloCidade="Cidade onde atende"
+            onChange={({ estado, cidade }) =>
+              setForm((anterior) => ({ ...anterior, estado: estado || '', cidade: cidade || '' }))
+            }
           />
         </section>
 

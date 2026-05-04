@@ -1,9 +1,11 @@
 'use client'
 
+import Link from 'next/link'
 import { FormEvent, useEffect, useMemo, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { iconeCategoria } from '@/lib/categorias-ui'
 import { formatarRelativoPt } from '@/lib/formatar-data'
+import { obterLimitesPlano, nomePlano } from '@/lib/plano-limites'
 
 type Categoria = { id: number; nome: string }
 type Demanda = { id: string; titulo: string; descricao: string; status: string; created_at?: string }
@@ -25,6 +27,14 @@ export default function ClienteDemandasScreen() {
   const [salvando, setSalvando] = useState(false)
   const [aviso, setAviso] = useState<string | null>(null)
   const [buscaCat, setBuscaCat] = useState('')
+  const [plano, setPlano] = useState<string>('free')
+
+  const limites = useMemo(() => obterLimitesPlano(plano), [plano])
+  const ativas = useMemo(
+    () => demandas.filter((d) => d.status === 'aberta' || d.status === 'em_andamento'),
+    [demandas],
+  )
+  const atingiuLimite = ativas.length >= limites.maxDemandasAtivas
 
   const categoriasFiltradas = useMemo(() => {
     const q = buscaCat.trim().toLowerCase()
@@ -43,12 +53,16 @@ export default function ClienteDemandasScreen() {
       const { data: auth } = await supabase.auth.getUser()
       if (!auth.user) return
 
-      const { data } = await supabase
-        .from('demandas')
-        .select('id, titulo, descricao, status, created_at')
-        .eq('cliente_id', auth.user.id)
-        .order('created_at', { ascending: false })
-      setDemandas((data as Demanda[] | null) || [])
+      const [demRes, perfilRes] = await Promise.all([
+        supabase
+          .from('demandas')
+          .select('id, titulo, descricao, status, created_at')
+          .eq('cliente_id', auth.user.id)
+          .order('created_at', { ascending: false }),
+        supabase.from('profiles').select('plano').eq('id', auth.user.id).maybeSingle(),
+      ])
+      setDemandas((demRes.data as Demanda[] | null) || [])
+      setPlano((perfilRes.data?.plano as string) || 'free')
     }
     carregar()
   }, [])
@@ -56,6 +70,12 @@ export default function ClienteDemandasScreen() {
   async function publicarDemanda(e: FormEvent) {
     e.preventDefault()
     if (!titulo.trim() || !descricao.trim() || !categoriaId) return
+    if (atingiuLimite) {
+      setAviso(
+        `Seu plano ${nomePlano(plano)} permite até ${limites.maxDemandasAtivas} demanda(s) ativa(s). Conclua, cancele ou faça upgrade.`,
+      )
+      return
+    }
     setAviso(null)
     setSalvando(true)
 
@@ -97,8 +117,25 @@ export default function ClienteDemandasScreen() {
           <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/65">Cliente</p>
           <h1 className="text-2xl font-bold">Suas demandas</h1>
           <p className="text-sm text-white/88">
-            Descreva o que precisa com calma: profissionais da categoria vão enviar propostas com valor e prazo.
+            Descreva o que precisa com calma: profissionais da categoria vão aceitar pra abrir um atendimento.
           </p>
+          <div className="flex items-center justify-between gap-2 bg-white/15 rounded-2xl px-3 py-2 backdrop-blur-sm">
+            <div>
+              <p className="text-[10px] uppercase tracking-wider text-white/65">Plano {nomePlano(plano)}</p>
+              <p className="text-sm font-bold">
+                {ativas.length} de{' '}
+                {limites.maxDemandasAtivas >= 999 ? '∞' : limites.maxDemandasAtivas} demanda(s) ativa(s)
+              </p>
+            </div>
+            {atingiuLimite && (
+              <Link
+                href="/cliente/configuracoes/plano"
+                className="text-[11px] font-bold bg-white text-indigo-700 px-3 py-1.5 rounded-xl hover:bg-indigo-50"
+              >
+                Fazer upgrade
+              </Link>
+            )}
+          </div>
         </div>
       </header>
 
@@ -191,11 +228,20 @@ export default function ClienteDemandasScreen() {
             </label>
             <button
               type="submit"
-              disabled={salvando}
-              className="w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white py-3 rounded-xl text-sm font-semibold shadow-md disabled:opacity-50"
+              disabled={salvando || atingiuLimite}
+              className="w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white py-3 rounded-xl text-sm font-semibold shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {salvando ? 'Publicando...' : 'Publicar demanda'}
+              {atingiuLimite
+                ? `Limite do plano ${nomePlano(plano)} atingido`
+                : salvando
+                  ? 'Publicando...'
+                  : 'Publicar demanda'}
             </button>
+            {atingiuLimite && (
+              <p className="text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2">
+                Você já tem {ativas.length} demanda(s) ativa(s). Conclua, cancele ou faça upgrade do plano para publicar mais.
+              </p>
+            )}
           </form>
         </section>
 
