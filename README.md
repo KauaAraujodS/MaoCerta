@@ -65,6 +65,13 @@ supabase/
   migrations/   # scripts SQL para criação das tabelas
 ```
 
+<<<<<<< HEAD
+## Requisitos funcionais
+
+- `docs/requisitos-funcionais.md`
+
+=======
+>>>>>>> 9c9936b99714120e814390a4b71c947b2f1396dc
 ## Variáveis de ambiente necessárias
 
 | Variável | Descrição |
