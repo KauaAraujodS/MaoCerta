@@ -34,49 +34,50 @@ export default function ChatAtendimento({
   const fimRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    let canal: ReturnType<ReturnType<typeof createClient>['channel']> | null = null
+    const supabase = createClient()
+    let ativo = true
 
-    async function carregar() {
-      setCarregando(true)
-      const supabase = createClient()
-      const { data, error } = await supabase
-        .from('mensagens_atendimento')
-        .select('*')
-        .eq('solicitacao_id', solicitacaoId)
-        .order('created_at', { ascending: true })
+    // 1) Registra .on() ANTES de subscribe — evita o erro
+    //    "cannot add postgres_changes callbacks after subscribe()"
+    // 2) Nome único por mount — evita colisão com canal residual no Strict Mode
+    const nomeCanal = `mensagens:${solicitacaoId}:${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
+    const canal = supabase
+      .channel(nomeCanal)
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'mensagens_atendimento',
+          filter: `solicitacao_id=eq.${solicitacaoId}`,
+        },
+        (payload) => {
+          const nova = payload.new as Mensagem
+          setMensagens((atual) => (atual.some((m) => m.id === nova.id) ? atual : [...atual, nova]))
+        },
+      )
+      .subscribe()
 
-      if (error) {
-        setErro(`Não foi possível carregar mensagens: ${error.message}`)
-      } else {
-        setMensagens((data as Mensagem[]) || [])
-      }
-      setCarregando(false)
-
-      canal = supabase
-        .channel(`mensagens:${solicitacaoId}`)
-        .on(
-          'postgres_changes',
-          {
-            event: 'INSERT',
-            schema: 'public',
-            table: 'mensagens_atendimento',
-            filter: `solicitacao_id=eq.${solicitacaoId}`,
-          },
-          (payload) => {
-            const nova = payload.new as Mensagem
-            setMensagens((atual) => (atual.some((m) => m.id === nova.id) ? atual : [...atual, nova]))
-          },
-        )
-        .subscribe()
-    }
-
-    carregar()
+    // Carrega o histórico em paralelo
+    setCarregando(true)
+    supabase
+      .from('mensagens_atendimento')
+      .select('*')
+      .eq('solicitacao_id', solicitacaoId)
+      .order('created_at', { ascending: true })
+      .then(({ data, error }) => {
+        if (!ativo) return
+        if (error) {
+          setErro(`Não foi possível carregar mensagens: ${error.message}`)
+        } else {
+          setMensagens((data as Mensagem[]) || [])
+        }
+        setCarregando(false)
+      })
 
     return () => {
-      if (canal) {
-        const supabase = createClient()
-        supabase.removeChannel(canal)
-      }
+      ativo = false
+      supabase.removeChannel(canal)
     }
   }, [solicitacaoId])
 
