@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { formatarDataPt } from '@/lib/formatar-data'
 import ChatAtendimento from '@/screens/atendimento/ChatAtendimento'
+import PerfilModal from '@/screens/perfil/PerfilModal'
 
 type Atendimento = {
   id: string
@@ -28,6 +29,7 @@ export default function ClienteAtendimentoDetalheScreen({ id }: { id: string }) 
   const [acaoEmCurso, setAcaoEmCurso] = useState(false)
   const [erro, setErro] = useState<string | null>(null)
   const [confirmandoCancelamento, setConfirmandoCancelamento] = useState(false)
+  const [verPerfilPrestador, setVerPerfilPrestador] = useState(false)
 
   useEffect(() => {
     carregar()
@@ -128,7 +130,11 @@ export default function ClienteAtendimentoDetalheScreen({ id }: { id: string }) 
           >
             ‹ Atendimentos
           </Link>
-          <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => setVerPerfilPrestador(true)}
+            className="flex items-center gap-3 w-full text-left bg-white/10 hover:bg-white/15 rounded-xl p-2 transition-colors"
+          >
             <div className="w-12 h-12 rounded-full bg-white/20 overflow-hidden flex items-center justify-center text-base font-bold">
               {prest?.avatar_url ? (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -138,16 +144,12 @@ export default function ClienteAtendimentoDetalheScreen({ id }: { id: string }) 
               )}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-[10px] uppercase tracking-wider text-white/65">Prestador</p>
+              <p className="text-[10px] uppercase tracking-wider text-white/65">Prestador · toque para ver perfil</p>
               <h1 className="text-lg font-bold truncate">{prest?.nome || 'Sem nome'}</h1>
               {prest?.cidade && <p className="text-[11px] text-white/80">{prest.cidade}</p>}
-              {prest?.telefone && (
-                <a href={`tel:${prest.telefone}`} className="text-[11px] text-white/80 hover:underline">
-                  {prest.telefone}
-                </a>
-              )}
             </div>
-          </div>
+            <span className="text-white/70 text-lg">›</span>
+          </button>
           <span className="inline-block text-[10px] font-bold uppercase tracking-wider bg-white/20 px-2.5 py-1 rounded-full">
             {statusLabel}
           </span>
@@ -215,6 +217,13 @@ export default function ClienteAtendimentoDetalheScreen({ id }: { id: string }) 
           corMinha="bg-purple-700 text-white"
         />
       </section>
+
+      <PerfilModal
+        perfilId={atendimento.profissional_id}
+        aberto={verPerfilPrestador}
+        onFechar={() => setVerPerfilPrestador(false)}
+        rotulo="Prestador"
+      />
     </main>
   )
 }

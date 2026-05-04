@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import { prestadorService } from '@/lib/supabase/prestador'
 import { formatarDataPt } from '@/lib/formatar-data'
 import ChatAtendimento from '@/screens/atendimento/ChatAtendimento'
+import PerfilModal from '@/screens/perfil/PerfilModal'
 
 type Atendimento = {
   id: string
@@ -29,6 +30,7 @@ export default function ProfissionalAtendimentoDetalheScreen({ id }: { id: strin
   const [acaoEmCurso, setAcaoEmCurso] = useState(false)
   const [erro, setErro] = useState<string | null>(null)
   const [confirmandoCancelamento, setConfirmandoCancelamento] = useState(false)
+  const [verPerfilCliente, setVerPerfilCliente] = useState(false)
 
   useEffect(() => {
     carregar()
@@ -157,7 +159,11 @@ export default function ProfissionalAtendimentoDetalheScreen({ id }: { id: strin
           >
             ‹ Atendimentos
           </Link>
-          <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => setVerPerfilCliente(true)}
+            className="flex items-center gap-3 w-full text-left bg-white/10 hover:bg-white/15 rounded-xl p-2 transition-colors"
+          >
             <div className="w-12 h-12 rounded-full bg-white/20 overflow-hidden flex items-center justify-center text-base font-bold">
               {cliente?.avatar_url ? (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -167,15 +173,14 @@ export default function ProfissionalAtendimentoDetalheScreen({ id }: { id: strin
               )}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-[10px] uppercase tracking-wider text-white/65">Cliente</p>
+              <p className="text-[10px] uppercase tracking-wider text-white/65">Cliente · toque para ver perfil</p>
               <h1 className="text-lg font-bold truncate">{cliente?.nome || 'Sem nome'}</h1>
               {cliente?.telefone && (
-                <a href={`tel:${cliente.telefone}`} className="text-[11px] text-white/80 hover:underline">
-                  {cliente.telefone}
-                </a>
+                <span className="text-[11px] text-white/80">{cliente.telefone}</span>
               )}
             </div>
-          </div>
+            <span className="text-white/70 text-lg">›</span>
+          </button>
           <span className="inline-block text-[10px] font-bold uppercase tracking-wider bg-white/20 px-2.5 py-1 rounded-full">
             {statusLabel}
           </span>
@@ -259,6 +264,13 @@ export default function ProfissionalAtendimentoDetalheScreen({ id }: { id: strin
       <section className="flex-1 max-w-lg w-full mx-auto bg-white border-x border-gray-100 flex flex-col">
         <ChatAtendimento solicitacaoId={atendimento.id} meuId={meuId} podeEnviar={ativo} />
       </section>
+
+      <PerfilModal
+        perfilId={atendimento.cliente_id}
+        aberto={verPerfilCliente}
+        onFechar={() => setVerPerfilCliente(false)}
+        rotulo="Cliente"
+      />
     </main>
   )
 }

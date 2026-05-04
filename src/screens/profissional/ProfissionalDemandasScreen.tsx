@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { iconeCategoria } from '@/lib/categorias-ui'
 import { formatarRelativoPt } from '@/lib/formatar-data'
+import PerfilModal from '@/screens/perfil/PerfilModal'
 
 type Demanda = {
   id: string
@@ -26,6 +27,7 @@ export default function ProfissionalDemandasScreen() {
   const [busca, setBusca] = useState('')
   const [aviso, setAviso] = useState<{ tipo: 'ok' | 'erro'; texto: string } | null>(null)
   const [userId, setUserId] = useState<string | null>(null)
+  const [perfilAberto, setPerfilAberto] = useState<string | null>(null)
 
   const demandasFiltradas = useMemo(() => {
     const q = busca.trim().toLowerCase()
@@ -214,15 +216,20 @@ export default function ProfissionalDemandasScreen() {
                   <p className="text-sm text-gray-600 leading-relaxed">{d.descricao}</p>
 
                   {cliente && (
-                    <p className="text-xs text-gray-500">
-                      <span className="font-semibold text-gray-700">{cliente.nome}</span>
-                      {cliente.cidade && (
-                        <>
-                          <span className="text-gray-300"> · </span>
-                          {cliente.cidade}
-                        </>
-                      )}
-                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setPerfilAberto(d.cliente_id)}
+                      className="text-left w-full bg-gray-50 hover:bg-gray-100 rounded-xl px-3 py-2 transition-colors"
+                    >
+                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Cliente</p>
+                      <p className="text-sm font-semibold text-gray-800">
+                        {cliente.nome}
+                        {cliente.cidade && (
+                          <span className="text-xs font-normal text-gray-500"> · {cliente.cidade}</span>
+                        )}
+                      </p>
+                      <p className="text-[11px] text-emerald-700 font-semibold mt-0.5">Ver perfil completo ›</p>
+                    </button>
                   )}
 
                   <div className="flex gap-2 pt-1">
@@ -259,6 +266,13 @@ export default function ProfissionalDemandasScreen() {
           </section>
         )}
       </div>
+
+      <PerfilModal
+        perfilId={perfilAberto || ''}
+        aberto={!!perfilAberto}
+        onFechar={() => setPerfilAberto(null)}
+        rotulo="Cliente"
+      />
     </main>
   )
 }
