@@ -45,6 +45,7 @@ export default function SuportePage() {
       voltarHref="/profissional/configuracoes"
       faq={FAQ}
       canais={CANAIS}
+      tema="prestador"
       destaque={{
         titulo: 'Suporte ao prestador',
         descricao: 'Tire dúvidas sobre repasse, disputas e visibilidade. As perguntas mais comuns estão abaixo.',

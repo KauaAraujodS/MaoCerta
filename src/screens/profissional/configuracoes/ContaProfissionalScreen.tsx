@@ -243,8 +243,8 @@ export default function ContaProfissionalScreen() {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 to-white pb-10">
-      <div className="max-w-lg mx-auto px-4 space-y-4">
-      <CabecalhoAjuste titulo="Conta" subtitulo="Edite seus dados pessoais e profissionais" voltarHref="/profissional/configuracoes" />
+      <CabecalhoAjuste titulo="Conta" subtitulo="Edite seus dados pessoais e profissionais" voltarHref="/profissional/configuracoes" tema="prestador" />
+      <div className="max-w-lg mx-auto px-4 -mt-6 space-y-4 relative z-10">
       <section className="rounded-2xl bg-gradient-to-r from-emerald-700 to-teal-600 text-white p-4 shadow-lg border border-emerald-600/30">
         <div className="flex items-center justify-between gap-3">
           <div>

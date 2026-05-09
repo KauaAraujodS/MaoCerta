@@ -23,6 +23,7 @@ type Props = {
     titulo: string
     descricao: string
   }
+  tema?: 'cliente' | 'prestador' | 'admin'
 }
 
 const DESTAQUE_PADRAO = {
@@ -30,13 +31,13 @@ const DESTAQUE_PADRAO = {
   descricao: 'Antes de abrir um chamado, dê uma olhada nas dúvidas mais comuns abaixo.',
 }
 
-export default function SuporteScreen({ voltarHref, faq, canais, destaque = DESTAQUE_PADRAO }: Props) {
+export default function SuporteScreen({ voltarHref, faq, canais, destaque = DESTAQUE_PADRAO, tema = 'cliente' }: Props) {
   const [aberta, setAberta] = useState<number | null>(0)
 
   return (
-    <main className="min-h-screen p-4">
-      <div className="max-w-lg mx-auto space-y-4">
-      <CabecalhoAjuste titulo="Suporte" subtitulo="Central de ajuda e contato" voltarHref={voltarHref} />
+    <main className="min-h-screen pb-10">
+      <CabecalhoAjuste titulo="Suporte" subtitulo="Central de ajuda e contato" voltarHref={voltarHref} tema={tema} />
+      <div className="max-w-lg mx-auto px-4 -mt-6 space-y-4 relative z-10">
 
       <section className="bg-gradient-to-br from-emerald-600 to-teal-500 rounded-3xl p-5 text-white space-y-1">
         <p className="text-xs font-semibold uppercase tracking-wider text-white/70">Precisa de ajuda?</p>

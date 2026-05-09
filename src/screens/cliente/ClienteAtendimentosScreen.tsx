@@ -80,7 +80,7 @@ export default function ClienteAtendimentosScreen() {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-purple-50/40 via-white to-white pb-10">
-      <header className="bg-gradient-to-r from-purple-700 via-indigo-600 to-blue-600 text-white px-4 pt-8 pb-10 rounded-b-[2rem] shadow-lg">
+      <header className="min-h-[200px] flex items-end bg-gradient-to-br from-purple-700 via-indigo-600 to-blue-600 text-white px-4 pt-8 pb-12 rounded-b-[2rem] shadow-lg">
         <div className="max-w-lg mx-auto space-y-2">
           <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/65">Suas contratações</p>
           <h1 className="text-2xl font-bold">Atendimentos</h1>

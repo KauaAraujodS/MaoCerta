@@ -6,6 +6,7 @@ export default function SegurancaPage() {
       voltarHref="/profissional/configuracoes"
       perfilToggleLabel="Perfil visível na busca"
       perfilToggleDescricao="Aparecer nos resultados quando clientes buscarem por sua categoria"
+      tema="prestador"
     />
   )
 }

@@ -88,9 +88,9 @@ export default function PlanoProfissionalScreen() {
   const ehAtual = selecionado === planoAtual
 
   return (
-    <main className="min-h-screen p-4">
-      <div className="max-w-lg mx-auto space-y-4">
-      <CabecalhoAjuste titulo="Plano" subtitulo="Veja seu plano atual e o que cada um oferece" voltarHref="/profissional/configuracoes" />
+    <main className="min-h-screen pb-10">
+      <CabecalhoAjuste titulo="Plano" subtitulo="Veja seu plano atual e o que cada um oferece" voltarHref="/profissional/configuracoes" tema="prestador" />
+      <div className="max-w-lg mx-auto px-4 -mt-6 space-y-4 relative z-10">
 
       <section className={`bg-gradient-to-br ${plano.cor} rounded-3xl p-5 text-white space-y-3`}>
         <div className="flex items-center justify-between">

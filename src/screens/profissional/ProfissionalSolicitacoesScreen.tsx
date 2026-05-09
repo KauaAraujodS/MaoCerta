@@ -61,8 +61,8 @@ export default function ProfissionalSolicitacoesScreen() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-violet-50/40 via-white to-white pb-10">
-      <header className="bg-gradient-to-r from-violet-700 via-indigo-600 to-blue-600 text-white px-4 pt-8 pb-10 rounded-b-[2rem] shadow-lg">
+    <main className="min-h-screen bg-gradient-to-b from-emerald-50/40 via-white to-white pb-10">
+      <header className="min-h-[200px] flex items-end bg-gradient-to-br from-emerald-700 via-teal-600 to-cyan-600 text-white px-4 pt-8 pb-12 rounded-b-[2rem] shadow-lg">
         <div className="max-w-lg mx-auto space-y-2">
           <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/65">Inbox</p>
           <h1 className="text-2xl font-bold">Solicitações recebidas</h1>
@@ -88,7 +88,7 @@ export default function ProfissionalSolicitacoesScreen() {
                 key={item.id}
                 className="bg-white rounded-2xl border border-gray-100 shadow-md overflow-hidden"
               >
-                <div className="h-1 bg-gradient-to-r from-violet-500 via-indigo-500 to-blue-500" />
+                <div className="h-1 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500" />
                 <div className="p-5 space-y-3">
                   <div className="flex flex-wrap items-center gap-2 justify-between">
                     <span

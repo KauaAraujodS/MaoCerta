@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import { iconeCategoria } from '@/lib/categorias-ui'
 import PerfilModal from '@/screens/perfil/PerfilModal'
 import CidadeEstadoSelect from '@/components/CidadeEstadoSelect'
+import { obterLimitesPlano, nomePlano } from '@/lib/plano-limites'
 
 type Categoria = { id: number; nome: string }
 
@@ -205,7 +206,7 @@ export default function ClienteBuscarScreen() {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-purple-50/40 via-white to-white pb-10">
-      <header className="bg-gradient-to-br from-purple-700 via-indigo-600 to-blue-600 text-white px-4 pt-8 pb-10 rounded-b-[2rem] shadow-lg">
+      <header className="min-h-[200px] flex items-end bg-gradient-to-br from-purple-700 via-indigo-600 to-blue-600 text-white px-4 pt-8 pb-12 rounded-b-[2rem] shadow-lg">
         <div className="max-w-lg mx-auto space-y-3">
           <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/65">Encontre o profissional certo</p>
           <h1 className="text-2xl font-bold">Buscar prestadores</h1>
@@ -505,6 +506,25 @@ function SolicitarServicoModal({
       setEnviando(false)
       return
     }
+
+    // RF27 — limite de negociações fora da demanda
+    const { data: meu } = await supabase.from('profiles').select('plano').eq('id', user.id).maybeSingle()
+    const limites = obterLimitesPlano(meu?.plano as string | undefined)
+    const { count } = await supabase
+      .from('solicitacoes')
+      .select('id', { count: 'exact', head: true })
+      .eq('cliente_id', user.id)
+      .is('demanda_origem_id', null)
+      .in('status', ['pendente', 'aceita', 'em_andamento'])
+    if ((count ?? 0) >= limites.maxNegociacoesForaDemanda) {
+      setEnviando(false)
+      setAviso({
+        tipo: 'erro',
+        texto: `Você já tem ${count} negociação(ões) ativa(s) fora de demanda. Limite do plano ${nomePlano(meu?.plano)}: ${limites.maxNegociacoesForaDemanda}.`,
+      })
+      return
+    }
+
     const { error } = await supabase.from('solicitacoes').insert({
       cliente_id: user.id,
       profissional_id: prestador.id,

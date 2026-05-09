@@ -40,6 +40,7 @@ export default function SuportePage() {
       voltarHref="/admin/configuracoes"
       faq={FAQ}
       canais={CANAIS}
+      tema="admin"
       destaque={{
         titulo: 'Procedimentos internos',
         descricao: 'Fluxos padrão de moderação, suspensão e tratamento de incidentes.',

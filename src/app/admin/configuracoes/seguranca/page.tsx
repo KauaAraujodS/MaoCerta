@@ -5,6 +5,7 @@ export default function SegurancaPage() {
     <SegurancaScreen
       voltarHref="/admin/configuracoes"
       mostrarPerfilPublico={false}
+      tema="admin"
     />
   )
 }

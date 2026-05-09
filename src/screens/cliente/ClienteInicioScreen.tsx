@@ -223,7 +223,7 @@ export default function ClienteInicioScreen() {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-100 via-white to-purple-50/40 pb-12">
-      <div className="bg-gradient-to-br from-purple-800 via-indigo-700 to-blue-700 text-white px-4 pt-8 pb-12 rounded-b-[2rem] shadow-xl">
+      <div className="min-h-[200px] flex items-end bg-gradient-to-br from-purple-700 via-indigo-600 to-blue-600 text-white px-4 pt-8 pb-12 rounded-b-[2rem] shadow-lg">
         <div className="max-w-lg mx-auto space-y-4">
           {carregando && (
             <div className="flex items-center gap-4 animate-pulse">

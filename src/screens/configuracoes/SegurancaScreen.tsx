@@ -9,6 +9,7 @@ type Props = {
   perfilToggleLabel?: string
   perfilToggleDescricao?: string
   mostrarPerfilPublico?: boolean
+  tema?: 'cliente' | 'prestador' | 'admin'
 }
 
 export default function SegurancaScreen({
@@ -16,6 +17,7 @@ export default function SegurancaScreen({
   perfilToggleLabel = 'Perfil público',
   perfilToggleDescricao = 'Permitir que outros usuários vejam seu nome e cidade',
   mostrarPerfilPublico = true,
+  tema = 'cliente',
 }: Props) {
   const [autenticacao2FA, setAutenticacao2FA] = useState(false)
   const [notificacoesLogin, setNotificacoesLogin] = useState(true)
@@ -23,9 +25,9 @@ export default function SegurancaScreen({
   const [mostrarTrocaSenha, setMostrarTrocaSenha] = useState(false)
 
   return (
-    <main className="min-h-screen p-4">
-      <div className="max-w-lg mx-auto space-y-4">
-      <CabecalhoAjuste titulo="Privacidade e Segurança" subtitulo="Proteja sua conta e seus dados" voltarHref={voltarHref} />
+    <main className="min-h-screen pb-10">
+      <CabecalhoAjuste titulo="Privacidade e Segurança" subtitulo="Proteja sua conta e seus dados" voltarHref={voltarHref} tema={tema} />
+      <div className="max-w-lg mx-auto px-4 -mt-6 space-y-4 relative z-10">
 
       <section className="bg-white rounded-2xl divide-y divide-gray-100">
         <Toggle

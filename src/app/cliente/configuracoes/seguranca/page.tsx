@@ -6,6 +6,7 @@ export default function SegurancaPage() {
       voltarHref="/cliente/configuracoes"
       perfilToggleLabel="Perfil público"
       perfilToggleDescricao="Permitir que prestadores vejam seu nome e cidade"
+      tema="cliente"
     />
   )
 }

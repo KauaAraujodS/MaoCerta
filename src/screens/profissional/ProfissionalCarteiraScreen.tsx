@@ -115,15 +115,23 @@ export default function ProfissionalCarteiraScreen() {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-emerald-50/40 via-white to-white pb-10">
-      <header className="bg-gradient-to-r from-emerald-700 via-teal-600 to-cyan-600 text-white px-4 pt-8 pb-12 rounded-b-[2rem] shadow-lg">
-        <div className="max-w-lg mx-auto space-y-3">
+      <header className="min-h-[200px] flex items-end bg-gradient-to-br from-emerald-700 via-teal-600 to-cyan-600 text-white px-4 pt-8 pb-12 rounded-b-[2rem] shadow-lg">
+        <div className="max-w-lg mx-auto w-full space-y-2">
           <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/65">Carteira interna</p>
           <h1 className="text-2xl font-bold">Seu saldo</h1>
-          <div className="bg-white/15 rounded-2xl p-4 backdrop-blur-sm">
-            <p className="text-[11px] text-white/70 uppercase tracking-wider">Disponível para saque</p>
-            <p className="text-3xl font-extrabold mt-1">{formatarValor(saldoDisponivel)}</p>
+          <p className="text-sm text-white/85 leading-relaxed">
+            Acompanhe créditos, débitos e solicite saque dos valores recebidos.
+          </p>
+        </div>
+      </header>
+
+      <div className="max-w-lg mx-auto px-4 -mt-6 space-y-4 relative z-10">
+        <section className="bg-white rounded-2xl border border-gray-100 shadow-md p-5 space-y-3">
+          <div>
+            <p className="text-[11px] text-gray-500 uppercase tracking-wider">Disponível para saque</p>
+            <p className="text-3xl font-extrabold text-emerald-700 mt-1">{formatarValor(saldoDisponivel)}</p>
             {totalPendente > 0 && (
-              <p className="text-[11px] text-white/80 mt-1">
+              <p className="text-[11px] text-gray-500 mt-1">
                 {formatarValor(totalPendente)} em saques pendentes
               </p>
             )}
@@ -132,14 +140,12 @@ export default function ProfissionalCarteiraScreen() {
             type="button"
             onClick={() => setMostrarSaque(v => !v)}
             disabled={saldoDisponivel <= 0}
-            className="w-full bg-white text-emerald-700 font-bold py-3 rounded-2xl text-sm hover:bg-emerald-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-emerald-700 text-white font-bold py-3 rounded-2xl text-sm hover:bg-emerald-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {mostrarSaque ? 'Cancelar' : 'Solicitar saque'}
           </button>
-        </div>
-      </header>
+        </section>
 
-      <div className="max-w-lg mx-auto px-4 -mt-6 space-y-4 relative z-10">
         {mostrarSaque && (
           <form onSubmit={enviarSaque} className="bg-white rounded-2xl border border-gray-100 shadow-md p-5 space-y-3">
             <div>

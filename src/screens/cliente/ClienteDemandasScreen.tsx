@@ -8,7 +8,14 @@ import { formatarRelativoPt } from '@/lib/formatar-data'
 import { obterLimitesPlano, nomePlano } from '@/lib/plano-limites'
 
 type Categoria = { id: number; nome: string }
-type Demanda = { id: string; titulo: string; descricao: string; status: string; created_at?: string }
+type Demanda = {
+  id: string
+  titulo: string
+  descricao: string
+  status: string
+  created_at?: string
+  qtdPropostas?: number
+}
 
 const MODELOS_TITULO = [
   'Reforma de banheiro completa',
@@ -34,7 +41,8 @@ export default function ClienteDemandasScreen() {
     () => demandas.filter((d) => d.status === 'aberta' || d.status === 'em_andamento'),
     [demandas],
   )
-  const atingiuLimite = ativas.length >= limites.maxDemandasAtivas
+  const podePublicar = limites.podePublicarDemanda
+  const atingiuLimite = !podePublicar || ativas.length >= limites.maxDemandasAtivas
 
   const categoriasFiltradas = useMemo(() => {
     const q = buscaCat.trim().toLowerCase()
@@ -56,12 +64,21 @@ export default function ClienteDemandasScreen() {
       const [demRes, perfilRes] = await Promise.all([
         supabase
           .from('demandas')
-          .select('id, titulo, descricao, status, created_at')
+          .select('id, titulo, descricao, status, created_at, propostas(count)')
           .eq('cliente_id', auth.user.id)
           .order('created_at', { ascending: false }),
         supabase.from('profiles').select('plano').eq('id', auth.user.id).maybeSingle(),
       ])
-      setDemandas((demRes.data as Demanda[] | null) || [])
+      type DemandaRaw = { id: string; titulo: string; descricao: string; status: string; created_at?: string; propostas?: { count: number }[] }
+      const lista = ((demRes.data as DemandaRaw[] | null) || []).map((d) => ({
+        id: d.id,
+        titulo: d.titulo,
+        descricao: d.descricao,
+        status: d.status,
+        created_at: d.created_at,
+        qtdPropostas: d.propostas?.[0]?.count ?? 0,
+      }))
+      setDemandas(lista)
       setPlano((perfilRes.data?.plano as string) || 'free')
     }
     carregar()
@@ -70,6 +87,10 @@ export default function ClienteDemandasScreen() {
   async function publicarDemanda(e: FormEvent) {
     e.preventDefault()
     if (!titulo.trim() || !descricao.trim() || !categoriaId) return
+    if (!podePublicar) {
+      setAviso(`O plano ${nomePlano(plano)} não permite publicar demandas. Faça upgrade para Básico ou Premium.`)
+      return
+    }
     if (atingiuLimite) {
       setAviso(
         `Seu plano ${nomePlano(plano)} permite até ${limites.maxDemandasAtivas} demanda(s) ativa(s). Conclua, cancele ou faça upgrade.`,
@@ -111,8 +132,8 @@ export default function ClienteDemandasScreen() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-indigo-50/50 via-white to-white pb-10">
-      <header className="bg-gradient-to-r from-indigo-700 via-violet-600 to-fuchsia-600 text-white px-4 pt-8 pb-10 rounded-b-[2rem] shadow-lg">
+    <main className="min-h-screen bg-gradient-to-b from-purple-50/40 via-white to-white pb-10">
+      <header className="min-h-[200px] flex items-end bg-gradient-to-br from-purple-700 via-indigo-600 to-blue-600 text-white px-4 pt-8 pb-12 rounded-b-[2rem] shadow-lg">
         <div className="max-w-lg mx-auto space-y-2">
           <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/65">Cliente</p>
           <h1 className="text-2xl font-bold">Suas demandas</h1>
@@ -123,14 +144,17 @@ export default function ClienteDemandasScreen() {
             <div>
               <p className="text-[10px] uppercase tracking-wider text-white/65">Plano {nomePlano(plano)}</p>
               <p className="text-sm font-bold">
-                {ativas.length} de{' '}
-                {limites.maxDemandasAtivas >= 999 ? '∞' : limites.maxDemandasAtivas} demanda(s) ativa(s)
+                {!podePublicar
+                  ? 'Não publica demanda'
+                  : `${ativas.length} de ${
+                      limites.maxDemandasAtivas >= 999 ? '∞' : limites.maxDemandasAtivas
+                    } demanda(s) ativa(s)`}
               </p>
             </div>
             {atingiuLimite && (
               <Link
                 href="/cliente/configuracoes/plano"
-                className="text-[11px] font-bold bg-white text-indigo-700 px-3 py-1.5 rounded-xl hover:bg-indigo-50"
+                className="text-[11px] font-bold bg-white text-purple-700 px-3 py-1.5 rounded-xl hover:bg-purple-50"
               >
                 Fazer upgrade
               </Link>
@@ -252,9 +276,10 @@ export default function ClienteDemandasScreen() {
           )}
           <ul className="space-y-3">
             {demandas.map((item) => (
-              <li
+              <Link
                 key={item.id}
-                className="rounded-xl border border-gray-100 p-4 bg-gradient-to-br from-white to-slate-50/80"
+                href={`/cliente/demandas/${item.id}`}
+                className="block rounded-xl border border-gray-100 p-4 bg-gradient-to-br from-white to-slate-50/80 hover:border-purple-200 transition-colors"
               >
                 <div className="flex items-start justify-between gap-2">
                   <p className="text-sm font-bold text-gray-900 leading-snug">{item.titulo}</p>
@@ -270,11 +295,16 @@ export default function ClienteDemandasScreen() {
                     {item.status.replace(/_/g, ' ')}
                   </span>
                 </div>
-                <p className="text-sm text-gray-600 mt-2 leading-relaxed">{item.descricao}</p>
-                {item.created_at && (
-                  <p className="text-[11px] text-gray-400 mt-2">{formatarRelativoPt(item.created_at)}</p>
-                )}
-              </li>
+                <p className="text-sm text-gray-600 mt-2 leading-relaxed line-clamp-2">{item.descricao}</p>
+                <div className="flex items-center justify-between gap-2 mt-3">
+                  {item.created_at && (
+                    <p className="text-[11px] text-gray-400">{formatarRelativoPt(item.created_at)}</p>
+                  )}
+                  <span className="text-[11px] font-semibold text-purple-700">
+                    {item.qtdPropostas ?? 0} proposta{(item.qtdPropostas ?? 0) === 1 ? '' : 's'} ›
+                  </span>
+                </div>
+              </Link>
             ))}
           </ul>
         </section>

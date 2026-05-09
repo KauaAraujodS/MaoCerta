@@ -159,7 +159,7 @@ export default function ProfissionalServicosScreen() {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 to-white pb-10">
-      <header className="bg-gradient-to-br from-emerald-800 via-teal-700 to-cyan-800 text-white px-4 pt-8 pb-10 rounded-b-[2rem] shadow-xl">
+      <header className="min-h-[200px] flex items-end bg-gradient-to-br from-emerald-700 via-teal-600 to-cyan-600 text-white px-4 pt-8 pb-12 rounded-b-[2rem] shadow-lg">
         <div className="max-w-lg mx-auto space-y-2">
           <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/60">Seu negócio</p>
           <h1 className="text-2xl font-bold">Categorias e serviços</h1>

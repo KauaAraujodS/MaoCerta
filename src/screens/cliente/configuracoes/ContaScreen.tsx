@@ -219,9 +219,9 @@ export default function ContaScreen() {
   }
 
   return (
-    <main className="min-h-screen p-4">
-      <div className="max-w-lg mx-auto space-y-4">
-      <CabecalhoAjuste titulo="Conta" subtitulo="Edite seus dados pessoais" voltarHref="/cliente/configuracoes" />
+    <main className="min-h-screen pb-10">
+      <CabecalhoAjuste titulo="Conta" subtitulo="Edite seus dados pessoais" voltarHref="/cliente/configuracoes" tema="cliente" />
+      <div className="max-w-lg mx-auto px-4 -mt-6 space-y-4 relative z-10">
 
       <section className="bg-white rounded-2xl p-5 flex flex-col items-center gap-3">
         <div className="relative">

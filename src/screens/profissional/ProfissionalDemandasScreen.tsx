@@ -1,10 +1,10 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { FormEvent, useEffect, useMemo, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { iconeCategoria } from '@/lib/categorias-ui'
 import { formatarRelativoPt } from '@/lib/formatar-data'
+import { obterLimitesPlano, nomePlano } from '@/lib/plano-limites'
 import PerfilModal from '@/screens/perfil/PerfilModal'
 
 type Demanda = {
@@ -20,7 +20,6 @@ type Demanda = {
 }
 
 export default function ProfissionalDemandasScreen() {
-  const router = useRouter()
   const [demandas, setDemandas] = useState<Demanda[]>([])
   const [carregando, setCarregando] = useState(true)
   const [acaoEmCurso, setAcaoEmCurso] = useState<string | null>(null)
@@ -28,6 +27,16 @@ export default function ProfissionalDemandasScreen() {
   const [aviso, setAviso] = useState<{ tipo: 'ok' | 'erro'; texto: string } | null>(null)
   const [userId, setUserId] = useState<string | null>(null)
   const [perfilAberto, setPerfilAberto] = useState<string | null>(null)
+  const [plano, setPlano] = useState<string>('free')
+  const [propostasAtivas, setPropostasAtivas] = useState(0)
+  const [demandaForm, setDemandaForm] = useState<string | null>(null)
+  const [formMensagem, setFormMensagem] = useState('')
+  const [formValor, setFormValor] = useState('')
+  const [formPrazo, setFormPrazo] = useState('')
+
+  const limites = useMemo(() => obterLimitesPlano(plano), [plano])
+  const podeEnviar = limites.podeEnviarPropostas
+  const limitePropostasAtingido = propostasAtivas >= limites.maxPropostasSimultaneasPrestador
 
   const demandasFiltradas = useMemo(() => {
     const q = busca.trim().toLowerCase()
@@ -60,18 +69,31 @@ export default function ProfissionalDemandasScreen() {
     }
     setUserId(user.id)
 
-    const [recusasRes, aceitasRes] = await Promise.all([
+    const [recusasRes, aceitasRes, propostasRes, perfilRes] = await Promise.all([
       supabase.from('demanda_recusas').select('demanda_id').eq('profissional_id', user.id),
       supabase
         .from('solicitacoes')
         .select('demanda_origem_id')
         .eq('profissional_id', user.id)
         .not('demanda_origem_id', 'is', null),
+      supabase
+        .from('propostas')
+        .select('demanda_id, status')
+        .eq('profissional_id', user.id),
+      supabase.from('profiles').select('plano').eq('id', user.id).maybeSingle(),
     ])
+
+    setPlano((perfilRes.data?.plano as string) || 'free')
+
+    const propostasMinhas = (propostasRes.data as { demanda_id: string; status: string }[] | null) || []
+    const propostasIds = new Set(propostasMinhas.map((p) => p.demanda_id))
+    const ativas = propostasMinhas.filter((p) => p.status === 'pendente' || p.status === 'aceita').length
+    setPropostasAtivas(ativas)
 
     const idsExcluidos = new Set<string>([
       ...(recusasRes.data?.map((r: { demanda_id: string }) => r.demanda_id) || []),
       ...(aceitasRes.data?.map((a: { demanda_origem_id: string }) => a.demanda_origem_id) || []),
+      ...propostasIds,
     ])
 
     const { data, error } = await supabase
@@ -95,32 +117,63 @@ export default function ProfissionalDemandasScreen() {
     setCarregando(false)
   }
 
-  async function aceitar(demanda: Demanda) {
-    if (!userId) return
-    setAcaoEmCurso(demanda.id)
+  function abrirFormulario(demanda: Demanda) {
+    setDemandaForm(demanda.id)
+    setFormMensagem('')
+    setFormValor('')
+    setFormPrazo('')
     setAviso(null)
-    const supabase = createClient()
+  }
 
-    const { error } = await supabase.from('solicitacoes').insert({
-      cliente_id: demanda.cliente_id,
+  function fecharFormulario() {
+    setDemandaForm(null)
+    setFormMensagem('')
+    setFormValor('')
+    setFormPrazo('')
+  }
+
+  async function enviarProposta(e: FormEvent, demanda: Demanda) {
+    e.preventDefault()
+    if (!userId) return
+    if (!podeEnviar) {
+      setAviso({ tipo: 'erro', texto: `O plano ${nomePlano(plano)} não permite enviar propostas.` })
+      return
+    }
+    if (limitePropostasAtingido) {
+      setAviso({
+        tipo: 'erro',
+        texto: `Você já tem ${propostasAtivas} proposta(s) ativa(s). Limite do plano ${nomePlano(plano)}: ${limites.maxPropostasSimultaneasPrestador}.`,
+      })
+      return
+    }
+    const valor = Number(formValor.replace(',', '.'))
+    if (!formMensagem.trim() || !valor || valor <= 0 || !formPrazo.trim()) {
+      setAviso({ tipo: 'erro', texto: 'Preencha mensagem, valor (>0) e prazo.' })
+      return
+    }
+
+    setAcaoEmCurso(demanda.id)
+    const supabase = createClient()
+    const { error } = await supabase.from('propostas').insert({
+      demanda_id: demanda.id,
       profissional_id: userId,
-      titulo: demanda.titulo,
-      descricao: demanda.descricao,
-      status: 'aceita',
-      demanda_origem_id: demanda.id,
+      mensagem: formMensagem.trim(),
+      valor_proposto: valor,
+      prazo: formPrazo.trim(),
     })
 
     setAcaoEmCurso(null)
 
     if (error) {
-      console.error('[aceitar] insert solicitacao', error)
-      setAviso({ tipo: 'erro', texto: `Não foi possível aceitar: ${error.message}` })
+      console.error('[enviarProposta] insert', error)
+      setAviso({ tipo: 'erro', texto: `Não foi possível enviar: ${error.message}` })
       return
     }
 
     setDemandas((atual) => atual.filter((d) => d.id !== demanda.id))
-    setAviso({ tipo: 'ok', texto: 'Demanda aceita. Encontre o atendimento na aba Atendimentos.' })
-    setTimeout(() => router.push('/profissional/atendimentos'), 900)
+    setPropostasAtivas((n) => n + 1)
+    fecharFormulario()
+    setAviso({ tipo: 'ok', texto: 'Proposta enviada. O cliente será notificado.' })
   }
 
   async function recusar(demanda: Demanda) {
@@ -147,13 +200,19 @@ export default function ProfissionalDemandasScreen() {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-emerald-50/30 pb-10">
-      <div className="bg-gradient-to-r from-emerald-700 via-teal-600 to-cyan-700 text-white px-4 pt-8 pb-10 rounded-b-[2rem] shadow-lg">
+      <div className="min-h-[200px] flex items-end bg-gradient-to-br from-emerald-700 via-teal-600 to-cyan-600 text-white px-4 pt-8 pb-12 rounded-b-[2rem] shadow-lg">
         <div className="max-w-lg mx-auto space-y-3">
           <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/70">Marketplace</p>
           <h1 className="text-2xl font-bold leading-tight">Demandas públicas</h1>
           <p className="text-sm text-white/85 leading-relaxed">
-            Pedidos abertos por clientes. Aceite para abrir um atendimento e conversar com o cliente, ou recuse para ocultar da sua lista.
+            Pedidos abertos por clientes. Envie sua proposta com valor e prazo — o cliente compara e escolhe um prestador.
           </p>
+          <div className="bg-white/15 rounded-2xl px-3 py-2 text-xs">
+            <span className="font-semibold">Plano {nomePlano(plano)}:</span>{' '}
+            {podeEnviar
+              ? `${propostasAtivas} de ${limites.maxPropostasSimultaneasPrestador} proposta(s) ativa(s)`
+              : 'não envia propostas'}
+          </div>
           <div className="relative pt-1">
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/50 text-sm">🔎</span>
             <input
@@ -232,24 +291,80 @@ export default function ProfissionalDemandasScreen() {
                     </button>
                   )}
 
-                  <div className="flex gap-2 pt-1">
-                    <button
-                      type="button"
-                      onClick={() => aceitar(d)}
-                      disabled={acaoCarregando}
-                      className="flex-1 min-w-[120px] text-sm font-semibold bg-emerald-600 text-white py-2.5 rounded-xl hover:bg-emerald-700 disabled:opacity-50 transition-colors"
-                    >
-                      {acaoCarregando ? 'Aceitando...' : 'Aceitar demanda'}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => recusar(d)}
-                      disabled={acaoCarregando}
-                      className="flex-1 min-w-[120px] text-sm font-semibold bg-white border border-gray-200 text-gray-700 py-2.5 rounded-xl hover:bg-gray-50 disabled:opacity-50"
-                    >
-                      Recusar
-                    </button>
-                  </div>
+                  {demandaForm !== d.id && (
+                    <div className="flex gap-2 pt-1">
+                      <button
+                        type="button"
+                        onClick={() => abrirFormulario(d)}
+                        disabled={acaoCarregando || !podeEnviar || limitePropostasAtingido}
+                        className="flex-1 min-w-[120px] text-sm font-semibold bg-emerald-600 text-white py-2.5 rounded-xl hover:bg-emerald-700 disabled:opacity-50 transition-colors"
+                      >
+                        {!podeEnviar
+                          ? 'Plano não envia propostas'
+                          : limitePropostasAtingido
+                            ? 'Limite de propostas atingido'
+                            : 'Enviar proposta'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => recusar(d)}
+                        disabled={acaoCarregando}
+                        className="flex-1 min-w-[120px] text-sm font-semibold bg-white border border-gray-200 text-gray-700 py-2.5 rounded-xl hover:bg-gray-50 disabled:opacity-50"
+                      >
+                        Recusar
+                      </button>
+                    </div>
+                  )}
+
+                  {demandaForm === d.id && (
+                    <form onSubmit={(e) => enviarProposta(e, d)} className="space-y-2 pt-2 border-t border-gray-100">
+                      <p className="text-xs font-bold text-gray-500 uppercase tracking-wide">Sua proposta</p>
+                      <textarea
+                        value={formMensagem}
+                        onChange={(e) => setFormMensagem(e.target.value)}
+                        placeholder="Como você executaria o serviço, materiais e disponibilidade"
+                        rows={3}
+                        required
+                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30 resize-none"
+                      />
+                      <div className="grid grid-cols-2 gap-2">
+                        <input
+                          type="text"
+                          inputMode="decimal"
+                          value={formValor}
+                          onChange={(e) => setFormValor(e.target.value)}
+                          placeholder="Valor (R$)"
+                          required
+                          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-sm"
+                        />
+                        <input
+                          type="text"
+                          value={formPrazo}
+                          onChange={(e) => setFormPrazo(e.target.value)}
+                          placeholder="Prazo (ex.: 3 dias)"
+                          required
+                          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-sm"
+                        />
+                      </div>
+                      <div className="flex gap-2">
+                        <button
+                          type="submit"
+                          disabled={acaoCarregando}
+                          className="flex-1 bg-emerald-600 text-white font-semibold py-2.5 rounded-xl text-sm hover:bg-emerald-700 disabled:opacity-50"
+                        >
+                          {acaoCarregando ? 'Enviando...' : 'Enviar proposta'}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={fecharFormulario}
+                          disabled={acaoCarregando}
+                          className="px-3 bg-white border border-gray-200 text-gray-700 font-semibold rounded-xl text-sm hover:bg-gray-50"
+                        >
+                          Cancelar
+                        </button>
+                      </div>
+                    </form>
+                  )}
                 </div>
               </article>
             )

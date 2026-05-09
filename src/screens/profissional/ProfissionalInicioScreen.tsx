@@ -189,7 +189,7 @@ export default function ProfissionalInicioScreen() {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-100 via-white to-emerald-50/40 pb-12">
-      <div className="bg-gradient-to-br from-emerald-800 via-teal-700 to-cyan-800 text-white px-4 pt-8 pb-12 rounded-b-[2rem] shadow-xl">
+      <div className="min-h-[200px] flex items-end bg-gradient-to-br from-emerald-700 via-teal-600 to-cyan-600 text-white px-4 pt-8 pb-12 rounded-b-[2rem] shadow-lg">
         <div className="max-w-lg mx-auto">
           {carregando && (
             <div className="flex items-center gap-4 animate-pulse">
