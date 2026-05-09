@@ -34,7 +34,8 @@ export default function SuporteScreen({ voltarHref, faq, canais, destaque = DEST
   const [aberta, setAberta] = useState<number | null>(0)
 
   return (
-    <main className="p-4 space-y-4">
+    <main className="min-h-screen p-4">
+      <div className="max-w-lg mx-auto space-y-4">
       <CabecalhoAjuste titulo="Suporte" subtitulo="Central de ajuda e contato" voltarHref={voltarHref} />
 
       <section className="bg-gradient-to-br from-emerald-600 to-teal-500 rounded-3xl p-5 text-white space-y-1">
@@ -85,6 +86,7 @@ export default function SuporteScreen({ voltarHref, faq, canais, destaque = DEST
       <p className="text-[11px] text-gray-400 text-center px-6 pb-2">
         Versão 0.1 · MãoCerta © 2026
       </p>
+      </div>
     </main>
   )
 }

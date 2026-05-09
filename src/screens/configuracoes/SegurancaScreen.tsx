@@ -23,7 +23,8 @@ export default function SegurancaScreen({
   const [mostrarTrocaSenha, setMostrarTrocaSenha] = useState(false)
 
   return (
-    <main className="p-4 space-y-4">
+    <main className="min-h-screen p-4">
+      <div className="max-w-lg mx-auto space-y-4">
       <CabecalhoAjuste titulo="Privacidade e Segurança" subtitulo="Proteja sua conta e seus dados" voltarHref={voltarHref} />
 
       <section className="bg-white rounded-2xl divide-y divide-gray-100">
@@ -107,6 +108,7 @@ export default function SegurancaScreen({
           Solicitar exclusão
         </button>
       </section>
+      </div>
     </main>
   )
 }

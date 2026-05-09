@@ -24,7 +24,8 @@ export default function ReputacaoScreen() {
   const semHistorico = METRICAS.totalAvaliacoes === 0
 
   return (
-    <main className="p-4 space-y-4">
+    <main className="min-h-screen p-4">
+      <div className="max-w-lg mx-auto space-y-4">
       <CabecalhoAjuste titulo="Reputação" subtitulo="Como prestadores enxergam você" voltarHref="/cliente/configuracoes" />
 
       <section className="bg-gradient-to-br from-amber-500 via-orange-500 to-rose-500 rounded-3xl p-5 text-white">
@@ -91,6 +92,7 @@ export default function ReputacaoScreen() {
           <li>Avalie cada atendimento concluído</li>
         </ul>
       </section>
+      </div>
     </main>
   )
 }

@@ -83,7 +83,8 @@ export default function PlanoScreen() {
   const ehAtual = selecionado === planoAtual
 
   return (
-    <main className="p-4 space-y-4">
+    <main className="min-h-screen p-4">
+      <div className="max-w-lg mx-auto space-y-4">
       <CabecalhoAjuste titulo="Plano" subtitulo="Veja seu plano atual e o que cada um oferece" voltarHref="/cliente/configuracoes" />
 
       <section className={`bg-gradient-to-br ${plano.cor} rounded-3xl p-5 text-white space-y-3`}>
@@ -176,6 +177,7 @@ export default function PlanoScreen() {
       <p className="text-[11px] text-gray-400 text-center px-6">
         Cobrança via Pix ou cartão dentro da plataforma. Sem taxa de cancelamento.
       </p>
+      </div>
     </main>
   )
 }

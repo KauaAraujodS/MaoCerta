@@ -219,7 +219,8 @@ export default function ContaScreen() {
   }
 
   return (
-    <main className="p-4 space-y-4">
+    <main className="min-h-screen p-4">
+      <div className="max-w-lg mx-auto space-y-4">
       <CabecalhoAjuste titulo="Conta" subtitulo="Edite seus dados pessoais" voltarHref="/cliente/configuracoes" />
 
       <section className="bg-white rounded-2xl p-5 flex flex-col items-center gap-3">
@@ -329,6 +330,7 @@ export default function ContaScreen() {
           {salvando ? 'Salvando...' : 'Salvar alterações'}
         </button>
       </form>
+      </div>
     </main>
   )
 }
