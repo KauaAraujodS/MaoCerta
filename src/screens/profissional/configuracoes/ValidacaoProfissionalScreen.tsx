@@ -89,7 +89,8 @@ export default function ValidacaoProfissionalScreen() {
   }
 
   return (
-    <main className="p-4 space-y-4">
+    <main className="min-h-screen p-4">
+      <div className="max-w-lg mx-auto space-y-4">
       <CabecalhoAjuste
         titulo="Validação de documentos"
         subtitulo="Envie seus documentos para liberar selo verificado"
@@ -133,6 +134,7 @@ export default function ValidacaoProfissionalScreen() {
       </section>
 
       {aviso && <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-xl p-3">{aviso}</p>}
+      </div>
     </main>
   )
 }

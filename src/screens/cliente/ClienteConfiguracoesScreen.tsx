@@ -106,7 +106,8 @@ export default function ClienteConfiguracoesScreen() {
   }
 
   return (
-    <main className="p-4 space-y-4">
+    <main className="min-h-screen p-4">
+      <div className="max-w-lg mx-auto space-y-4">
       <h1 className="text-2xl font-bold text-gray-900 px-2 pt-2">Ajustes</h1>
 
       {/* Card de perfil */}
@@ -165,6 +166,7 @@ export default function ClienteConfiguracoesScreen() {
       >
         <span>↪</span> Sair da conta
       </button>
+      </div>
     </main>
   )
 }
