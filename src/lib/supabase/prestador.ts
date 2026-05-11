@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/client'
+import { Etapa, AgendamentoProposta, CancelamentoEtapa } from '@/types'
 
 export type StatusAtendimento = 'aceita' | 'em_andamento' | 'concluida' | 'cancelada'
 
@@ -129,5 +130,223 @@ export const prestadorService = {
       .update({ status: 'cancelado' })
       .eq('id', id)
     if (error) throw error
+  },
+
+  // ========================================================================
+  // RF30-RF38: Gerenciamento de Etapas
+  // ========================================================================
+
+  async getEtapasAtendimento(solicitacaoId: string): Promise<Etapa[]> {
+    const { data, error } = await createClient()
+      .from('etapas_atendimento')
+      .select('*')
+      .eq('solicitacao_id', solicitacaoId)
+      .order('sequencia', { ascending: true })
+    if (error) throw error
+    return (data as Etapa[]) || []
+  },
+
+  async getEtapaDetalhes(etapaId: string): Promise<Etapa | null> {
+    const { data, error } = await createClient()
+      .from('etapas_atendimento')
+      .select('*')
+      .eq('id', etapaId)
+      .maybeSingle()
+    if (error) throw error
+    return (data as Etapa) || null
+  },
+
+  async atualizarStatusEtapa(etapaId: string, novoStatus: Etapa['status'], notas?: string) {
+    const update: Record<string, any> = { 
+      status: novoStatus,
+      updated_at: new Date().toISOString()
+    }
+    if (notas) update.notas_conclusao = notas
+    
+    const { error } = await createClient()
+      .from('etapas_atendimento')
+      .update(update)
+      .eq('id', etapaId)
+    if (error) throw error
+  },
+
+  async iniciarEtapa(etapaId: string, notas?: string) {
+    const { error } = await createClient()
+      .from('etapas_atendimento')
+      .update({
+        status: 'em_progresso',
+        notas_inicial: notas || null,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', etapaId)
+    if (error) throw error
+  },
+
+  async concluirEtapa(etapaId: string, notas?: string) {
+    const { error } = await createClient()
+      .from('etapas_atendimento')
+      .update({
+        status: 'concluida',
+        notas_conclusao: notas || null,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', etapaId)
+    if (error) throw error
+  },
+
+  async confirmarEtapaCliente(etapaId: string) {
+    const { error } = await createClient()
+      .from('etapas_atendimento')
+      .update({
+        cliente_confirmou: true,
+        data_confirmacao_cliente: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', etapaId)
+    if (error) throw error
+  },
+
+  async confirmarEtapaProfissional(etapaId: string) {
+    const { error } = await createClient()
+      .from('etapas_atendimento')
+      .update({
+        profissional_confirmou: true,
+        data_confirmacao_profissional: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', etapaId)
+    if (error) throw error
+  },
+
+  // RF36: Proposta de data/horário
+  async propostaAgendamento(
+    etapaId: string,
+    solicitacaoId: string,
+    dataProposta: string,
+    horaProposta: string,
+    propostoPor: string
+  ): Promise<string> {
+    const { data, error } = await createClient()
+      .from('agendamento_propostas')
+      .insert({
+        etapa_id: etapaId,
+        solicitacao_id: solicitacaoId,
+        data_proposta: dataProposta,
+        hora_proposta: horaProposta,
+        proposto_por: propostoPor,
+        status: 'proposto_prestador'
+      })
+      .select('id')
+      .single()
+    if (error) throw error
+    return data?.id || ''
+  },
+
+  async getAgendamentoPropostas(etapaId: string): Promise<AgendamentoProposta[]> {
+    const { data, error } = await createClient()
+      .from('agendamento_propostas')
+      .select('*')
+      .eq('etapa_id', etapaId)
+      .order('created_at', { ascending: false })
+    if (error) throw error
+    return (data as AgendamentoProposta[]) || []
+  },
+
+  // RF37: Aceite mútuo de agendamento
+  async aceitarAgendamento(agendamentoId: string, respondidoPor: string) {
+    const supabase = createClient()
+    
+    // Pega a proposta atual
+    const { data: proposta, error: erroGet } = await supabase
+      .from('agendamento_propostas')
+      .select('*')
+      .eq('id', agendamentoId)
+      .maybeSingle()
+    
+    if (erroGet) throw erroGet
+    if (!proposta) throw new Error('Proposta não encontrada')
+
+    // Se ainda não foi respondida, marca como proposto pelo outro lado
+    const novoStatus = proposta.status === 'proposto_prestador' 
+      ? 'proposto_cliente'
+      : proposta.status === 'proposto_cliente'
+        ? 'aceito_ambos'
+        : proposta.status
+
+    const { error } = await supabase
+      .from('agendamento_propostas')
+      .update({
+        status: novoStatus,
+        respondido_por: respondidoPor,
+        resposta_em: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', agendamentoId)
+    if (error) throw error
+  },
+
+  async rejeitarAgendamento(agendamentoId: string, respondidoPor: string, motivo?: string) {
+    const { error } = await createClient()
+      .from('agendamento_propostas')
+      .update({
+        status: 'rejeitado',
+        respondido_por: respondidoPor,
+        resposta_em: new Date().toISOString(),
+        motivo_rejeicao: motivo || null,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', agendamentoId)
+    if (error) throw error
+  },
+
+  async cancelarAgendamento(agendamentoId: string, respondidoPor: string) {
+    const { error } = await createClient()
+      .from('agendamento_propostas')
+      .update({
+        status: 'cancelado',
+        respondido_por: respondidoPor,
+        resposta_em: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', agendamentoId)
+    if (error) throw error
+  },
+
+  // RF38: Registrar cancelamentos durante o fluxo
+  async cancelarEtapa(etapaId: string, solicitacaoId: string, canceladoPor: string, motivo?: string): Promise<string> {
+    const supabase = createClient()
+    
+    // Marca etapa como cancelada
+    const { error: erroUpdate } = await supabase
+      .from('etapas_atendimento')
+      .update({
+        status: 'cancelada',
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', etapaId)
+    if (erroUpdate) throw erroUpdate
+
+    // Registra motivo do cancelamento
+    const { data, error: erroInsert } = await supabase
+      .from('cancelamento_etapas')
+      .insert({
+        etapa_id: etapaId,
+        solicitacao_id: solicitacaoId,
+        cancelado_por: canceladoPor,
+        motivo: motivo || null
+      })
+      .select('id')
+      .single()
+    if (erroInsert) throw erroInsert
+    return data?.id || ''
+  },
+
+  async getCancelamentosEtapa(etapaId: string): Promise<CancelamentoEtapa[]> {
+    const { data, error } = await createClient()
+      .from('cancelamento_etapas')
+      .select('*')
+      .eq('etapa_id', etapaId)
+    if (error) throw error
+    return (data as CancelamentoEtapa[]) || []
   },
 }

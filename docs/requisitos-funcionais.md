@@ -1,29 +1,28 @@
-# Requisitos funcionais
+## Requisitos Funcionais - Prestador de Serviços
 
-## Prestador de serviços
+### Atendimentos
+**RF-P01** – Acompanhamento de Atendimentos em Andamento  ###Kauã
+O sistema deve permitir que o prestador acompanhe seus atendimentos em andamento, incluindo status, detalhes do serviço e informações do cliente.
 
-### RF-15 — Acompanhar atendimentos em andamento - # Kauã Puttin
+### Carteira Financeira
+**RF-P02** – Visualização de Carteira  ###Kauã
+O sistema deve permitir que o prestador visualize o saldo disponível em sua carteira interna e o histórico completo de movimentações financeiras (créditos e débitos).
 
-O sistema deve permitir que o prestador acompanhe seus atendimentos em andamento, incluindo:
+**RF-P03** – Solicitação de Saque  ###Kauã
+O sistema deve permitir que o prestador solicite saque dos valores recebidos, com registro do status da solicitação (Pendente, Processado, Cancelado).
 
-- status do atendimento;
-- detalhes do serviço (ex.: categoria, descrição, data/horário, local);
-- informações do cliente (ex.: nome e formas de contato disponibilizadas no atendimento).
+## Requisitos Funcionais - Cliente
 
-### RF-16 — Visualizar carteira interna (saldo e histórico) - # Kauã Puttin
+**RF-C01** – Busca de Prestadores com Filtros  ###Kauã
+O sistema deve permitir que o cliente busque prestadores utilizando filtros por categoria de serviço e localização (cidade/bairro), exibindo resultados ordenados por relevância, avaliação ou distância.
 
-O sistema deve permitir que o prestador visualize:
+**RF-C02** – Visualização de Perfil do Prestador  ###Kauã
+O sistema deve permitir que o cliente visualize o perfil completo de um prestador, incluindo:
+- Informações pessoais (nome, foto, descrição)
+- Reputação (nota média)
+- Avaliações de outros clientes (comentários + nota)
+- Status de verificação da conta
+- Serviços oferecidos e valores
 
-- o saldo disponível na carteira interna;
-- o histórico de movimentações financeiras, discriminando créditos e débitos (com data/hora, valor, tipo e referência/descrição da origem).
-
-### RF-17 — Solicitar saque e acompanhar status - # Kauã Puttin
-
-O sistema deve permitir que o prestador solicite saque dos valores recebidos.
-
-O sistema deve registrar e disponibilizar ao prestador o status de cada solicitação de saque, com os seguintes estados:
-
-- pendente;
-- processado;
-- cancelado.
-
+**RF-C03** – Contratação Direta de Prestador  ###Kauã
+O sistema deve permitir que o cliente contrate um prestador diretamente pela plataforma, registrando um novo atendimento com status inicial "agendado", incluindo data, horário, endereço e valor combinado.

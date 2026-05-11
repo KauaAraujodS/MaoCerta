@@ -8,6 +8,7 @@ import { prestadorService } from '@/lib/supabase/prestador'
 import { formatarDataPt } from '@/lib/formatar-data'
 import ChatAtendimento from '@/screens/atendimento/ChatAtendimento'
 import PerfilModal from '@/screens/perfil/PerfilModal'
+import GerenciadorEtapas from '@/components/etapas/GerenciadorEtapas'
 
 type Atendimento = {
   id: string
@@ -261,7 +262,23 @@ export default function ProfissionalAtendimentoDetalheScreen({ id }: { id: strin
         <p className="text-xs text-red-700 bg-red-50 border-b border-red-100 px-4 py-2 text-center">{erro}</p>
       )}
 
+      {/* Seção de Etapas */}
+      <section className="bg-white border-b border-gray-100 px-4 py-4">
+        <div className="max-w-lg mx-auto space-y-3">
+          <p className="text-xs font-bold text-gray-500 uppercase tracking-wide">📋 Etapas do Atendimento</p>
+          <GerenciadorEtapas
+            solicitacaoId={atendimento.id}
+            meuId={meuId}
+            meuTipo="profissional"
+            solicitacaoStatus={atendimento.status}
+          />
+        </div>
+      </section>
+
       <section className="flex-1 max-w-lg w-full mx-auto bg-white border-x border-gray-100 flex flex-col">
+        <div className="px-4 py-3 border-b border-gray-100">
+          <p className="text-xs font-bold text-gray-500 uppercase tracking-wide">💬 Chat</p>
+        </div>
         <ChatAtendimento solicitacaoId={atendimento.id} meuId={meuId} podeEnviar={ativo} />
       </section>
 
