@@ -32,6 +32,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# segredos locais (copie de scripts/secrets.ps1.example)
+scripts/secrets.ps1
+
 # claude code (configuração local da ferramenta)
 .claude
 

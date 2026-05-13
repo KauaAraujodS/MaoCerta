@@ -10,6 +10,7 @@ import ChatAtendimento from '@/screens/atendimento/ChatAtendimento'
 import PerfilModal from '@/screens/perfil/PerfilModal'
 import GerenciadorEtapas from '@/components/etapas/GerenciadorEtapas'
 import ValorServicoCard from '@/components/financeiro/ValorServicoCard'
+import AtendimentoContextoSidebar from '@/components/atendimento/AtendimentoContextoSidebar'
 
 type Atendimento = {
   id: string
@@ -154,7 +155,7 @@ export default function ProfissionalAtendimentoDetalheScreen({ id }: { id: strin
           : 'Cancelado'
 
   return (
-    <main className="min-h-screen bg-gray-50 flex flex-col">
+    <main className="min-h-screen bg-gray-50 dark:bg-slate-950 flex flex-col">
       <header className="bg-gradient-to-r from-emerald-700 via-teal-600 to-cyan-700 text-white px-4 pt-6 pb-5 shadow-lg">
         <div className="max-w-lg mx-auto space-y-3">
           <Link
@@ -191,12 +192,14 @@ export default function ProfissionalAtendimentoDetalheScreen({ id }: { id: strin
         </div>
       </header>
 
-      <section className="bg-white border-b border-gray-100 px-4 py-4">
-        <div className="max-w-lg mx-auto space-y-2">
+      <div className="flex-1 w-full max-w-6xl mx-auto px-4 grid lg:grid-cols-[minmax(0,28rem)_288px] gap-6 pb-8 items-start">
+        <div className="w-full min-w-0">
+      <section className="bg-white dark:bg-slate-900/80 border-b border-gray-100 dark:border-slate-800 px-4 py-4">
+        <div className="w-full space-y-2">
           <p className="text-xs font-bold text-gray-500 uppercase tracking-wide">Detalhes</p>
-          <h2 className="text-base font-bold text-gray-900">{atendimento.titulo}</h2>
-          <p className="text-sm text-gray-600 leading-relaxed">{atendimento.descricao}</p>
-          <p className="text-[11px] text-gray-400">Aberto em {formatarDataPt(atendimento.created_at)}</p>
+          <h2 className="text-base font-bold text-gray-900 dark:text-slate-100">{atendimento.titulo}</h2>
+          <p className="text-sm text-gray-600 dark:text-slate-300 leading-relaxed">{atendimento.descricao}</p>
+          <p className="text-[11px] text-gray-400 dark:text-slate-500">Aberto em {formatarDataPt(atendimento.created_at)}</p>
 
           {ativo && (
             <div className="flex flex-wrap gap-2 pt-2">
@@ -234,8 +237,8 @@ export default function ProfissionalAtendimentoDetalheScreen({ id }: { id: strin
       </section>
 
       {confirmandoCancelamento && (
-        <section className="bg-amber-50 border-b border-amber-200 px-4 py-4">
-          <div className="max-w-lg mx-auto space-y-3">
+        <section className="bg-amber-50 dark:bg-amber-950/30 border-b border-amber-200 dark:border-amber-900 px-4 py-4">
+          <div className="w-full space-y-3">
             <p className="text-sm text-amber-900">
               Tem certeza? {atendimento.demanda_origem_id ? 'A demanda volta a aparecer pra outros prestadores.' : ''}
             </p>
@@ -265,8 +268,8 @@ export default function ProfissionalAtendimentoDetalheScreen({ id }: { id: strin
         <p className="text-xs text-red-700 bg-red-50 border-b border-red-100 px-4 py-2 text-center">{erro}</p>
       )}
 
-      <section className="bg-emerald-50/40 border-b border-emerald-100 px-4 py-4">
-        <div className="max-w-lg mx-auto space-y-3">
+      <section className="bg-emerald-50/40 dark:bg-emerald-950/20 border-b border-emerald-100 dark:border-emerald-900 px-4 py-4">
+        <div className="w-full space-y-3">
           <p className="text-[11px] text-emerald-950/90 leading-relaxed rounded-xl border border-emerald-200 bg-white/90 px-3 py-2.5">
             <strong>Repasse seguro:</strong> o cliente paga por Pix na plataforma; o valor só entra na sua carteira após
             as confirmações da etapa. Não peça Pix fora da MaoCerta (RN18).
@@ -286,8 +289,8 @@ export default function ProfissionalAtendimentoDetalheScreen({ id }: { id: strin
       </section>
 
       {/* Seção de Etapas */}
-      <section className="bg-white border-b border-gray-100 px-4 py-4">
-        <div className="max-w-lg mx-auto space-y-3">
+      <section className="bg-white dark:bg-slate-900/80 border-b border-gray-100 dark:border-slate-800 px-4 py-4">
+        <div className="w-full space-y-3">
           <p className="text-xs font-bold text-gray-500 uppercase tracking-wide">📋 Etapas do Atendimento</p>
           <GerenciadorEtapas
             solicitacaoId={atendimento.id}
@@ -299,12 +302,26 @@ export default function ProfissionalAtendimentoDetalheScreen({ id }: { id: strin
         </div>
       </section>
 
-      <section className="flex-1 max-w-lg w-full mx-auto bg-white border-x border-gray-100 flex flex-col">
-        <div className="px-4 py-3 border-b border-gray-100">
+      <section className="flex-1 w-full mx-auto bg-white dark:bg-slate-900/80 border-x border-gray-100 dark:border-slate-800 flex flex-col">
+        <div className="px-4 py-3 border-b border-gray-100 dark:border-slate-800">
           <p className="text-xs font-bold text-gray-500 uppercase tracking-wide">💬 Chat</p>
         </div>
         <ChatAtendimento solicitacaoId={atendimento.id} meuId={meuId} podeEnviar={ativo} />
       </section>
+        </div>
+
+        <aside className="hidden lg:block lg:sticky lg:top-14 self-start pt-4">
+          <AtendimentoContextoSidebar
+            titulo={atendimento.titulo}
+            descricao={atendimento.descricao}
+            statusLabel={statusLabel}
+            criadoEm={atendimento.created_at}
+            valorTotal={atendimento.valor_total_servico ?? null}
+            outroPapel="cliente"
+            outroNome={cliente?.nome || '—'}
+          />
+        </aside>
+      </div>
 
       <PerfilModal
         perfilId={atendimento.cliente_id}

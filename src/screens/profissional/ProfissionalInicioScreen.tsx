@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { nomePlano } from '@/lib/plano-limites'
+import OnboardingChecklist from '@/components/onboarding/OnboardingChecklist'
 
 type Resumo = {
   userId: string | null
@@ -20,6 +21,7 @@ type Resumo = {
   nDemandasAbertas: number
   nAtendimentosAtivos: number
   saldoCarteira: number
+  valorEmEscrow: number
 }
 
 function iniciais(nome: string) {
@@ -109,6 +111,7 @@ const resumoVazio: Resumo = {
   nDemandasAbertas: 0,
   nAtendimentosAtivos: 0,
   saldoCarteira: 0,
+  valorEmEscrow: 0,
 }
 
 export default function ProfissionalInicioScreen() {
@@ -138,6 +141,7 @@ export default function ProfissionalInicioScreen() {
         demRes,
         atendAtivosRes,
         walletRes,
+        escrowRes,
       ] = await Promise.all([
         supabase
           .from('profiles')
@@ -160,9 +164,16 @@ export default function ProfissionalInicioScreen() {
           .eq('profissional_id', user.id)
           .in('status', ['aceita', 'em_andamento']),
         supabase.from('wallets').select('saldo').eq('user_id', user.id).maybeSingle(),
+        supabase
+          .from('pagamentos')
+          .select('valor_liquido_prestador')
+          .eq('profissional_id', user.id)
+          .eq('status', 'em_escrow'),
       ])
 
       const p = perfilRes.data
+      const escrowRows = (escrowRes.data as { valor_liquido_prestador: number }[] | null) || []
+      const valorEmEscrow = escrowRows.reduce((a, row) => a + Number(row.valor_liquido_prestador || 0), 0)
       setResumo({
         userId: user.id,
         nome: p?.nome || (user.user_metadata as { nome?: string })?.nome || user.email?.split('@')[0] || 'Profissional',
@@ -178,6 +189,7 @@ export default function ProfissionalInicioScreen() {
         nDemandasAbertas: demRes.count ?? 0,
         nAtendimentosAtivos: atendAtivosRes.count ?? 0,
         saldoCarteira: Number(walletRes.data?.saldo ?? 0),
+        valorEmEscrow,
       })
       setCarregando(false)
     }
@@ -188,7 +200,7 @@ export default function ProfissionalInicioScreen() {
   const d = r ?? resumoVazio
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-100 via-white to-emerald-50/40 pb-12">
+    <main className="min-h-screen bg-gradient-to-b from-slate-100 via-white to-emerald-50/40 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 pb-12">
       <div className="min-h-[200px] flex items-end bg-gradient-to-br from-emerald-700 via-teal-600 to-cyan-600 text-white px-4 pt-8 pb-12 rounded-b-[2rem] shadow-lg">
         <div className="max-w-lg mx-auto">
           {carregando && (
@@ -263,7 +275,34 @@ export default function ProfissionalInicioScreen() {
           </div>
         </section>
 
-        <p className="text-center text-xs text-gray-500">
+        {!carregando && d.userId && (
+          <OnboardingChecklist
+            variant="profissional"
+            perfilCompleto={!!(d.cidade && d.bio && d.bio.trim().length > 20)}
+            temCategorias={d.nCategorias > 0}
+            temServicos={d.nServicos > 0}
+            temMovimento={d.nPropostas > 0 || d.nSolicitacoesTotal > 0}
+          />
+        )}
+
+        <section className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div className="rounded-2xl border border-emerald-200 dark:border-emerald-900/60 bg-white dark:bg-slate-900/80 p-4 shadow-sm">
+            <p className="text-[10px] font-bold uppercase text-emerald-800 dark:text-emerald-300">Saldo disponível</p>
+            <p className="text-xl font-bold text-emerald-900 dark:text-emerald-200 mt-1">{formatarReais(d.saldoCarteira)}</p>
+            <Link href="/profissional/carteira" className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 mt-2 inline-block">
+              Ver carteira →
+            </Link>
+          </div>
+          <div className="rounded-2xl border border-amber-200 dark:border-amber-900/60 bg-amber-50/80 dark:bg-amber-950/30 p-4 shadow-sm">
+            <p className="text-[10px] font-bold uppercase text-amber-900 dark:text-amber-200">Em escrow (etapas)</p>
+            <p className="text-xl font-bold text-amber-950 dark:text-amber-100 mt-1">{formatarReais(d.valorEmEscrow)}</p>
+            <p className="text-[10px] text-amber-900/80 dark:text-amber-200/90 mt-1 leading-snug">
+              Valor retido até confirmações e prazo de contestação.
+            </p>
+          </div>
+        </section>
+
+        <p className="text-center text-xs text-gray-500 dark:text-slate-400">
           {carregando ? 'Atualizando marketplace…' : `${d.nDemandasAbertas} demanda(s) pública(s) aberta(s) agora.`}
         </p>
 

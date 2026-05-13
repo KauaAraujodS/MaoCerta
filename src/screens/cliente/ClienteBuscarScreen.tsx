@@ -20,6 +20,7 @@ type Prestador = {
   bio: string | null
   experiencia_anos: number | null
   created_at: string
+  score_prioridade_busca?: number | null
   categorias: CategoriaVinculo[]
   notaMedia: number | null
   qtdAvaliacoes: number
@@ -36,6 +37,28 @@ function categoriasPlanas(p: Prestador) {
 
 function localStr(p: { cidade: string | null; estado: string | null }) {
   return [p.cidade, p.estado].filter(Boolean).join(' - ')
+}
+
+function anosNaPlataforma(createdAt: string) {
+  const t = new Date(createdAt).getTime()
+  if (Number.isNaN(t)) return 'Na MaoCerta'
+  const anos = (Date.now() - t) / (365.25 * 24 * 60 * 60 * 1000)
+  if (anos < 0.25) return 'Chegou recentemente na MaoCerta'
+  if (anos < 1) return 'Há alguns meses na MaoCerta'
+  return `Há ${Math.floor(anos)} ano(s) na MaoCerta`
+}
+
+function dicaConfianca(p: Prestador) {
+  if (p.notaMedia != null && p.notaMedia >= 4.5 && p.qtdAvaliacoes >= 3) {
+    return { txt: 'Avaliações excelentes', destaque: true }
+  }
+  if (p.atendimentosConcluidos >= 15) {
+    return { txt: 'Histórico forte de entregas', destaque: true }
+  }
+  if ((p.score_prioridade_busca ?? 0) >= 5) {
+    return { txt: 'Destaque nas buscas', destaque: true }
+  }
+  return { txt: 'Combine prazos pelo chat', destaque: false }
 }
 
 export default function ClienteBuscarScreen() {
@@ -82,7 +105,7 @@ export default function ClienteBuscarScreen() {
       supabase
         .from('profiles')
         .select(`
-          id, nome, avatar_url, cidade, estado, bio, experiencia_anos, created_at,
+          id, nome, avatar_url, cidade, estado, bio, experiencia_anos, created_at, score_prioridade_busca,
           categorias:profissional_categorias ( categoria:categoria_id ( id, nome ) )
         `)
         .eq('tipo', 'profissional')
@@ -127,6 +150,7 @@ export default function ClienteBuscarScreen() {
           notaMedia: media,
           qtdAvaliacoes: notas.length,
           atendimentosConcluidos: atendPorId[p.id] || 0,
+          score_prioridade_busca: Number((p as PrestadorRaw & { score_prioridade_busca?: number }).score_prioridade_busca ?? 0),
         }
       })
 
@@ -181,6 +205,9 @@ export default function ClienteBuscarScreen() {
         if (aMatch !== bMatch) return bMatch - aMatch
         if (a.atendimentosConcluidos !== b.atendimentosConcluidos)
           return b.atendimentosConcluidos - a.atendimentosConcluidos
+        const sa = a.score_prioridade_busca ?? 0
+        const sb = b.score_prioridade_busca ?? 0
+        if (sa !== sb) return sb - sa
         return (b.notaMedia ?? -1) - (a.notaMedia ?? -1)
       })
     }
@@ -205,7 +232,7 @@ export default function ClienteBuscarScreen() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-purple-50/40 via-white to-white pb-10">
+    <main className="min-h-screen bg-gradient-to-b from-purple-50/40 via-white to-white dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 pb-10">
       <header className="min-h-[200px] flex items-end bg-gradient-to-br from-purple-700 via-indigo-600 to-blue-600 text-white px-4 pt-8 pb-12 rounded-b-[2rem] shadow-lg">
         <div className="max-w-lg mx-auto space-y-3">
           <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/65">Encontre o profissional certo</p>
@@ -429,7 +456,7 @@ function CardPrestador({
   const principal = cats[0]
 
   return (
-    <li className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+    <li className="bg-white dark:bg-slate-900/90 rounded-3xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-hidden">
       <div className="p-4 flex gap-3">
         <div className="w-14 h-14 shrink-0 rounded-full bg-gradient-to-br from-purple-200 to-indigo-200 flex items-center justify-center text-base font-bold text-purple-900 overflow-hidden">
           {prestador.avatar_url ? (
@@ -456,8 +483,35 @@ function CardPrestador({
               ) : (
                 <span className="text-gray-400">novo</span>
               )}
+              {prestador.notaMedia != null && prestador.notaMedia >= 4.5 && prestador.qtdAvaliacoes >= 5 && (
+                <span className="ml-1 text-[9px] font-bold uppercase text-amber-900 bg-amber-100 px-1 rounded">
+                  Top
+                </span>
+              )}
             </span>
             <span className="text-emerald-700">{prestador.atendimentosConcluidos} ✓</span>
+          </div>
+          <div className="flex flex-wrap gap-1.5 pt-1">
+            <span className="text-[9px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+              {anosNaPlataforma(prestador.created_at)}
+            </span>
+            <span className="text-[9px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-900/50">
+              {prestador.atendimentosConcluidos} trabalho(s) concluído(s) na plataforma
+            </span>
+            {(() => {
+              const d = dicaConfianca(prestador)
+              return (
+                <span
+                  className={`text-[9px] font-semibold px-2 py-0.5 rounded-full border ${
+                    d.destaque
+                      ? 'bg-violet-100 dark:bg-violet-950/50 text-violet-900 dark:text-violet-200 border-violet-200 dark:border-violet-800'
+                      : 'bg-gray-50 dark:bg-slate-800 text-gray-600 dark:text-slate-400 border-gray-200 dark:border-slate-700'
+                  }`}
+                >
+                  {d.txt}
+                </span>
+              )
+            })()}
           </div>
         </div>
       </div>

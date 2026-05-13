@@ -22,10 +22,12 @@ export type Atendimento = {
 
 export type WalletTransaction = {
   id: string
-  tipo: 'credito' | 'debito'
+  tipo: string
   valor: number
   descricao: string
   referencia: string | null
+  etapa_id?: string | null
+  bloqueado_ate?: string | null
   created_at: string
 }
 
@@ -34,6 +36,8 @@ export type Saque = {
   valor: number
   status: 'pendente' | 'processado' | 'cancelado'
   observacao: string | null
+  metodo?: string | null
+  anti_fraude_status?: string | null
   created_at: string
   processado_em: string | null
 }
@@ -83,14 +87,14 @@ export const prestadorService = {
     if (error) throw error
   },
 
-  async getWallet(userId: string): Promise<{ saldo: number } | null> {
+  async getWallet(userId: string): Promise<{ saldo: number; saldo_bloqueado?: number } | null> {
     const { data, error } = await createClient()
       .from('wallets')
-      .select('saldo')
+      .select('saldo, saldo_bloqueado')
       .eq('user_id', userId)
       .maybeSingle()
     if (error) throw error
-    return data
+    return data as { saldo: number; saldo_bloqueado?: number } | null
   },
 
   async getWalletTransactions(userId: string): Promise<WalletTransaction[]> {
@@ -115,13 +119,19 @@ export const prestadorService = {
   },
 
   async solicitarSaque(userId: string, valor: number, observacao?: string) {
-    const { data, error } = await createClient()
-      .from('saques')
-      .insert({ user_id: userId, valor, observacao: observacao || null })
-      .select('id')
-      .single()
+    const { data, error } = await createClient().rpc('fn_wallet_solicitar_saque', {
+      p_valor: valor,
+      p_metodo: 'pix',
+      p_observacao: observacao ?? '',
+    })
     if (error) throw error
-    return data
+    const row = data as { ok?: boolean; erro?: string; saque_id?: string }
+    if (row && row.ok === false) {
+      const err = new Error(row.erro || 'saque_negado')
+      ;(err as Error & { codigo?: string }).codigo = row.erro
+      throw err
+    }
+    return { id: row?.saque_id }
   },
 
   async cancelarSaque(id: string) {

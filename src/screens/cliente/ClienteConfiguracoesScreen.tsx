@@ -33,10 +33,10 @@ const itens = [
     descricao: 'Gerenciar assinatura e benefícios',
   },
   {
-    href: '/cliente/configuracoes/reputacao',
-    icone: '⭐',
-    titulo: 'Reputação',
-    descricao: 'Avaliações e histórico',
+    href: '/cliente/financeiro',
+    icone: '💰',
+    titulo: 'Financeiro',
+    descricao: 'Extrato: pagamento, contrato, etapa e serviço',
   },
   {
     href: '/cliente/configuracoes/seguranca',

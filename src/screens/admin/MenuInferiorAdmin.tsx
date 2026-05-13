@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 const abas = [
   { href: '/admin/inicio', icone: '🏠', label: 'Início' },
   { href: '/admin/usuarios', icone: '👥', label: 'Usuários' },
-  { href: '/admin/denuncias', icone: '🚩', label: 'Denúncias' },
+  { href: '/admin/financeiro', icone: '💰', label: 'Financeiro' },
   { href: '/admin/configuracoes', icone: '⚙️', label: 'Ajustes' },
 ]
 

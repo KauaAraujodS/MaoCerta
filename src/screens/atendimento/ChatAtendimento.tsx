@@ -9,6 +9,8 @@ type Mensagem = {
   remetente_id: string
   conteudo: string
   created_at: string
+  alerta_pagamento_externo?: boolean
+  motivo_moderacao?: string | null
 }
 
 type Props = {
@@ -132,6 +134,11 @@ export default function ChatAtendimento({
                 }`}
               >
                 <p className="whitespace-pre-wrap break-words">{m.conteudo}</p>
+                {m.alerta_pagamento_externo && (
+                  <p className="text-[10px] mt-1.5 font-semibold text-amber-900 bg-amber-100/90 rounded-lg px-2 py-1 border border-amber-200">
+                    ⚠️ {m.motivo_moderacao || 'Mensagem sinalizada: use apenas o pagamento oficial da plataforma (RN18).'}
+                  </p>
+                )}
                 <p className={`text-[10px] mt-1 ${minha ? 'text-white/70' : 'text-gray-400'}`}>
                   {new Date(m.created_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
                 </p>

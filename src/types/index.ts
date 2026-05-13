@@ -98,13 +98,18 @@ export interface CancelamentoEtapa {
   created_at: string;
 }
 
-/** RF39–RF45: pagamento Pix por etapa */
+/** RF39–RF45: pagamento Pix por etapa (status padronizados RF39.2) */
 export type StatusPagamento =
+  | "aguardando_pagamento"
+  | "pago"
+  | "em_escrow"
+  | "liberado"
+  | "cancelado"
+  | "contestado"
+  /** legado migração */
   | "aguardando_pix"
   | "pago_retido"
-  | "liberado"
-  | "em_disputa"
-  | "cancelado";
+  | "em_disputa";
 
 export interface Pagamento {
   id: string;
@@ -113,6 +118,7 @@ export interface Pagamento {
   cliente_id: string;
   profissional_id: string;
   valor_bruto: number;
+  valor_etapa?: number | null;
   comissao_percentual: number;
   valor_comissao: number;
   valor_liquido_prestador: number;
@@ -120,6 +126,10 @@ export interface Pagamento {
   status: StatusPagamento;
   pix_copia_e_cola: string | null;
   pix_txid: string | null;
+  pix_payload_hash?: string | null;
+  qr_expires_at?: string | null;
+  pago_em?: string | null;
+  webhook_ref?: string | null;
   dispute_motivo: string | null;
   liberado_em: string | null;
   created_at: string;

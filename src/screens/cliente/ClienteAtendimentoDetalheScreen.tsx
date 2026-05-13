@@ -10,6 +10,7 @@ import PerfilModal from '@/screens/perfil/PerfilModal'
 import GerenciadorEtapas from '@/components/etapas/GerenciadorEtapas'
 import ValorServicoCard from '@/components/financeiro/ValorServicoCard'
 import AvaliarPrestadorCard from '@/components/financeiro/AvaliarPrestadorCard'
+import AtendimentoContextoSidebar from '@/components/atendimento/AtendimentoContextoSidebar'
 
 type Atendimento = {
   id: string
@@ -126,7 +127,7 @@ export default function ClienteAtendimentoDetalheScreen({ id }: { id: string }) 
           : 'Cancelado'
 
   return (
-    <main className="min-h-screen bg-gray-50 flex flex-col">
+    <main className="min-h-screen bg-gray-50 dark:bg-slate-950 flex flex-col">
       <header className="bg-gradient-to-r from-purple-700 via-indigo-600 to-blue-600 text-white px-4 pt-6 pb-5 shadow-lg">
         <div className="max-w-lg mx-auto space-y-3">
           <Link
@@ -161,12 +162,14 @@ export default function ClienteAtendimentoDetalheScreen({ id }: { id: string }) 
         </div>
       </header>
 
-      <section className="bg-white border-b border-gray-100 px-4 py-4">
-        <div className="max-w-lg mx-auto space-y-2">
+      <div className="flex-1 w-full max-w-6xl mx-auto px-4 grid lg:grid-cols-[minmax(0,28rem)_288px] gap-6 pb-8 items-start">
+        <div className="w-full min-w-0">
+      <section className="bg-white dark:bg-slate-900/80 border-b border-gray-100 dark:border-slate-800 px-4 py-4">
+        <div className="w-full space-y-2">
           <p className="text-xs font-bold text-gray-500 uppercase tracking-wide">Sua demanda</p>
-          <h2 className="text-base font-bold text-gray-900">{atendimento.titulo}</h2>
-          <p className="text-sm text-gray-600 leading-relaxed">{atendimento.descricao}</p>
-          <p className="text-[11px] text-gray-400">Aceita em {formatarDataPt(atendimento.created_at)}</p>
+          <h2 className="text-base font-bold text-gray-900 dark:text-slate-100">{atendimento.titulo}</h2>
+          <p className="text-sm text-gray-600 dark:text-slate-300 leading-relaxed">{atendimento.descricao}</p>
+          <p className="text-[11px] text-gray-400 dark:text-slate-500">Aceita em {formatarDataPt(atendimento.created_at)}</p>
 
           {ativo && (
             <div className="pt-2">
@@ -183,8 +186,8 @@ export default function ClienteAtendimentoDetalheScreen({ id }: { id: string }) 
       </section>
 
       {confirmandoCancelamento && (
-        <section className="bg-amber-50 border-b border-amber-200 px-4 py-4">
-          <div className="max-w-lg mx-auto space-y-3">
+        <section className="bg-amber-50 dark:bg-amber-950/30 border-b border-amber-200 dark:border-amber-900 px-4 py-4">
+          <div className="w-full space-y-3">
             <p className="text-sm text-amber-900">
               Tem certeza? {atendimento.demanda_origem_id ? 'Sua demanda volta a aparecer pra outros prestadores.' : ''}
             </p>
@@ -214,8 +217,8 @@ export default function ClienteAtendimentoDetalheScreen({ id }: { id: string }) 
         <p className="text-xs text-red-700 bg-red-50 border-b border-red-100 px-4 py-2 text-center">{erro}</p>
       )}
 
-      <section className="bg-violet-50/50 border-b border-violet-100 px-4 py-4">
-        <div className="max-w-lg mx-auto space-y-3">
+      <section className="bg-violet-50/50 dark:bg-violet-950/20 border-b border-violet-100 dark:border-violet-900 px-4 py-4">
+        <div className="w-full space-y-3">
           <p className="text-[11px] text-violet-900/90 leading-relaxed rounded-xl border border-violet-200 bg-white/80 px-3 py-2.5">
             <strong>Pagamento MaoCerta (RN18):</strong> use apenas o Pix gerado aqui por etapa. Transferências diretas ao
             prestador ficam fora da proteção da plataforma.
@@ -234,8 +237,8 @@ export default function ClienteAtendimentoDetalheScreen({ id }: { id: string }) 
         </div>
       </section>
 
-      <section className="bg-white border-b border-gray-100 px-4 py-4">
-        <div className="max-w-lg mx-auto space-y-3">
+      <section className="bg-white dark:bg-slate-900/80 border-b border-gray-100 dark:border-slate-800 px-4 py-4">
+        <div className="w-full space-y-3">
           <p className="text-xs font-bold text-gray-500 uppercase tracking-wide">📋 Etapas do atendimento</p>
           <GerenciadorEtapas
             solicitacaoId={atendimento.id}
@@ -247,8 +250,8 @@ export default function ClienteAtendimentoDetalheScreen({ id }: { id: string }) 
         </div>
       </section>
 
-      <section className="bg-gray-50 border-b border-gray-100 px-4 py-4">
-        <div className="max-w-lg mx-auto">
+      <section className="bg-gray-50 dark:bg-slate-950/50 border-b border-gray-100 dark:border-slate-800 px-4 py-4">
+        <div className="w-full">
           <AvaliarPrestadorCard
             atendimentoId={atendimento.id}
             profissionalId={atendimento.profissional_id}
@@ -258,8 +261,8 @@ export default function ClienteAtendimentoDetalheScreen({ id }: { id: string }) 
         </div>
       </section>
 
-      <section className="flex-1 max-w-lg w-full mx-auto bg-white border-x border-gray-100 flex flex-col">
-        <div className="px-4 py-3 border-b border-gray-100">
+      <section className="flex-1 w-full mx-auto bg-white dark:bg-slate-900/80 border-x border-gray-100 dark:border-slate-800 flex flex-col">
+        <div className="px-4 py-3 border-b border-gray-100 dark:border-slate-800">
           <p className="text-xs font-bold text-gray-500 uppercase tracking-wide">💬 Chat</p>
         </div>
         <ChatAtendimento
@@ -269,6 +272,20 @@ export default function ClienteAtendimentoDetalheScreen({ id }: { id: string }) 
           corMinha="bg-purple-700 text-white"
         />
       </section>
+        </div>
+
+        <aside className="hidden lg:block lg:sticky lg:top-14 self-start pt-4">
+          <AtendimentoContextoSidebar
+            titulo={atendimento.titulo}
+            descricao={atendimento.descricao}
+            statusLabel={statusLabel}
+            criadoEm={atendimento.created_at}
+            valorTotal={atendimento.valor_total_servico ?? null}
+            outroPapel="prestador"
+            outroNome={prest?.nome || '—'}
+          />
+        </aside>
+      </div>
 
       <PerfilModal
         perfilId={atendimento.profissional_id}

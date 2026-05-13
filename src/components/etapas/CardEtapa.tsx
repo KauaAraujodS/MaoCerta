@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { Etapa, Pagamento, TipoEtapa } from '@/types'
 import { formatarDataPt, formatarValorBrl } from '@/lib/formatar-data'
 import PagamentoEtapaPanel from '@/components/financeiro/PagamentoEtapaPanel'
+import EtapaFinanceiraTimeline from '@/components/financeiro/EtapaFinanceiraTimeline'
+import { pagamentoPermiteIniciarEtapa } from '@/lib/financeiro/status-pagamento'
 
 type Props = {
   etapa: Etapa
@@ -57,6 +59,11 @@ export default function CardEtapa({
   const badge = statusBadges[etapa.status]
   const nomeEtapa = nomeEtapaMap[etapa.tipo]
   const valorEtapaNum = Number(etapa.valor_acordado ?? 0)
+  const pagamentoOkParaIniciar = pagamentoPermiteIniciarEtapa(pagamento?.status)
+  const podeIniciarComoProfissional =
+    meuTipo === 'profissional' &&
+    ((etapa.status === 'pendente' && valorEtapaNum <= 0) ||
+      (etapa.status === 'agendada' && (valorEtapaNum <= 0 || pagamentoOkParaIniciar)))
   const ambosCfirmaram = etapa.cliente_confirmou && etapa.profissional_confirmou
   const podeConfirmar = 
     etapa.status === 'concluida' && 
@@ -142,6 +149,8 @@ export default function CardEtapa({
             </div>
           </div>
 
+          <EtapaFinanceiraTimeline etapa={etapa} pagamento={pagamento} />
+
           <PagamentoEtapaPanel
             etapa={etapa}
             solicitacaoStatus={solicitacaoStatus}
@@ -155,12 +164,12 @@ export default function CardEtapa({
             <div className="space-y-2 pt-2">
               {etapa.status === 'pendente' && (
                 <>
-                  {meuTipo === 'profissional' && (
+                  {podeIniciarComoProfissional && (
                     <button
                       onClick={onComecar}
                       className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-4 rounded-lg transition"
                     >
-                      ▶️ Iniciar Etapa
+                      ▶️ Iniciar etapa
                     </button>
                   )}
                   {podePropor && (
@@ -181,6 +190,21 @@ export default function CardEtapa({
                     </button>
                   )}
                 </>
+              )}
+
+              {etapa.status === 'agendada' && meuTipo === 'profissional' && valorEtapaNum > 0 && !pagamentoOkParaIniciar && (
+                <p className="text-[11px] text-center text-amber-800 bg-amber-50 border border-amber-100 rounded-lg py-2 px-2">
+                  Aguardando o cliente pagar esta etapa pela plataforma para você iniciar o trabalho (RF39.3).
+                </p>
+              )}
+
+              {etapa.status === 'agendada' && podeIniciarComoProfissional && (
+                <button
+                  onClick={onComecar}
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-4 rounded-lg transition"
+                >
+                  ▶️ Iniciar etapa
+                </button>
               )}
 
               {etapa.status === 'em_progresso' && meuTipo === 'profissional' && (

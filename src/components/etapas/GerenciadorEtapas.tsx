@@ -69,9 +69,16 @@ export default function GerenciadorEtapas({
     try {
       await prestadorService.iniciarEtapa(etapaId, notas)
       await carregar()
-    } catch (e) {
+    } catch (e: unknown) {
       console.error(e)
-      setErro('Erro ao iniciar etapa')
+      const msg = e && typeof e === 'object' && 'message' in e ? String((e as { message?: string }).message) : ''
+      if (msg.includes('ETAPA_ANTERIOR_NAO_LIBERADA')) {
+        setErro('A etapa anterior precisa estar paga e liberada antes de iniciar esta (RF39.3).')
+      } else if (msg.includes('ETAPA_SEM_PAGAMENTO_CONFIRMADO')) {
+        setErro('O cliente precisa confirmar o Pix desta etapa na plataforma antes de você iniciar o trabalho.')
+      } else {
+        setErro('Erro ao iniciar etapa')
+      }
     }
   }
 

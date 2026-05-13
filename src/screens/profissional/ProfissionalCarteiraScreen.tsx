@@ -26,6 +26,7 @@ export default function ProfissionalCarteiraScreen() {
   const [aba, setAba] = useState<Aba>('movimentacoes')
   const [userId, setUserId] = useState<string | null>(null)
   const [saldo, setSaldo] = useState(0)
+  const [saldoBloqueado, setSaldoBloqueado] = useState(0)
   const [movimentacoes, setMovimentacoes] = useState<WalletTransaction[]>([])
   const [saques, setSaques] = useState<Saque[]>([])
   const [carregando, setCarregando] = useState(true)
@@ -57,6 +58,7 @@ export default function ProfissionalCarteiraScreen() {
         prestadorService.getSaques(user.id),
       ])
       setSaldo(Number(wallet?.saldo ?? 0))
+      setSaldoBloqueado(Number(wallet?.saldo_bloqueado ?? 0))
       setMovimentacoes(movs)
       setSaques(sqs)
     } catch (e) {
@@ -95,9 +97,14 @@ export default function ProfissionalCarteiraScreen() {
       setMostrarSaque(false)
       setAba('saques')
       await carregar()
-    } catch (err) {
+    } catch (err: unknown) {
       console.error(err)
-      setAviso({ tipo: 'erro', texto: 'Não foi possível registrar o saque. Tente novamente.' })
+      const cod = (err as Error & { codigo?: string }).codigo || (err as Error).message
+      if (cod === 'abaixo_minimo') {
+        setAviso({ tipo: 'erro', texto: 'Valor abaixo do mínimo permitido para saque.' })
+      } else {
+        setAviso({ tipo: 'erro', texto: 'Não foi possível registrar o saque. Tente novamente.' })
+      }
     } finally {
       setEnviandoSaque(false)
     }
@@ -128,11 +135,16 @@ export default function ProfissionalCarteiraScreen() {
       <div className="max-w-lg mx-auto px-4 -mt-6 space-y-4 relative z-10">
         <section className="bg-white rounded-2xl border border-gray-100 shadow-md p-5 space-y-3">
           <div>
-            <p className="text-[11px] text-gray-500 uppercase tracking-wider">Saldo interno</p>
+            <p className="text-[11px] text-gray-500 uppercase tracking-wider">Disponível para saque</p>
             <p className="text-3xl font-extrabold text-emerald-700 mt-1">{formatarValor(saldoDisponivel)}</p>
+            {saldoBloqueado > 0 && (
+              <p className="text-sm font-semibold text-amber-800 mt-2">
+                Em escrow / bloqueado: {formatarValor(saldoBloqueado)}
+              </p>
+            )}
             <p className="text-[11px] text-gray-500 mt-2 leading-relaxed">
-              Créditos entram <strong>só</strong> após pagamento confirmado na plataforma e liberação da etapa (RN24 — sem
-              recarga manual).
+              Créditos disponíveis após liberação das etapas. Sem recarga manual (RN24). Saques via fluxo anti-fraude
+              (S1).
             </p>
             {totalPendente > 0 && (
               <p className="text-[11px] text-gray-500 mt-1">
@@ -225,10 +237,12 @@ export default function ProfissionalCarteiraScreen() {
               <li key={m.id} className="bg-white rounded-xl border border-gray-100 p-4 flex items-center gap-3">
                 <span
                   className={`w-9 h-9 rounded-full flex items-center justify-center text-base font-bold ${
-                    m.tipo === 'credito' ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'
+                    m.tipo === 'debito' || m.tipo === 'estorno_disputa' || m.tipo === 'saque'
+                      ? 'bg-red-100 text-red-700'
+                      : 'bg-emerald-100 text-emerald-700'
                   }`}
                 >
-                  {m.tipo === 'credito' ? '↑' : '↓'}
+                  {m.tipo === 'debito' || m.tipo === 'estorno_disputa' || m.tipo === 'saque' ? '↓' : '↑'}
                 </span>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold text-gray-900 truncate">{m.descricao}</p>
@@ -236,10 +250,12 @@ export default function ProfissionalCarteiraScreen() {
                 </div>
                 <span
                   className={`text-sm font-bold whitespace-nowrap ${
-                    m.tipo === 'credito' ? 'text-emerald-700' : 'text-red-700'
+                    m.tipo === 'debito' || m.tipo === 'estorno_disputa' || m.tipo === 'saque'
+                      ? 'text-red-700'
+                      : 'text-emerald-700'
                   }`}
                 >
-                  {m.tipo === 'credito' ? '+' : '−'}
+                  {m.tipo === 'debito' || m.tipo === 'estorno_disputa' || m.tipo === 'saque' ? '−' : '+'}
                   {formatarValor(Number(m.valor))}
                 </span>
               </li>

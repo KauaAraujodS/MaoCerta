@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { iconeCategoria } from '@/lib/categorias-ui'
 import { formatarRelativoPt } from '@/lib/formatar-data'
+import OnboardingChecklist from '@/components/onboarding/OnboardingChecklist'
 
 type Resumo = {
   userId: string | null
@@ -222,7 +223,7 @@ export default function ClienteInicioScreen() {
   const d = r ?? resumoVazio
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-100 via-white to-purple-50/40 pb-12">
+    <main className="min-h-screen bg-gradient-to-b from-slate-100 via-white to-purple-50/40 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 pb-12">
       <div className="min-h-[200px] flex items-end bg-gradient-to-br from-purple-700 via-indigo-600 to-blue-600 text-white px-4 pt-8 pb-12 rounded-b-[2rem] shadow-lg">
         <div className="max-w-lg mx-auto space-y-4">
           {carregando && (
@@ -275,6 +276,15 @@ export default function ClienteInicioScreen() {
           <CardStat valor={d.nConcluidas} label="Concluídas" cor="text-blue-700" carregando={carregando} />
           <CardStat valor={d.nDemandas} label="Demandas" cor="text-violet-700" carregando={carregando} />
         </section>
+
+        {!carregando && r?.userId && (
+          <OnboardingChecklist
+            variant="cliente"
+            perfilCompleto={!!(r.cidade && r.nome && r.nome.length > 1)}
+            temDemanda={r.nDemandas > 0}
+            temAtendimento={r.nAtivas + r.nConcluidas > 0}
+          />
+        )}
 
         {/* Categorias populares */}
         {!carregando && categoriasPopulares.length > 0 && (
@@ -475,9 +485,9 @@ function CardStat({
   carregando: boolean
 }) {
   return (
-    <div className="bg-white rounded-2xl p-4 shadow-md border border-gray-100 text-center">
+    <div className="bg-white rounded-2xl p-4 shadow-md border border-gray-100 dark:bg-slate-900/80 dark:border-slate-800 text-center">
       <p className={`text-2xl font-bold ${cor}`}>{carregando ? '—' : valor}</p>
-      <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-wide mt-1">{label}</p>
+      <p className="text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wide mt-1">{label}</p>
     </div>
   )
 }
