@@ -1,11 +1,24 @@
+-- Schema inicial (idempotente — seguro para rodar várias vezes)
+
 -- Tipos enumerados
-create type tipo_usuario as enum ('cliente', 'profissional');
-create type status_demanda as enum ('aberta', 'em_andamento', 'concluida', 'cancelada');
-create type status_proposta as enum ('pendente', 'aceita', 'recusada');
-create type status_acordo as enum ('em_andamento', 'concluido', 'cancelado');
+do $$
+begin
+  if not exists (select 1 from pg_type where typname = 'tipo_usuario') then
+    create type tipo_usuario as enum ('cliente', 'profissional');
+  end if;
+  if not exists (select 1 from pg_type where typname = 'status_demanda') then
+    create type status_demanda as enum ('aberta', 'em_andamento', 'concluida', 'cancelada');
+  end if;
+  if not exists (select 1 from pg_type where typname = 'status_proposta') then
+    create type status_proposta as enum ('pendente', 'aceita', 'recusada');
+  end if;
+  if not exists (select 1 from pg_type where typname = 'status_acordo') then
+    create type status_acordo as enum ('em_andamento', 'concluido', 'cancelado');
+  end if;
+end$$;
 
 -- Perfis dos usuários (extende o auth.users do Supabase)
-create table profiles (
+create table if not exists profiles (
   id uuid references auth.users on delete cascade primary key,
   nome text not null,
   tipo tipo_usuario not null,
@@ -16,13 +29,13 @@ create table profiles (
 );
 
 -- Categorias de serviço (ex: elétrica, pintura, limpeza...)
-create table categorias (
+create table if not exists categorias (
   id serial primary key,
   nome text not null unique
 );
 
 -- Serviços que o profissional oferece
-create table servicos (
+create table if not exists servicos (
   id uuid default gen_random_uuid() primary key,
   profissional_id uuid references profiles(id) on delete cascade not null,
   categoria_id int references categorias(id) not null,
@@ -32,7 +45,7 @@ create table servicos (
 );
 
 -- Demandas postadas por clientes
-create table demandas (
+create table if not exists demandas (
   id uuid default gen_random_uuid() primary key,
   cliente_id uuid references profiles(id) on delete cascade not null,
   categoria_id int references categorias(id) not null,
@@ -43,7 +56,7 @@ create table demandas (
 );
 
 -- Propostas de profissionais para uma demanda
-create table propostas (
+create table if not exists propostas (
   id uuid default gen_random_uuid() primary key,
   demanda_id uuid references demandas(id) on delete cascade not null,
   profissional_id uuid references profiles(id) on delete cascade not null,
@@ -55,7 +68,7 @@ create table propostas (
 );
 
 -- Acordo fechado entre cliente e profissional
-create table acordos (
+create table if not exists acordos (
   id uuid default gen_random_uuid() primary key,
   demanda_id uuid references demandas(id),
   cliente_id uuid references profiles(id) not null,
@@ -67,7 +80,7 @@ create table acordos (
 );
 
 -- Mensagens entre cliente e profissional dentro de um acordo
-create table mensagens (
+create table if not exists mensagens (
   id uuid default gen_random_uuid() primary key,
   acordo_id uuid references acordos(id) on delete cascade not null,
   remetente_id uuid references profiles(id) not null,
@@ -86,4 +99,5 @@ insert into categorias (nome) values
   ('Informática'),
   ('Montagem de móveis'),
   ('Ar-condicionado'),
-  ('Reforma geral');
+  ('Reforma geral')
+on conflict (nome) do nothing;
