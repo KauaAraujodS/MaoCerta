@@ -190,7 +190,7 @@ export default function ClienteDemandaDetalheScreen({ id }: { id: string }) {
   const cat = demanda?.categorias?.nome || 'Categoria'
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-purple-50/40 via-white to-white pb-10">
+    <main className="min-h-screen bg-gradient-to-b from-purple-50/40 via-white to-white dark:from-slate-950 dark:via-slate-950 dark:to-slate-950 pb-10">
       <header className="min-h-[200px] flex items-end bg-gradient-to-br from-purple-700 via-indigo-600 to-blue-600 text-white px-4 pt-8 pb-12 rounded-b-[2rem] shadow-lg">
         <div className="max-w-lg mx-auto w-full space-y-3">
           <Link
@@ -292,7 +292,7 @@ export default function ClienteDemandaDetalheScreen({ id }: { id: string }) {
                       <button
                         type="button"
                         onClick={() => prest && setPerfilAberto(prest.id)}
-                        className="flex items-center gap-3 flex-1 min-w-0 text-left hover:bg-gray-50 dark:hover:bg-slate-800 dark:bg-slate-800 rounded-xl p-1 -m-1"
+                        className="flex items-center gap-3 flex-1 min-w-0 text-left hover:bg-gray-50 dark:hover:bg-slate-800 rounded-xl p-1 -m-1"
                       >
                         <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-200 to-indigo-200 flex items-center justify-center text-base font-bold text-purple-900 overflow-hidden shrink-0">
                           {prest?.avatar_url ? (

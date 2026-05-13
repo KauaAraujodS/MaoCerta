@@ -38,7 +38,9 @@ async function carregarMunicipios(uf: string): Promise<Municipio[]> {
   return data
 }
 
-const CLASSE_PADRAO = 'mt-1 w-full bg-gray-50 border border-gray-200 dark:border-slate-700 rounded-2xl px-3 py-2.5 text-sm text-gray-900 dark:text-slate-100 focus:outline-none focus:border-purple-600 focus:bg-white dark:bg-slate-900'
+const CLASSE_PADRAO = 'mt-1 w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl px-3 py-2.5 text-sm text-gray-900 dark:text-slate-100 focus:outline-none focus:border-purple-600 focus:bg-white dark:focus:bg-slate-900'
+
+const CLASSE_OPTION = 'bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100'
 
 export default function CidadeEstadoSelect({
   estado,
@@ -95,9 +97,9 @@ export default function CidadeEstadoSelect({
           disabled={disabled}
           className={classeBaseInput}
         >
-          <option value="">UF</option>
+          <option value="" className={CLASSE_OPTION}>UF</option>
           {estados.map((e) => (
-            <option key={e.id} value={e.sigla}>
+            <option key={e.id} value={e.sigla} className={CLASSE_OPTION}>
               {e.sigla}
             </option>
           ))}
@@ -112,9 +114,9 @@ export default function CidadeEstadoSelect({
           disabled={disabled || !estado || carregandoMun}
           className={classeBaseInput}
         >
-          <option value="">{!estado ? 'Selecione um estado primeiro' : carregandoMun ? 'Carregando...' : 'Selecione uma cidade'}</option>
+          <option value="" className={CLASSE_OPTION}>{!estado ? 'Selecione um estado primeiro' : carregandoMun ? 'Carregando...' : 'Selecione uma cidade'}</option>
           {municipios.map((m) => (
-            <option key={m.id} value={m.nome}>
+            <option key={m.id} value={m.nome} className={CLASSE_OPTION}>
               {m.nome}
             </option>
           ))}

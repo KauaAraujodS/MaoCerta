@@ -251,11 +251,11 @@ export default function ClienteBuscarScreen() {
             onChange={(e) => setFiltroCategoria(e.target.value ? Number(e.target.value) : null)}
             className="w-full rounded-2xl bg-white/15 border border-white/25 px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-white/40"
           >
-            <option value="" className="text-gray-900 dark:text-slate-100">
+            <option value="" className="bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100">
               Todas as categorias
             </option>
             {categorias.map((c) => (
-              <option key={c.id} value={c.id} className="text-gray-900 dark:text-slate-100">
+              <option key={c.id} value={c.id} className="bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100">
                 {c.nome}
               </option>
             ))}

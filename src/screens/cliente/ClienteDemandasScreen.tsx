@@ -279,7 +279,7 @@ export default function ClienteDemandasScreen() {
               <Link
                 key={item.id}
                 href={`/cliente/demandas/${item.id}`}
-                className="block rounded-xl border border-gray-100 dark:border-slate-800 p-4 bg-gradient-to-br from-white to-slate-50/80 hover:border-purple-200 transition-colors"
+                className="block rounded-xl border border-gray-100 dark:border-slate-800 p-4 bg-gradient-to-br from-white to-slate-50/80 dark:from-slate-800 dark:to-slate-900 hover:border-purple-200 transition-colors"
               >
                 <div className="flex items-start justify-between gap-2">
                   <p className="text-sm font-bold text-gray-900 dark:text-slate-100 leading-snug">{item.titulo}</p>

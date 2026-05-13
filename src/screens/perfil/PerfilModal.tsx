@@ -216,12 +216,12 @@ export default function PerfilModal({ perfilId, aberto, onFechar, rotulo = 'Perf
         className="bg-white dark:bg-slate-900 rounded-t-3xl sm:rounded-3xl w-full max-w-md max-h-[92vh] overflow-y-auto shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-100 dark:border-slate-800 px-4 py-3 flex items-center justify-between rounded-t-3xl">
+        <div className="sticky top-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-gray-100 dark:border-slate-800 px-4 py-3 flex items-center justify-between rounded-t-3xl">
           <p className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider">{rotulo}</p>
           <button
             type="button"
             onClick={onFechar}
-            className="w-8 h-8 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 dark:bg-slate-800 flex items-center justify-center text-gray-500 dark:text-slate-400"
+            className="w-8 h-8 rounded-full bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 flex items-center justify-center text-gray-500 dark:text-slate-400"
             aria-label="Fechar"
           >
             ✕
@@ -289,8 +289,8 @@ export default function PerfilModal({ perfilId, aberto, onFechar, rotulo = 'Perf
                   <p className="text-sm text-gray-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">{perfil.bio}</p>
                 )}
                 {perfil.experiencia_anos != null && (
-                  <div className="bg-emerald-50 border border-emerald-100 rounded-2xl px-3 py-2">
-                    <p className="text-sm text-gray-800 dark:text-slate-200">
+                  <div className="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/40 rounded-2xl px-3 py-2">
+                    <p className="text-sm text-emerald-900 dark:text-emerald-200">
                       <strong>{perfil.experiencia_anos}</strong> ano(s) de experiência profissional
                     </p>
                   </div>
