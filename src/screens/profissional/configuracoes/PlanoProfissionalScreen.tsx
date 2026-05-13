@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import CabecalhoAjuste from '@/screens/configuracoes/CabecalhoAjuste'
+import PagarPlanoModal from '@/components/financeiro/PagarPlanoModal'
 
 type PlanoId = 'free' | 'basico' | 'premium'
 
@@ -33,7 +34,7 @@ const PLANOS: Plano[] = [
   {
     id: 'basico',
     nome: 'Pro',
-    preco: 'R$ 29,90/mês',
+    preco: 'R$ 0,50/mês',
     descricao: 'Para crescer com mais leads',
     destaques: [
       'Até 5 demandas ativas',
@@ -47,7 +48,7 @@ const PLANOS: Plano[] = [
   {
     id: 'premium',
     nome: 'Premium Pro',
-    preco: 'R$ 59,90/mês',
+    preco: 'R$ 1,50/mês',
     descricao: 'Para quem vive da plataforma',
     destaques: [
       'Demandas ativas ilimitadas',
@@ -64,6 +65,17 @@ const PLANOS: Plano[] = [
 export default function PlanoProfissionalScreen() {
   const [planoAtual, setPlanoAtual] = useState<PlanoId>('free')
   const [selecionado, setSelecionado] = useState<PlanoId>('free')
+  const [modalAberto, setModalAberto] = useState(false)
+
+  async function recarregarPlano() {
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+    const { data } = await supabase.from('profiles').select('plano').eq('id', user.id).maybeSingle()
+    const p = (data?.plano as PlanoId) || 'free'
+    setPlanoAtual(p)
+    setSelecionado(p)
+  }
 
   useEffect(() => {
     async function carregar() {
@@ -160,29 +172,39 @@ export default function PlanoProfissionalScreen() {
         </section>
       )}
 
-      <section className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start gap-3">
-        <span className="text-xl">🔒</span>
-        <div className="space-y-1">
-          <p className="text-sm font-semibold text-amber-900">Mudança de plano em breve</p>
-          <p className="text-xs text-amber-800 leading-relaxed">
-            A troca de plano só será liberada após a confirmação do pagamento. Estamos finalizando a integração
-            com Pix e cartão — até lá, todos os prestadores ficam no plano <strong>{PLANOS.find(p => p.id === planoAtual)?.nome}</strong>.
-          </p>
-        </div>
-      </section>
-
-      <button
-        type="button"
-        disabled
-        className="w-full bg-gray-200 text-gray-500 font-semibold py-3 rounded-2xl text-sm cursor-not-allowed"
-      >
-        {ehAtual ? 'Você já está nesse plano' : `Assinar ${plano.nome} (em breve)`}
-      </button>
+      {ehAtual ? (
+        <button
+          type="button"
+          disabled
+          className="w-full bg-gray-200 text-gray-500 font-semibold py-3 rounded-2xl text-sm cursor-not-allowed"
+        >
+          Você já está nesse plano
+        </button>
+      ) : (
+        <button
+          type="button"
+          onClick={() => setModalAberto(true)}
+          className="w-full bg-emerald-700 text-white font-semibold py-3 rounded-2xl text-sm hover:bg-emerald-800"
+        >
+          Assinar com Pix · {plano.preco.replace('/mês', '')}
+        </button>
+      )}
 
       <p className="text-[11px] text-gray-400 text-center px-6">
-        Cobrança via Pix ou cartão. Cancelamento sem multa a qualquer momento.
+        Cobrança única via Pix dentro da plataforma. Mensalidade automática vai chegar em uma próxima atualização.
       </p>
       </div>
+
+      {selecionado !== 'free' && (
+        <PagarPlanoModal
+          aberto={modalAberto}
+          plano={selecionado as 'basico' | 'premium'}
+          nomePlano={plano.nome}
+          tema="profissional"
+          onFechar={() => setModalAberto(false)}
+          onPago={recarregarPlano}
+        />
+      )}
     </main>
   )
 }
