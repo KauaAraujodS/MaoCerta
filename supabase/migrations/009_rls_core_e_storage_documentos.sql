@@ -22,6 +22,8 @@ grant execute on function public.is_administrator() to authenticated;
 -- solicitacoes: remover FOR ALL do profissional (evita insert com profissional_id = self e cliente_id arbitrário)
 -- ---------------------------------------------------------------------------
 drop policy if exists "profissional ve e atualiza solicitacoes recebidas" on solicitacoes;
+drop policy if exists "profissional ve solicitacoes recebidas" on solicitacoes;
+drop policy if exists "profissional atualiza solicitacoes recebidas" on solicitacoes;
 
 create policy "profissional ve solicitacoes recebidas"
   on solicitacoes for select
