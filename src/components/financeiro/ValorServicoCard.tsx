@@ -1,0 +1,140 @@
+'use client'
+
+import { FormEvent, useEffect, useState } from 'react'
+import { financeiroService } from '@/lib/supabase/financeiro'
+import { formatarValorBrl } from '@/lib/formatar-data'
+
+type Props = {
+  solicitacaoId: string
+  valorAtual: number | null | undefined
+  status: string
+  podeEditar: boolean
+  onSalvo: () => void
+  /** Cliente: roxo | Profissional: esmeralda */
+  tema: 'cliente' | 'profissional'
+}
+
+export default function ValorServicoCard({
+  solicitacaoId,
+  valorAtual,
+  status,
+  podeEditar,
+  onSalvo,
+  tema,
+}: Props) {
+  const shell =
+    tema === 'cliente'
+      ? 'from-violet-600 via-indigo-600 to-blue-600 border-violet-100'
+      : 'from-emerald-700 via-teal-600 to-cyan-600 border-emerald-100'
+
+  const btn =
+    tema === 'cliente'
+      ? 'bg-violet-700 hover:bg-violet-800 focus-visible:ring-violet-500'
+      : 'bg-emerald-700 hover:bg-emerald-800 focus-visible:ring-emerald-500'
+
+  const [valor, setValor] = useState(valorAtual != null ? String(valorAtual) : '')
+  const [salvando, setSalvando] = useState(false)
+  const [msg, setMsg] = useState<{ tipo: 'ok' | 'erro'; t: string } | null>(null)
+
+  useEffect(() => {
+    setValor(valorAtual != null ? String(valorAtual) : '')
+  }, [valorAtual])
+
+  const ativo = status === 'aceita' || status === 'em_andamento'
+
+  async function salvar(e: FormEvent) {
+    e.preventDefault()
+    if (!podeEditar || !ativo) return
+    const v = Number(valor.replace(',', '.'))
+    if (!valor.trim() || Number.isNaN(v) || v <= 0) {
+      setMsg({ tipo: 'erro', t: 'Informe um valor maior que zero.' })
+      return
+    }
+    setSalvando(true)
+    setMsg(null)
+    try {
+      const r = await financeiroService.definirValorTotalServico(solicitacaoId, v)
+      if (!r.ok) {
+        setMsg({ tipo: 'erro', t: 'Não foi possível salvar o valor.' })
+        return
+      }
+      setMsg({ tipo: 'ok', t: 'Valor salvo e dividido nas etapas (vistoria, orçamento e execução).' })
+      onSalvo()
+    } catch (err) {
+      console.error(err)
+      setMsg({ tipo: 'erro', t: 'Erro ao salvar. Verifique sua conexão.' })
+    } finally {
+      setSalvando(false)
+    }
+  }
+
+  const num = valorAtual != null ? Number(valorAtual) : null
+  const parte = num != null && !Number.isNaN(num) ? num / 3 : null
+
+  return (
+    <section
+      className={`rounded-2xl border shadow-md overflow-hidden bg-gradient-to-br ${shell} p-[1px]`}
+    >
+      <div className="rounded-2xl bg-white p-4 sm:p-5 space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Financeiro</p>
+            <h2 className="text-lg font-bold text-gray-900 mt-0.5">Valor total do serviço</h2>
+            <p className="text-xs text-gray-500 mt-1 max-w-md leading-relaxed">
+              O valor é dividido em <strong>três partes iguais</strong> (uma por etapa). O cliente paga cada etapa via{' '}
+              <strong>Pix pela plataforma</strong> — sem transferência direta ao prestador (RN18).
+            </p>
+          </div>
+          {num != null && num > 0 && (
+            <div className="shrink-0 rounded-xl bg-gray-50 border border-gray-100 px-4 py-3 text-right min-w-[140px]">
+              <p className="text-[10px] text-gray-500 uppercase font-semibold">Total acordado</p>
+              <p className="text-xl font-extrabold text-gray-900">{formatarValorBrl(num)}</p>
+              {parte != null && (
+                <p className="text-[11px] text-gray-500 mt-1">~{formatarValorBrl(Math.round(parte * 100) / 100)} / etapa</p>
+              )}
+            </div>
+          )}
+        </div>
+
+        {podeEditar && ativo ? (
+          <form onSubmit={salvar} className="space-y-3">
+            <label className="block">
+              <span className="text-xs font-semibold text-gray-600">Valor (R$)</span>
+              <input
+                type="text"
+                inputMode="decimal"
+                value={valor}
+                onChange={e => setValor(e.target.value)}
+                placeholder="Ex.: 900,00"
+                className="mt-1 w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-3 text-base font-semibold text-gray-900 outline-none focus:border-gray-400 focus:bg-white transition"
+              />
+            </label>
+            <button
+              type="submit"
+              disabled={salvando}
+              className={`w-full rounded-xl py-3 text-sm font-bold text-white shadow-md transition focus-visible:outline focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 ${btn}`}
+            >
+              {salvando ? 'Salvando…' : 'Salvar e distribuir nas etapas'}
+            </button>
+          </form>
+        ) : (
+          <p className="text-xs text-gray-500">
+            {!ativo
+              ? 'Valor bloqueado para edição neste status do atendimento.'
+              : 'Você pode visualizar o valor, mas apenas o cliente ou o prestador do atendimento altera aqui.'}
+          </p>
+        )}
+
+        {msg && (
+          <p
+            className={`text-xs font-medium rounded-lg px-3 py-2 ${
+              msg.tipo === 'ok' ? 'bg-emerald-50 text-emerald-800' : 'bg-red-50 text-red-700'
+            }`}
+          >
+            {msg.t}
+          </p>
+        )}
+      </div>
+    </section>
+  )
+}

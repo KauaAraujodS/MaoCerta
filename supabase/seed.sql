@@ -1,0 +1,1 @@
+-- Seed opcional (vazio). Dados iniciais vêm das migrations (ex.: categorias).

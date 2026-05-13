@@ -1,0 +1,40 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# supabase (gerado localmente para colar no SQL Editor — não versionar)
+/supabase/CONSOLIDADO_SQL_EDITOR.sql
+
+# local env files
+.env*.local
+.env
+
+# vercel
+.vercel
+
+# claude code (configuração local da ferramenta)
+.claude
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
