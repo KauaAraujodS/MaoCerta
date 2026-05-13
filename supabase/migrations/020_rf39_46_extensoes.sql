@@ -1053,11 +1053,13 @@ comment on view public.vw_relatorio_comissoes_mes is 'RF42.3: base para relatór
 
 -- RF46: inserts em avaliacoes apenas via RPC (bloqueia caminho antigo)
 drop policy if exists "avaliacoes_insert_participante" on public.avaliacoes;
+drop policy if exists "avaliacoes_insert_bloqueado_usuario" on public.avaliacoes;
 create policy "avaliacoes_insert_bloqueado_usuario" on public.avaliacoes
   for insert to authenticated with check (false);
 
 -- RF44 / S1: saques apenas via RPC (valor mínimo + anti-fraude)
 drop policy if exists "saques_insert_own" on public.saques;
+drop policy if exists "saques_insert_bloqueado_direto" on public.saques;
 create policy "saques_insert_bloqueado_direto" on public.saques
   for insert to authenticated with check (false);
 
