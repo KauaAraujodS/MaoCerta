@@ -227,7 +227,7 @@ export default function ClienteAtendimentoDetalheScreen({ id }: { id: string }) 
             solicitacaoId={atendimento.id}
             valorAtual={atendimento.valor_total_servico}
             status={atendimento.status}
-            podeEditar={ativo}
+            podeEditar={false}
             tema="cliente"
             onSalvo={() => {
               void carregar()

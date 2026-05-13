@@ -144,20 +144,31 @@ export default function ClienteDemandaDetalheScreen({ id }: { id: string }) {
     }
 
     // 1) Cria solicitação aceita ligada à demanda + proposta
-    const { error: erroSol } = await supabase.from('solicitacoes').insert({
-      cliente_id: demanda.cliente_id,
-      profissional_id: proposta.profissional_id,
-      titulo: demanda.titulo,
-      descricao: demanda.descricao,
-      status: 'aceita',
-      demanda_origem_id: demanda.id,
-      proposta_origem_id: proposta.id,
-    })
-    if (erroSol) {
+    const { data: solCriada, error: erroSol } = await supabase
+      .from('solicitacoes')
+      .insert({
+        cliente_id: demanda.cliente_id,
+        profissional_id: proposta.profissional_id,
+        titulo: demanda.titulo,
+        descricao: demanda.descricao,
+        status: 'aceita',
+        demanda_origem_id: demanda.id,
+        proposta_origem_id: proposta.id,
+      })
+      .select('id')
+      .single()
+    if (erroSol || !solCriada) {
       setAcaoEmCurso(null)
-      setAviso({ tipo: 'erro', texto: `Falha ao abrir atendimento: ${erroSol.message}` })
+      setAviso({ tipo: 'erro', texto: `Falha ao abrir atendimento: ${erroSol?.message || 'sem id'}` })
       return
     }
+
+    // 1b) Copia o valor da proposta pro atendimento — dispara a divisão entre etapas.
+    // O prestador foi quem definiu o valor na proposta; o cliente apenas concordou ao escolher.
+    await supabase
+      .from('solicitacoes')
+      .update({ valor_total_servico: Number(proposta.valor_proposto) })
+      .eq('id', solCriada.id)
 
     // 2) Marca proposta como aceita (trigger faz as outras virarem suplente)
     const { error: erroProp } = await supabase

@@ -109,6 +109,9 @@ export default function ValorServicoCard({
                 className="mt-1 w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-3 text-base font-semibold text-gray-900 outline-none focus:border-gray-400 focus:bg-white transition"
               />
             </label>
+            <p className="text-[11px] text-gray-500">
+              Só você (prestador) define o valor. O cliente vê o total e paga cada etapa.
+            </p>
             <button
               type="submit"
               disabled={salvando}
@@ -121,7 +124,9 @@ export default function ValorServicoCard({
           <p className="text-xs text-gray-500">
             {!ativo
               ? 'Valor bloqueado para edição neste status do atendimento.'
-              : 'Você pode visualizar o valor, mas apenas o cliente ou o prestador do atendimento altera aqui.'}
+              : tema === 'cliente'
+                ? 'Apenas o prestador define o valor do serviço. Você vê o total acordado e paga cada etapa.'
+                : 'Apenas você (prestador) altera este valor.'}
           </p>
         )}
 
