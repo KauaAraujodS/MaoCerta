@@ -130,7 +130,7 @@ export default function PlanoProfissionalScreen() {
               key={p.id}
               onClick={() => setSelecionado(p.id)}
               className={`rounded-2xl py-3 px-2 text-xs font-semibold transition-colors ${
-                ativo ? 'bg-emerald-700 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'
+                ativo ? 'bg-emerald-700 text-white' : 'bg-white dark:bg-slate-900 text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700'
               }`}
             >
               {p.nome}
@@ -142,11 +142,11 @@ export default function PlanoProfissionalScreen() {
         })}
       </div>
 
-      <section className="bg-white rounded-2xl p-5 space-y-3">
-        <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">Inclui</h2>
+      <section className="bg-white dark:bg-slate-900 rounded-2xl p-5 space-y-3">
+        <h2 className="text-sm font-bold text-gray-900 dark:text-slate-100 uppercase tracking-wide">Inclui</h2>
         <ul className="space-y-2">
           {plano.destaques.map(item => (
-            <li key={item} className="flex items-start gap-3 text-sm text-gray-700">
+            <li key={item} className="flex items-start gap-3 text-sm text-gray-700 dark:text-slate-300">
               <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 text-xs font-bold">
                 ✓
               </span>
@@ -157,12 +157,12 @@ export default function PlanoProfissionalScreen() {
       </section>
 
       {plano.limites.length > 0 && (
-        <section className="bg-white rounded-2xl p-5 space-y-3">
-          <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">Limitações</h2>
+        <section className="bg-white dark:bg-slate-900 rounded-2xl p-5 space-y-3">
+          <h2 className="text-sm font-bold text-gray-900 dark:text-slate-100 uppercase tracking-wide">Limitações</h2>
           <ul className="space-y-2">
             {plano.limites.map(item => (
-              <li key={item} className="flex items-start gap-3 text-sm text-gray-500">
-                <span className="w-5 h-5 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center shrink-0 text-xs font-bold">
+              <li key={item} className="flex items-start gap-3 text-sm text-gray-500 dark:text-slate-400">
+                <span className="w-5 h-5 rounded-full bg-gray-100 dark:bg-slate-800 text-gray-400 dark:text-slate-500 flex items-center justify-center shrink-0 text-xs font-bold">
                   ✕
                 </span>
                 {item}
@@ -176,7 +176,7 @@ export default function PlanoProfissionalScreen() {
         <button
           type="button"
           disabled
-          className="w-full bg-gray-200 text-gray-500 font-semibold py-3 rounded-2xl text-sm cursor-not-allowed"
+          className="w-full bg-gray-200 dark:bg-slate-700 text-gray-600 dark:text-slate-300 font-semibold py-3 rounded-2xl text-sm cursor-not-allowed"
         >
           Você já está nesse plano
         </button>
@@ -190,7 +190,7 @@ export default function PlanoProfissionalScreen() {
         </button>
       )}
 
-      <p className="text-[11px] text-gray-400 text-center px-6">
+      <p className="text-[11px] text-gray-400 dark:text-slate-500 text-center px-6">
         Cobrança única via Pix dentro da plataforma. Mensalidade automática vai chegar em uma próxima atualização.
       </p>
       </div>

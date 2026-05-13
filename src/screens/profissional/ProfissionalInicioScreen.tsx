@@ -225,7 +225,7 @@ export default function ProfissionalInicioScreen() {
                 </div>
                 <Link
                   href="/profissional/configuracoes/conta"
-                  className="absolute -bottom-1 -right-1 w-9 h-9 rounded-full bg-white text-emerald-800 text-sm font-bold shadow-md flex items-center justify-center hover:bg-emerald-50 border border-emerald-100"
+                  className="absolute -bottom-1 -right-1 w-9 h-9 rounded-full bg-white dark:bg-slate-900 text-emerald-800 text-sm font-bold shadow-md flex items-center justify-center hover:bg-emerald-50 border border-emerald-100"
                   title="Alterar foto e dados"
                 >
                   ✎
@@ -257,21 +257,21 @@ export default function ProfissionalInicioScreen() {
 
       <div className="max-w-lg mx-auto px-4 -mt-8 space-y-4 relative z-10">
         <section className={`grid grid-cols-2 gap-2 ${carregando ? 'opacity-60' : ''}`}>
-          <div className="bg-white rounded-2xl p-4 shadow-md border border-gray-100 text-center">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 shadow-md border border-gray-100 dark:border-slate-800 text-center">
             <p className="text-2xl font-bold text-emerald-700">{carregando ? '—' : d.nServicos}</p>
-            <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-wide mt-1">Serviços</p>
+            <p className="text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wide mt-1">Serviços</p>
           </div>
-          <div className="bg-white rounded-2xl p-4 shadow-md border border-gray-100 text-center">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 shadow-md border border-gray-100 dark:border-slate-800 text-center">
             <p className="text-2xl font-bold text-teal-700">{carregando ? '—' : d.nCategorias}</p>
-            <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-wide mt-1">Áreas</p>
+            <p className="text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wide mt-1">Áreas</p>
           </div>
-          <div className="bg-white rounded-2xl p-4 shadow-md border border-gray-100 text-center">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 shadow-md border border-gray-100 dark:border-slate-800 text-center">
             <p className="text-2xl font-bold text-violet-700">{carregando ? '—' : d.nPropostas}</p>
-            <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-wide mt-1">Propostas enviadas</p>
+            <p className="text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wide mt-1">Propostas enviadas</p>
           </div>
-          <div className="bg-white rounded-2xl p-4 shadow-md border border-gray-100 text-center">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 shadow-md border border-gray-100 dark:border-slate-800 text-center">
             <p className="text-2xl font-bold text-amber-700">{carregando ? '—' : d.nSolicitacoesPendentes}</p>
-            <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-wide mt-1">Solicitações novas</p>
+            <p className="text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wide mt-1">Solicitações novas</p>
           </div>
         </section>
 
@@ -286,7 +286,7 @@ export default function ProfissionalInicioScreen() {
         )}
 
         <section className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          <div className="rounded-2xl border border-emerald-200 dark:border-emerald-900/60 bg-white dark:bg-slate-900/80 p-4 shadow-sm">
+          <div className="rounded-2xl border border-emerald-200 dark:border-emerald-900/60 bg-white dark:bg-slate-900 dark:bg-slate-900/80 p-4 shadow-sm">
             <p className="text-[10px] font-bold uppercase text-emerald-800 dark:text-emerald-300">Saldo disponível</p>
             <p className="text-xl font-bold text-emerald-900 dark:text-emerald-200 mt-1">{formatarReais(d.saldoCarteira)}</p>
             <Link href="/profissional/carteira" className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 mt-2 inline-block">
@@ -307,19 +307,19 @@ export default function ProfissionalInicioScreen() {
         </p>
 
         <section className="space-y-3 pt-2">
-          <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest px-1">Atalhos</h2>
+          <h2 className="text-xs font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest px-1">Atalhos</h2>
           {linksPainel.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="group bg-white rounded-2xl p-4 flex items-center gap-4 shadow-sm border border-gray-100 hover:border-emerald-200 hover:shadow-md transition-all"
+              className="group bg-white dark:bg-slate-900 rounded-2xl p-4 flex items-center gap-4 shadow-sm border border-gray-100 dark:border-slate-800 hover:border-emerald-200 hover:shadow-md transition-all"
             >
               <span className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 flex items-center justify-center text-xl shadow-inner border border-emerald-100/80 group-hover:scale-105 transition-transform">
                 {item.icone}
               </span>
               <div className="flex-1 min-w-0">
-                <p className="font-bold text-gray-900">{item.titulo}</p>
-                <p className="text-xs text-gray-500 mt-0.5">{item.descricao}</p>
+                <p className="font-bold text-gray-900 dark:text-slate-100">{item.titulo}</p>
+                <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5">{item.descricao}</p>
                 <p className="text-[11px] font-semibold text-emerald-700 mt-1.5 truncate">
                   {carregando ? 'Carregando…' : item.dica(d)}
                 </p>
@@ -330,14 +330,14 @@ export default function ProfissionalInicioScreen() {
         </section>
 
         {d.userId && (
-          <section className="rounded-2xl bg-white border border-gray-200 shadow-sm p-4 mt-4">
-            <p className="text-xs font-bold text-gray-500 uppercase tracking-wide">Seu ID para solicitações diretas</p>
-            <p className="text-[11px] text-gray-500 mt-1 leading-relaxed">
+          <section className="rounded-2xl bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 shadow-sm p-4 mt-4">
+            <p className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide">Seu ID para solicitações diretas</p>
+            <p className="text-[11px] text-gray-500 dark:text-slate-400 mt-1 leading-relaxed">
               O cliente cola este código em <strong>Buscar e solicitar</strong> para o pedido cair em{' '}
               <strong>Solicitações recebidas</strong>.
             </p>
             <div className="mt-3 flex gap-2 items-stretch">
-              <code className="flex-1 text-[11px] bg-gray-50 border border-gray-200 rounded-lg px-2 py-2 break-all text-gray-800 font-mono leading-snug">
+              <code className="flex-1 text-[11px] bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-2 py-2 break-all text-gray-800 dark:text-slate-200 font-mono leading-snug">
                 {d.userId}
               </code>
               <button
@@ -361,7 +361,7 @@ export default function ProfissionalInicioScreen() {
 
         <section className="rounded-2xl bg-emerald-900/5 border border-emerald-100 p-4 mt-4">
           <p className="text-xs font-semibold text-emerald-900">Dica</p>
-          <p className="text-xs text-gray-600 mt-1 leading-relaxed">
+          <p className="text-xs text-gray-600 dark:text-slate-400 mt-1 leading-relaxed">
             Mantenha <strong>categorias</strong> e <strong>serviços</strong> atualizados e responda solicitações em até 24 h
             para melhorar sua reputação quando o módulo de avaliações estiver ativo.
           </p>

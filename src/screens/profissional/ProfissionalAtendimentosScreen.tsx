@@ -15,11 +15,11 @@ function badgeStatus(status: string) {
     case 'em_andamento':
       return { label: 'Em andamento', className: 'bg-blue-50 text-blue-700 border-blue-200' }
     case 'concluida':
-      return { label: 'Concluído', className: 'bg-gray-100 text-gray-700 border-gray-200' }
+      return { label: 'Concluído', className: 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 border-gray-200 dark:border-slate-700' }
     case 'cancelada':
       return { label: 'Cancelado', className: 'bg-red-50 text-red-700 border-red-200' }
     default:
-      return { label: status, className: 'bg-gray-100 text-gray-600 border-gray-200' }
+      return { label: status, className: 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-400 border-gray-200 dark:border-slate-700' }
   }
 }
 
@@ -62,7 +62,7 @@ export default function ProfissionalAtendimentosScreen() {
   const vazio = !carregando && lista.length === 0
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-emerald-50/40 via-white to-white pb-10">
+    <main className="min-h-screen bg-gradient-to-b from-emerald-50/40 via-white to-white dark:from-slate-950 dark:via-slate-950 dark:to-slate-950 pb-10">
       <header className="min-h-[200px] flex items-end bg-gradient-to-br from-emerald-700 via-teal-600 to-cyan-600 text-white px-4 pt-8 pb-12 rounded-b-[2rem] shadow-lg">
         <div className="max-w-lg mx-auto space-y-2">
           <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/65">Sua agenda</p>
@@ -74,7 +74,7 @@ export default function ProfissionalAtendimentosScreen() {
       </header>
 
       <div className="max-w-lg mx-auto px-4 -mt-6 space-y-4 relative z-10">
-        <div className="bg-white rounded-2xl p-1 grid grid-cols-2 gap-1 shadow border border-gray-100">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl p-1 grid grid-cols-2 gap-1 shadow border border-gray-100 dark:border-slate-800">
           <BotaoAba ativo={aba === 'andamento'} onClick={() => setAba('andamento')} contador={emAndamento.length}>
             Em andamento
           </BotaoAba>
@@ -84,9 +84,9 @@ export default function ProfissionalAtendimentosScreen() {
         </div>
 
         {carregando && (
-          <div className="bg-white rounded-2xl p-6 shadow border border-gray-100 flex items-center gap-3">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow border border-gray-100 dark:border-slate-800 flex items-center gap-3">
             <span className="inline-block w-5 h-5 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin" />
-            <p className="text-sm text-gray-600">Carregando...</p>
+            <p className="text-sm text-gray-600 dark:text-slate-400">Carregando...</p>
           </div>
         )}
 
@@ -105,15 +105,15 @@ export default function ProfissionalAtendimentosScreen() {
                     >
                       {badge.label}
                     </span>
-                    <time className="text-[11px] text-gray-400" dateTime={item.updated_at}>
+                    <time className="text-[11px] text-gray-400 dark:text-slate-500" dateTime={item.updated_at}>
                       {formatarRelativoPt(item.updated_at)} · {formatarDataPt(item.updated_at)}
                     </time>
                   </div>
-                  <h2 className="text-base font-bold text-gray-900 leading-snug">{item.titulo}</h2>
-                  <p className="text-sm text-gray-600 leading-relaxed line-clamp-2">{item.descricao}</p>
+                  <h2 className="text-base font-bold text-gray-900 dark:text-slate-100 leading-snug">{item.titulo}</h2>
+                  <p className="text-sm text-gray-600 dark:text-slate-400 leading-relaxed line-clamp-2">{item.descricao}</p>
 
                   {cliente && (
-                    <div className="flex items-center gap-3 pt-2 border-t border-gray-100">
+                    <div className="flex items-center gap-3 pt-2 border-t border-gray-100 dark:border-slate-800">
                       <div className="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-200 to-teal-200 flex items-center justify-center text-sm font-bold text-emerald-900 overflow-hidden">
                         {cliente.avatar_url ? (
                           // eslint-disable-next-line @next/next/no-img-element
@@ -123,8 +123,8 @@ export default function ProfissionalAtendimentosScreen() {
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs text-gray-500">Cliente</p>
-                        <p className="text-sm font-semibold text-gray-900 truncate">{cliente.nome}</p>
+                        <p className="text-xs text-gray-500 dark:text-slate-400">Cliente</p>
+                        <p className="text-sm font-semibold text-gray-900 dark:text-slate-100 truncate">{cliente.nome}</p>
                       </div>
                       {ehAndamento && (
                         <span className="text-emerald-700 text-xs font-semibold shrink-0">Abrir conversa ›</span>
@@ -139,14 +139,14 @@ export default function ProfissionalAtendimentosScreen() {
               <Link
                 key={item.id}
                 href={`/profissional/atendimentos/${item.id}`}
-                className="block bg-white rounded-2xl border border-gray-100 shadow-md overflow-hidden hover:border-emerald-200 transition-colors"
+                className="block bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-md overflow-hidden hover:border-emerald-200 transition-colors"
               >
                 {conteudo}
               </Link>
             ) : (
               <article
                 key={item.id}
-                className="bg-white rounded-2xl border border-gray-100 shadow-md overflow-hidden"
+                className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-md overflow-hidden"
               >
                 {conteudo}
               </article>
@@ -154,12 +154,12 @@ export default function ProfissionalAtendimentosScreen() {
           })}
 
         {vazio && (
-          <section className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm text-center space-y-2">
+          <section className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-gray-100 dark:border-slate-800 shadow-sm text-center space-y-2">
             <p className="text-4xl">{aba === 'andamento' ? '🛠️' : '📜'}</p>
-            <p className="text-sm font-semibold text-gray-800">
+            <p className="text-sm font-semibold text-gray-800 dark:text-slate-200">
               {aba === 'andamento' ? 'Nenhum atendimento ativo' : 'Sem histórico ainda'}
             </p>
-            <p className="text-xs text-gray-500 leading-relaxed max-w-sm mx-auto">
+            <p className="text-xs text-gray-500 dark:text-slate-400 leading-relaxed max-w-sm mx-auto">
               {aba === 'andamento'
                 ? 'Quando você aceitar uma solicitação na aba Pedidos, ela aparece aqui pra acompanhar.'
                 : 'Atendimentos concluídos ou cancelados ficam guardados aqui.'}
@@ -193,11 +193,11 @@ function BotaoAba({
       type="button"
       onClick={onClick}
       className={`text-xs font-semibold py-2.5 rounded-xl transition-colors ${
-        ativo ? 'bg-emerald-700 text-white' : 'text-gray-600 hover:bg-gray-50'
+        ativo ? 'bg-emerald-700 text-white' : 'text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:bg-slate-800 dark:hover:bg-slate-800'
       }`}
     >
       {children}
-      <span className={`ml-1.5 text-[10px] px-1.5 py-0.5 rounded-full ${ativo ? 'bg-white/25' : 'bg-gray-100'}`}>
+      <span className={`ml-1.5 text-[10px] px-1.5 py-0.5 rounded-full ${ativo ? 'bg-white/25' : 'bg-gray-100 dark:bg-slate-800'}`}>
         {contador}
       </span>
     </button>

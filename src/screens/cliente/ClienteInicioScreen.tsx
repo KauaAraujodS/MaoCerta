@@ -65,7 +65,7 @@ function badgeStatus(status: string) {
     case 'pendente':
       return { label: 'Aguardando', className: 'bg-amber-100 text-amber-900' }
     default:
-      return { label: status, className: 'bg-gray-100 text-gray-700' }
+      return { label: status, className: 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300' }
   }
 }
 
@@ -258,11 +258,11 @@ export default function ClienteInicioScreen() {
 
               <Link
                 href="/cliente/buscar"
-                className="block bg-white rounded-2xl px-4 py-3 shadow-lg hover:shadow-xl transition-shadow"
+                className="block bg-white dark:bg-slate-900 rounded-2xl px-4 py-3 shadow-lg hover:shadow-xl transition-shadow"
               >
                 <p className="text-[10px] font-bold text-purple-700 uppercase tracking-wider">Comece por aqui</p>
-                <p className="text-sm font-semibold text-gray-700 mt-0.5">O que você precisa hoje?</p>
-                <p className="text-[11px] text-gray-400 mt-1">🔎 Buscar prestadores · filtros · localização</p>
+                <p className="text-sm font-semibold text-gray-700 dark:text-slate-300 mt-0.5">O que você precisa hoje?</p>
+                <p className="text-[11px] text-gray-400 dark:text-slate-500 mt-1">🔎 Buscar prestadores · filtros · localização</p>
               </Link>
             </>
           )}
@@ -294,7 +294,7 @@ export default function ClienteInicioScreen() {
                 <Link
                   key={c.id}
                   href="/cliente/buscar"
-                  className="bg-white border border-purple-100 rounded-full px-3 py-1.5 text-xs font-semibold text-purple-800 hover:bg-purple-50 flex items-center gap-1.5 shadow-sm"
+                  className="bg-white dark:bg-slate-900 border border-purple-100 dark:border-purple-900/40 rounded-full px-3 py-1.5 text-xs font-semibold text-purple-800 dark:text-purple-300 hover:bg-purple-50 dark:hover:bg-slate-800 flex items-center gap-1.5 shadow-sm"
                 >
                   <span>{iconeCategoria(c.nome)}</span>
                   <span>{c.nome}</span>
@@ -323,7 +323,7 @@ export default function ClienteInicioScreen() {
                   <Link
                     key={s.id}
                     href={`/cliente/atendimentos/${s.id}`}
-                    className="block bg-white rounded-2xl border border-gray-100 shadow-sm p-4 hover:border-purple-200 transition-colors"
+                    className="block bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm p-4 hover:border-purple-200 transition-colors"
                   >
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-200 to-indigo-200 flex items-center justify-center text-sm font-bold text-purple-900 overflow-hidden">
@@ -336,12 +336,12 @@ export default function ClienteInicioScreen() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-2">
-                          <p className="text-sm font-bold text-gray-900 truncate">{s.titulo}</p>
+                          <p className="text-sm font-bold text-gray-900 dark:text-slate-100 truncate">{s.titulo}</p>
                           <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full whitespace-nowrap ${badge.className}`}>
                             {badge.label}
                           </span>
                         </div>
-                        <p className="text-[11px] text-gray-500 truncate">
+                        <p className="text-[11px] text-gray-500 dark:text-slate-400 truncate">
                           {prest ? prest.nome : 'Aguardando prestador'} · {formatarRelativoPt(s.updated_at)}
                         </p>
                       </div>
@@ -366,7 +366,7 @@ export default function ClienteInicioScreen() {
                 <Link
                   key={p.id}
                   href="/cliente/buscar"
-                  className="bg-white rounded-2xl border border-gray-100 shadow-sm p-3 hover:border-purple-200 flex flex-col items-center text-center"
+                  className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm p-3 hover:border-purple-200 flex flex-col items-center text-center"
                 >
                   <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-200 to-indigo-200 flex items-center justify-center text-base font-bold text-purple-900 overflow-hidden mb-2">
                     {p.avatar_url ? (
@@ -376,14 +376,14 @@ export default function ClienteInicioScreen() {
                       <span>{p.nome.slice(0, 1).toUpperCase()}</span>
                     )}
                   </div>
-                  <p className="text-sm font-bold text-gray-900 truncate w-full">{p.nome}</p>
+                  <p className="text-sm font-bold text-gray-900 dark:text-slate-100 truncate w-full">{p.nome}</p>
                   {p.categoriaPrincipal && (
                     <p className="text-[10px] text-purple-700 font-semibold mt-0.5 truncate w-full">
                       {iconeCategoria(p.categoriaPrincipal)} {p.categoriaPrincipal}
                     </p>
                   )}
                   {p.cidade && (
-                    <p className="text-[10px] text-gray-400 mt-0.5 truncate w-full">📍 {p.cidade}</p>
+                    <p className="text-[10px] text-gray-400 dark:text-slate-500 mt-0.5 truncate w-full">📍 {p.cidade}</p>
                   )}
                 </Link>
               ))}
@@ -419,15 +419,15 @@ export default function ClienteInicioScreen() {
                   <Link
                     key={s.id}
                     href={`/cliente/atendimentos/${s.id}`}
-                    className="block bg-white rounded-2xl border border-gray-100 shadow-sm p-4 hover:border-purple-200"
+                    className="block bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm p-4 hover:border-purple-200"
                   >
                     <div className="flex items-center gap-3">
                       <span className={`text-lg ${concluida ? 'text-emerald-600' : 'text-red-600'}`}>
                         {concluida ? '✅' : '✖️'}
                       </span>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-bold text-gray-900 truncate">{s.titulo}</p>
-                        <p className="text-[11px] text-gray-500">
+                        <p className="text-sm font-bold text-gray-900 dark:text-slate-100 truncate">{s.titulo}</p>
+                        <p className="text-[11px] text-gray-500 dark:text-slate-400">
                           {s.profissional?.nome || 'Sem prestador'} · {formatarRelativoPt(s.updated_at)}
                         </p>
                       </div>
@@ -461,7 +461,7 @@ function Secao({
   return (
     <section className="space-y-2">
       <div className="flex items-center justify-between px-1">
-        <h2 className="text-xs font-bold text-gray-500 uppercase tracking-widest">{titulo}</h2>
+        <h2 className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-widest">{titulo}</h2>
         {linkVerTodos && (
           <Link href={linkVerTodos} className="text-[11px] font-semibold text-purple-700 hover:text-purple-900">
             Ver todos ›
@@ -485,7 +485,7 @@ function CardStat({
   carregando: boolean
 }) {
   return (
-    <div className="bg-white rounded-2xl p-4 shadow-md border border-gray-100 dark:bg-slate-900/80 dark:border-slate-800 text-center">
+    <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 shadow-md border border-gray-100 dark:bg-slate-900/80 dark:border-slate-800 text-center">
       <p className={`text-2xl font-bold ${cor}`}>{carregando ? '—' : valor}</p>
       <p className="text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wide mt-1">{label}</p>
     </div>
@@ -494,19 +494,19 @@ function CardStat({
 
 function CardVazio({ emoji, titulo, texto }: { emoji: string; titulo: string; texto: string }) {
   return (
-    <section className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm text-center space-y-1">
+    <section className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-gray-100 dark:border-slate-800 shadow-sm text-center space-y-1">
       <p className="text-3xl">{emoji}</p>
-      <p className="text-sm font-semibold text-gray-800">{titulo}</p>
-      <p className="text-xs text-gray-500 leading-relaxed max-w-xs mx-auto">{texto}</p>
+      <p className="text-sm font-semibold text-gray-800 dark:text-slate-200">{titulo}</p>
+      <p className="text-xs text-gray-500 dark:text-slate-400 leading-relaxed max-w-xs mx-auto">{texto}</p>
     </section>
   )
 }
 
 function PlaceholderCard() {
   return (
-    <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 animate-pulse">
-      <div className="h-3 bg-gray-200 rounded w-32" />
-      <div className="h-3 bg-gray-100 rounded w-48 mt-2" />
+    <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-slate-800 animate-pulse">
+      <div className="h-3 bg-gray-200 dark:bg-slate-700 rounded w-32" />
+      <div className="h-3 bg-gray-100 dark:bg-slate-800 rounded w-48 mt-2" />
     </div>
   )
 }
@@ -525,11 +525,11 @@ function Atalho({
   return (
     <Link
       href={href}
-      className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm hover:border-purple-200 hover:shadow-md transition-all"
+      className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-gray-100 dark:border-slate-800 shadow-sm hover:border-purple-200 hover:shadow-md transition-all"
     >
       <span className="text-2xl">{icone}</span>
-      <p className="text-sm font-bold text-gray-900 mt-2">{titulo}</p>
-      <p className="text-[11px] text-gray-500 mt-0.5 leading-tight">{descricao}</p>
+      <p className="text-sm font-bold text-gray-900 dark:text-slate-100 mt-2">{titulo}</p>
+      <p className="text-[11px] text-gray-500 dark:text-slate-400 mt-0.5 leading-tight">{descricao}</p>
     </Link>
   )
 }

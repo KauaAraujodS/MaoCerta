@@ -16,7 +16,7 @@ function badgeSaque(status: string) {
     case 'processado':
       return { label: 'Processado', className: 'bg-emerald-50 text-emerald-700 border-emerald-200' }
     case 'cancelado':
-      return { label: 'Cancelado', className: 'bg-gray-100 text-gray-600 border-gray-200' }
+      return { label: 'Cancelado', className: 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-400 border-gray-200 dark:border-slate-700' }
     default:
       return { label: 'Pendente', className: 'bg-amber-50 text-amber-900 border-amber-200' }
   }
@@ -121,7 +121,7 @@ export default function ProfissionalCarteiraScreen() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-emerald-50/40 via-white to-white pb-10">
+    <main className="min-h-screen bg-gradient-to-b from-emerald-50/40 via-white to-white dark:from-slate-950 dark:via-slate-950 dark:to-slate-950 pb-10">
       <header className="min-h-[200px] flex items-end bg-gradient-to-br from-emerald-700 via-teal-600 to-cyan-600 text-white px-4 pt-8 pb-12 rounded-b-[2rem] shadow-lg">
         <div className="max-w-lg mx-auto w-full space-y-2">
           <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/65">Carteira interna</p>
@@ -133,21 +133,21 @@ export default function ProfissionalCarteiraScreen() {
       </header>
 
       <div className="max-w-lg mx-auto px-4 -mt-6 space-y-4 relative z-10">
-        <section className="bg-white rounded-2xl border border-gray-100 shadow-md p-5 space-y-3">
+        <section className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-md p-5 space-y-3">
           <div>
-            <p className="text-[11px] text-gray-500 uppercase tracking-wider">Disponível para saque</p>
+            <p className="text-[11px] text-gray-500 dark:text-slate-400 uppercase tracking-wider">Disponível para saque</p>
             <p className="text-3xl font-extrabold text-emerald-700 mt-1">{formatarValor(saldoDisponivel)}</p>
             {saldoBloqueado > 0 && (
               <p className="text-sm font-semibold text-amber-800 mt-2">
                 Em escrow / bloqueado: {formatarValor(saldoBloqueado)}
               </p>
             )}
-            <p className="text-[11px] text-gray-500 mt-2 leading-relaxed">
+            <p className="text-[11px] text-gray-500 dark:text-slate-400 mt-2 leading-relaxed">
               Créditos disponíveis após liberação das etapas. Sem recarga manual (RN24). Saques via fluxo anti-fraude
               (S1).
             </p>
             {totalPendente > 0 && (
-              <p className="text-[11px] text-gray-500 mt-1">
+              <p className="text-[11px] text-gray-500 dark:text-slate-400 mt-1">
                 {formatarValor(totalPendente)} em saques pendentes
               </p>
             )}
@@ -163,16 +163,16 @@ export default function ProfissionalCarteiraScreen() {
         </section>
 
         {mostrarSaque && (
-          <form onSubmit={enviarSaque} className="bg-white rounded-2xl border border-gray-100 shadow-md p-5 space-y-3">
+          <form onSubmit={enviarSaque} className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-md p-5 space-y-3">
             <div>
-              <h2 className="text-sm font-bold text-gray-900">Nova solicitação de saque</h2>
-              <p className="text-xs text-gray-500 mt-1">
+              <h2 className="text-sm font-bold text-gray-900 dark:text-slate-100">Nova solicitação de saque</h2>
+              <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
                 Saldo disponível: <strong>{formatarValor(saldoDisponivel)}</strong>
               </p>
             </div>
 
             <label className="block">
-              <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Valor (R$)</span>
+              <span className="text-xs font-semibold text-gray-600 dark:text-slate-400 uppercase tracking-wide">Valor (R$)</span>
               <input
                 type="text"
                 inputMode="decimal"
@@ -180,18 +180,18 @@ export default function ProfissionalCarteiraScreen() {
                 onChange={e => setValorSaque(e.target.value)}
                 placeholder="0,00"
                 required
-                className="mt-1 w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-emerald-600 focus:bg-white"
+                className="mt-1 w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-emerald-600 focus:bg-white dark:bg-slate-900"
               />
             </label>
 
             <label className="block">
-              <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Observação (opcional)</span>
+              <span className="text-xs font-semibold text-gray-600 dark:text-slate-400 uppercase tracking-wide">Observação (opcional)</span>
               <textarea
                 value={observacao}
                 onChange={e => setObservacao(e.target.value)}
                 rows={2}
                 placeholder="Ex.: chave Pix, banco preferido..."
-                className="mt-1 w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-emerald-600 focus:bg-white resize-none"
+                className="mt-1 w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-emerald-600 focus:bg-white resize-none"
               />
             </label>
 
@@ -215,7 +215,7 @@ export default function ProfissionalCarteiraScreen() {
           </div>
         )}
 
-        <div className="bg-white rounded-2xl p-1 grid grid-cols-2 gap-1 shadow border border-gray-100">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl p-1 grid grid-cols-2 gap-1 shadow border border-gray-100 dark:border-slate-800">
           <BotaoAba ativo={aba === 'movimentacoes'} onClick={() => setAba('movimentacoes')} contador={movimentacoes.length}>
             Movimentações
           </BotaoAba>
@@ -225,16 +225,16 @@ export default function ProfissionalCarteiraScreen() {
         </div>
 
         {carregando && (
-          <div className="bg-white rounded-2xl p-6 shadow border border-gray-100 flex items-center gap-3">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow border border-gray-100 dark:border-slate-800 flex items-center gap-3">
             <span className="inline-block w-5 h-5 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin" />
-            <p className="text-sm text-gray-600">Carregando...</p>
+            <p className="text-sm text-gray-600 dark:text-slate-400">Carregando...</p>
           </div>
         )}
 
         {!carregando && aba === 'movimentacoes' && movimentacoes.length > 0 && (
           <ul className="space-y-2">
             {movimentacoes.map(m => (
-              <li key={m.id} className="bg-white rounded-xl border border-gray-100 p-4 flex items-center gap-3">
+              <li key={m.id} className="bg-white dark:bg-slate-900 rounded-xl border border-gray-100 dark:border-slate-800 p-4 flex items-center gap-3">
                 <span
                   className={`w-9 h-9 rounded-full flex items-center justify-center text-base font-bold ${
                     m.tipo === 'debito' || m.tipo === 'estorno_disputa' || m.tipo === 'saque'
@@ -245,8 +245,8 @@ export default function ProfissionalCarteiraScreen() {
                   {m.tipo === 'debito' || m.tipo === 'estorno_disputa' || m.tipo === 'saque' ? '↓' : '↑'}
                 </span>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-gray-900 truncate">{m.descricao}</p>
-                  <p className="text-[11px] text-gray-400">{formatarDataPt(m.created_at)}</p>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-slate-100 truncate">{m.descricao}</p>
+                  <p className="text-[11px] text-gray-400 dark:text-slate-500">{formatarDataPt(m.created_at)}</p>
                 </div>
                 <span
                   className={`text-sm font-bold whitespace-nowrap ${
@@ -276,17 +276,17 @@ export default function ProfissionalCarteiraScreen() {
             {saques.map(s => {
               const badge = badgeSaque(s.status)
               return (
-                <li key={s.id} className="bg-white rounded-xl border border-gray-100 p-4 space-y-2">
+                <li key={s.id} className="bg-white dark:bg-slate-900 rounded-xl border border-gray-100 dark:border-slate-800 p-4 space-y-2">
                   <div className="flex items-center justify-between gap-2">
                     <span
                       className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${badge.className}`}
                     >
                       {badge.label}
                     </span>
-                    <time className="text-[11px] text-gray-400">{formatarDataPt(s.created_at)}</time>
+                    <time className="text-[11px] text-gray-400 dark:text-slate-500">{formatarDataPt(s.created_at)}</time>
                   </div>
                   <div className="flex items-center justify-between">
-                    <p className="text-base font-bold text-gray-900">{formatarValor(Number(s.valor))}</p>
+                    <p className="text-base font-bold text-gray-900 dark:text-slate-100">{formatarValor(Number(s.valor))}</p>
                     {s.status === 'pendente' && (
                       <button
                         type="button"
@@ -297,7 +297,7 @@ export default function ProfissionalCarteiraScreen() {
                       </button>
                     )}
                   </div>
-                  {s.observacao && <p className="text-xs text-gray-500">{s.observacao}</p>}
+                  {s.observacao && <p className="text-xs text-gray-500 dark:text-slate-400">{s.observacao}</p>}
                 </li>
               )
             })}
@@ -332,11 +332,11 @@ function BotaoAba({
       type="button"
       onClick={onClick}
       className={`text-xs font-semibold py-2.5 rounded-xl transition-colors ${
-        ativo ? 'bg-emerald-700 text-white' : 'text-gray-600 hover:bg-gray-50'
+        ativo ? 'bg-emerald-700 text-white' : 'text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:bg-slate-800 dark:hover:bg-slate-800'
       }`}
     >
       {children}
-      <span className={`ml-1.5 text-[10px] px-1.5 py-0.5 rounded-full ${ativo ? 'bg-white/25' : 'bg-gray-100'}`}>
+      <span className={`ml-1.5 text-[10px] px-1.5 py-0.5 rounded-full ${ativo ? 'bg-white/25' : 'bg-gray-100 dark:bg-slate-800'}`}>
         {contador}
       </span>
     </button>
@@ -345,10 +345,10 @@ function BotaoAba({
 
 function Vazio({ emoji, titulo, texto }: { emoji: string; titulo: string; texto: string }) {
   return (
-    <section className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm text-center space-y-2">
+    <section className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-gray-100 dark:border-slate-800 shadow-sm text-center space-y-2">
       <p className="text-4xl">{emoji}</p>
-      <p className="text-sm font-semibold text-gray-800">{titulo}</p>
-      <p className="text-xs text-gray-500 leading-relaxed max-w-sm mx-auto">{texto}</p>
+      <p className="text-sm font-semibold text-gray-800 dark:text-slate-200">{titulo}</p>
+      <p className="text-xs text-gray-500 dark:text-slate-400 leading-relaxed max-w-sm mx-auto">{texto}</p>
     </section>
   )
 }

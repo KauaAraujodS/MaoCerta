@@ -29,7 +29,7 @@ export default function SegurancaScreen({
       <CabecalhoAjuste titulo="Privacidade e Segurança" subtitulo="Proteja sua conta e seus dados" voltarHref={voltarHref} tema={tema} />
       <div className="max-w-lg mx-auto px-4 -mt-6 space-y-4 relative z-10">
 
-      <section className="bg-white rounded-2xl divide-y divide-gray-100">
+      <section className="bg-white dark:bg-slate-900 rounded-2xl divide-y divide-gray-100">
         <Toggle
           icone="🔐"
           titulo="Autenticação em 2 fatores"
@@ -55,16 +55,16 @@ export default function SegurancaScreen({
         )}
       </section>
 
-      <section className="bg-white rounded-2xl overflow-hidden">
+      <section className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden">
         <button
           onClick={() => setMostrarTrocaSenha(v => !v)}
-          className="w-full flex items-center justify-between p-4 hover:bg-gray-50"
+          className="w-full flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-slate-800 dark:bg-slate-800"
         >
           <div className="flex items-center gap-3">
             <span className="text-lg">🔑</span>
             <div className="text-left">
-              <p className="font-semibold text-sm text-gray-900">Alterar senha</p>
-              <p className="text-xs text-gray-500">Use uma senha forte e única</p>
+              <p className="font-semibold text-sm text-gray-900 dark:text-slate-100">Alterar senha</p>
+              <p className="text-xs text-gray-500 dark:text-slate-400">Use uma senha forte e única</p>
             </div>
           </div>
           <span className={`text-gray-300 text-lg transition-transform ${mostrarTrocaSenha ? 'rotate-90' : ''}`}>›</span>
@@ -76,7 +76,7 @@ export default function SegurancaScreen({
         )}
       </section>
 
-      <section className="bg-white rounded-2xl divide-y divide-gray-100">
+      <section className="bg-white dark:bg-slate-900 rounded-2xl divide-y divide-gray-100">
         <ItemAcao
           icone="🚫"
           titulo="Usuários bloqueados"
@@ -106,7 +106,7 @@ export default function SegurancaScreen({
             </p>
           </div>
         </div>
-        <button className="w-full bg-white text-red-600 font-semibold py-2.5 rounded-xl text-sm border border-red-200 hover:bg-red-100">
+        <button className="w-full bg-white dark:bg-slate-900 text-red-600 font-semibold py-2.5 rounded-xl text-sm border border-red-200 hover:bg-red-100">
           Solicitar exclusão
         </button>
       </section>
@@ -131,12 +131,12 @@ function Toggle({
   return (
     <button
       onClick={() => onChange(!ativo)}
-      className="w-full flex items-center gap-3 p-4 hover:bg-gray-50 text-left"
+      className="w-full flex items-center gap-3 p-4 hover:bg-gray-50 dark:hover:bg-slate-800 dark:bg-slate-800 text-left"
     >
       <span className="text-lg shrink-0">{icone}</span>
       <div className="flex-1 min-w-0">
-        <p className="font-semibold text-sm text-gray-900">{titulo}</p>
-        <p className="text-xs text-gray-500">{descricao}</p>
+        <p className="font-semibold text-sm text-gray-900 dark:text-slate-100">{titulo}</p>
+        <p className="text-xs text-gray-500 dark:text-slate-400">{descricao}</p>
       </div>
       <span
         className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors ${
@@ -144,7 +144,7 @@ function Toggle({
         }`}
       >
         <span
-          className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+          className={`inline-block h-4 w-4 transform rounded-full bg-white dark:bg-slate-900 transition-transform ${
             ativo ? 'translate-x-6' : 'translate-x-1'
           }`}
         />
@@ -165,14 +165,14 @@ function ItemAcao({
   contador?: number
 }) {
   return (
-    <button className="w-full flex items-center gap-3 p-4 hover:bg-gray-50 text-left">
+    <button className="w-full flex items-center gap-3 p-4 hover:bg-gray-50 dark:hover:bg-slate-800 dark:bg-slate-800 text-left">
       <span className="text-lg shrink-0">{icone}</span>
       <div className="flex-1 min-w-0">
-        <p className="font-semibold text-sm text-gray-900">{titulo}</p>
-        <p className="text-xs text-gray-500">{descricao}</p>
+        <p className="font-semibold text-sm text-gray-900 dark:text-slate-100">{titulo}</p>
+        <p className="text-xs text-gray-500 dark:text-slate-400">{descricao}</p>
       </div>
       {contador !== undefined && (
-        <span className="bg-gray-100 text-gray-600 text-[11px] font-semibold px-2 py-0.5 rounded-full">
+        <span className="bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-400 text-[11px] font-semibold px-2 py-0.5 rounded-full">
           {contador}
         </span>
       )}
@@ -218,7 +218,7 @@ function FormularioSenha() {
   }
 
   return (
-    <form onSubmit={enviar} className="space-y-3 pt-2 border-t border-gray-100">
+    <form onSubmit={enviar} className="space-y-3 pt-2 border-t border-gray-100 dark:border-slate-800">
       <CampoSenha label="Senha atual" valor={atual} onChange={setAtual} />
       <CampoSenha label="Nova senha" valor={nova} onChange={setNova} />
       <CampoSenha label="Confirmar nova senha" valor={confirmar} onChange={setConfirmar} />
@@ -255,12 +255,12 @@ function CampoSenha({
 }) {
   return (
     <label className="block">
-      <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">{label}</span>
+      <span className="text-xs font-semibold text-gray-600 dark:text-slate-400 uppercase tracking-wide">{label}</span>
       <input
         type="password"
         value={valor}
         onChange={e => onChange(e.target.value)}
-        className="mt-1 w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-purple-600 focus:bg-white"
+        className="mt-1 w-full bg-gray-50 border border-gray-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm text-gray-900 dark:text-slate-100 focus:outline-none focus:border-purple-600 focus:bg-white dark:bg-slate-900"
       />
     </label>
   )

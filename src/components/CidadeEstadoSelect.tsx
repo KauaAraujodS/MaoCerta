@@ -38,7 +38,7 @@ async function carregarMunicipios(uf: string): Promise<Municipio[]> {
   return data
 }
 
-const CLASSE_PADRAO = 'mt-1 w-full bg-gray-50 border border-gray-200 rounded-2xl px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-purple-600 focus:bg-white'
+const CLASSE_PADRAO = 'mt-1 w-full bg-gray-50 border border-gray-200 dark:border-slate-700 rounded-2xl px-3 py-2.5 text-sm text-gray-900 dark:text-slate-100 focus:outline-none focus:border-purple-600 focus:bg-white dark:bg-slate-900'
 
 export default function CidadeEstadoSelect({
   estado,
@@ -88,7 +88,7 @@ export default function CidadeEstadoSelect({
   return (
     <div className="grid grid-cols-3 gap-2">
       <label className="block">
-        <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">{rotuloEstado}</span>
+        <span className="text-xs font-semibold text-gray-600 dark:text-slate-400 uppercase tracking-wide">{rotuloEstado}</span>
         <select
           value={estado || ''}
           onChange={(e) => trocarEstado(e.target.value)}
@@ -105,7 +105,7 @@ export default function CidadeEstadoSelect({
       </label>
 
       <label className="block col-span-2">
-        <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">{rotuloCidade}</span>
+        <span className="text-xs font-semibold text-gray-600 dark:text-slate-400 uppercase tracking-wide">{rotuloCidade}</span>
         <select
           value={cidade || ''}
           onChange={(e) => trocarCidade(e.target.value)}

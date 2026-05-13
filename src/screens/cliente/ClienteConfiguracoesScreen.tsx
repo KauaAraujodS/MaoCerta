@@ -118,7 +118,7 @@ export default function ClienteConfiguracoesScreen() {
       </header>
 
       <div className="max-w-lg mx-auto px-4 -mt-6 space-y-4 relative z-10">
-        <section className="bg-white rounded-2xl border border-gray-100 shadow-md p-5 space-y-3">
+        <section className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-md p-5 space-y-3">
           <div className="flex items-center gap-4">
             <div className="w-14 h-14 bg-gradient-to-br from-purple-200 to-indigo-200 rounded-full flex items-center justify-center text-lg font-bold text-purple-900 overflow-hidden">
               {profile?.avatarUrl ? (
@@ -129,17 +129,17 @@ export default function ClienteConfiguracoesScreen() {
               )}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-bold text-base text-gray-900 truncate">{profile?.nome || 'Carregando...'}</p>
-              <p className="text-gray-500 text-xs truncate">{profile?.email || ''}</p>
+              <p className="font-bold text-base text-gray-900 dark:text-slate-100 truncate">{profile?.nome || 'Carregando...'}</p>
+              <p className="text-gray-500 dark:text-slate-400 text-xs truncate">{profile?.email || ''}</p>
             </div>
           </div>
-          <div className="border-t border-gray-100 pt-3 flex items-center justify-between">
+          <div className="border-t border-gray-100 dark:border-slate-800 pt-3 flex items-center justify-between">
             <div>
-              <p className="text-gray-400 text-[10px] font-medium uppercase tracking-wider">Plano atual</p>
+              <p className="text-gray-400 dark:text-slate-500 text-[10px] font-medium uppercase tracking-wider">Plano atual</p>
               <p className="font-bold text-purple-700">{NOME_PLANO[profile?.plano || 'free'] || 'Free'}</p>
             </div>
             <div className="text-right">
-              <p className="text-gray-400 text-[10px] font-medium uppercase tracking-wider">Avaliação</p>
+              <p className="text-gray-400 dark:text-slate-500 text-[10px] font-medium uppercase tracking-wider">Avaliação</p>
               <p className="font-bold text-amber-500">— ⭐</p>
             </div>
           </div>
@@ -151,14 +151,14 @@ export default function ClienteConfiguracoesScreen() {
             <Link
               key={item.href}
               href={item.href}
-              className="flex items-center gap-4 bg-white rounded-2xl p-4 hover:bg-gray-50 transition-colors shadow-sm border border-gray-100"
+              className="flex items-center gap-4 bg-white dark:bg-slate-900 rounded-2xl p-4 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors shadow-sm border border-gray-100 dark:border-slate-800"
             >
-              <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-lg shrink-0">
+              <div className="w-10 h-10 bg-gray-100 dark:bg-slate-800 rounded-full flex items-center justify-center text-lg shrink-0">
                 {item.icone}
               </div>
               <div className="flex-1">
-                <p className="font-semibold text-sm text-gray-900">{item.titulo}</p>
-                <p className="text-xs text-gray-500">{item.descricao}</p>
+                <p className="font-semibold text-sm text-gray-900 dark:text-slate-100">{item.titulo}</p>
+                <p className="text-xs text-gray-500 dark:text-slate-400">{item.descricao}</p>
               </div>
               <span className="text-gray-300 text-lg">›</span>
             </Link>

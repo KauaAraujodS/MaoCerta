@@ -258,13 +258,13 @@ export default function ContaProfissionalScreen() {
         </div>
         <div className="mt-3 h-2 rounded-full bg-black/20 overflow-hidden">
           <div
-            className="h-full rounded-full bg-white transition-all duration-500"
+            className="h-full rounded-full bg-white dark:bg-slate-900 transition-all duration-500"
             style={{ width: `${completudePerfil}%` }}
           />
         </div>
       </section>
 
-      <section className="bg-white rounded-2xl p-5 flex flex-col items-center gap-3 shadow-sm border border-gray-100">
+      <section className="bg-white dark:bg-slate-900 rounded-2xl p-5 flex flex-col items-center gap-3 shadow-sm border border-gray-100 dark:border-slate-800">
         <div className="relative">
           <div className="w-24 h-24 rounded-full bg-gradient-to-br from-emerald-600 to-teal-500 text-white text-2xl font-bold flex items-center justify-center overflow-hidden">
             {avatarUrl ? (
@@ -316,12 +316,12 @@ export default function ContaProfissionalScreen() {
             </>
           )}
         </div>
-        <p className="text-[11px] text-gray-400">JPG ou PNG · até {TAMANHO_MAX_MB} MB · Foto profissional ajuda a fechar mais serviços</p>
+        <p className="text-[11px] text-gray-400 dark:text-slate-500">JPG ou PNG · até {TAMANHO_MAX_MB} MB · Foto profissional ajuda a fechar mais serviços</p>
       </section>
 
       <form onSubmit={salvar} className="space-y-4">
-        <section className="bg-white rounded-2xl p-5 space-y-4">
-          <h2 className="text-xs font-bold text-gray-500 uppercase tracking-wide">Dados pessoais</h2>
+        <section className="bg-white dark:bg-slate-900 rounded-2xl p-5 space-y-4">
+          <h2 className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide">Dados pessoais</h2>
           <Campo
             label="Nome completo"
             valor={form.nome}
@@ -348,10 +348,10 @@ export default function ContaProfissionalScreen() {
           />
         </section>
 
-        <section className="bg-white rounded-2xl p-5 space-y-4">
+        <section className="bg-white dark:bg-slate-900 rounded-2xl p-5 space-y-4">
           <div>
-            <h2 className="text-xs font-bold text-gray-500 uppercase tracking-wide">Apresentação profissional</h2>
-            <p className="text-[11px] text-gray-400 mt-1">Esse texto aparece no seu perfil para os clientes que te encontrarem.</p>
+            <h2 className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide">Apresentação profissional</h2>
+            <p className="text-[11px] text-gray-400 dark:text-slate-500 mt-1">Esse texto aparece no seu perfil para os clientes que te encontrarem.</p>
           </div>
           <CampoTexto
             label="Sobre seu trabalho"
@@ -424,14 +424,14 @@ function Campo(props: {
 }) {
   return (
     <label className="block">
-      <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">{props.label}</span>
+      <span className="text-xs font-semibold text-gray-600 dark:text-slate-400 uppercase tracking-wide">{props.label}</span>
       <input
         type="text"
         value={props.valor}
         placeholder={props.placeholder}
         disabled={props.disabled}
         onChange={e => props.onChange(e.target.value)}
-        className="mt-1 w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-emerald-600 focus:bg-white"
+        className="mt-1 w-full bg-gray-50 border border-gray-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm text-gray-900 dark:text-slate-100 focus:outline-none focus:border-emerald-600 focus:bg-white dark:bg-slate-900"
       />
     </label>
   )
@@ -440,11 +440,11 @@ function Campo(props: {
 function CampoLeitura(props: { label: string; valor: string; dica?: string }) {
   return (
     <div>
-      <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">{props.label}</span>
-      <div className="mt-1 w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-500">
+      <span className="text-xs font-semibold text-gray-600 dark:text-slate-400 uppercase tracking-wide">{props.label}</span>
+      <div className="mt-1 w-full bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm text-gray-500 dark:text-slate-400">
         {props.valor || '—'}
       </div>
-      {props.dica && <p className="text-[11px] text-gray-400 mt-1">{props.dica}</p>}
+      {props.dica && <p className="text-[11px] text-gray-400 dark:text-slate-500 mt-1">{props.dica}</p>}
     </div>
   )
 }
@@ -458,14 +458,14 @@ function CampoTexto(props: {
 }) {
   return (
     <label className="block">
-      <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">{props.label}</span>
+      <span className="text-xs font-semibold text-gray-600 dark:text-slate-400 uppercase tracking-wide">{props.label}</span>
       <textarea
         value={props.valor}
         placeholder={props.placeholder}
         disabled={props.disabled}
         rows={4}
         onChange={e => props.onChange(e.target.value)}
-        className="mt-1 w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-emerald-600 focus:bg-white resize-none"
+        className="mt-1 w-full bg-gray-50 border border-gray-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm text-gray-900 dark:text-slate-100 focus:outline-none focus:border-emerald-600 focus:bg-white dark:bg-slate-900 resize-none"
       />
     </label>
   )

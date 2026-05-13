@@ -212,8 +212,8 @@ export default function PagamentoEtapaPanel({
 
   if (valorEtapa <= 0) {
     return (
-      <div className="rounded-xl border border-dashed border-gray-200 bg-gray-50/80 px-3 py-2.5">
-        <p className="text-[11px] text-gray-500 leading-snug">
+      <div className="rounded-xl border border-dashed border-gray-200 dark:border-slate-700 bg-gray-50/80 px-3 py-2.5">
+        <p className="text-[11px] text-gray-500 dark:text-slate-400 leading-snug">
           Defina o <strong>valor total do serviço</strong> acima para dividir automaticamente nestas etapas e habilitar o
           Pix.
         </p>
@@ -223,8 +223,8 @@ export default function PagamentoEtapaPanel({
 
   if (!pagamento && meuTipo === 'profissional') {
     return (
-      <div className="rounded-xl border border-gray-100 bg-white/60 px-3 py-2">
-        <p className="text-[11px] text-gray-500">
+      <div className="rounded-xl border border-gray-100 dark:border-slate-800 bg-white/60 px-3 py-2">
+        <p className="text-[11px] text-gray-500 dark:text-slate-400">
           Etapa: <strong>{formatarValorBrl(valorEtapa)}</strong> — o cliente paga pela plataforma (Pix). Pagamentos
           externos são moderados (RN18).
         </p>
@@ -275,7 +275,7 @@ export default function PagamentoEtapaPanel({
             onChange={e => setAceiteEscrow(e.target.checked)}
             className="mt-0.5 h-4 w-4 rounded border-violet-300 text-violet-700"
           />
-          <span className="text-[11px] text-gray-700 leading-relaxed">
+          <span className="text-[11px] text-gray-700 dark:text-slate-300 leading-relaxed">
             Li e aceito que o pagamento será retido em escrow até aprovação da etapa e que aplicam-se a política de
             disputa e os termos da plataforma (obrigatório para continuar).
           </span>
@@ -305,16 +305,16 @@ export default function PagamentoEtapaPanel({
     Date.now() - new Date(pagamento.created_at).getTime() <= 15 * 60 * 1000
 
   return (
-    <div className="rounded-2xl border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-900/80 p-4 shadow-sm space-y-3">
+    <div className="rounded-2xl border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-900 dark:bg-slate-900/80 p-4 shadow-sm space-y-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Pagamento desta etapa</p>
+        <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">Pagamento desta etapa</p>
         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${badge.cls}`}>{badge.txt}</span>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-center">
-        <div className="rounded-lg bg-gray-50 px-2 py-2">
-          <p className="text-[10px] text-gray-500 uppercase">Bruto / etapa</p>
-          <p className="text-sm font-bold text-gray-900">{formatarValorBrl(Number(pagamento.valor_bruto))}</p>
+        <div className="rounded-lg bg-gray-50 dark:bg-slate-800 px-2 py-2">
+          <p className="text-[10px] text-gray-500 dark:text-slate-400 uppercase">Bruto / etapa</p>
+          <p className="text-sm font-bold text-gray-900 dark:text-slate-100">{formatarValorBrl(Number(pagamento.valor_bruto))}</p>
         </div>
         <div className="rounded-lg bg-rose-50/80 px-2 py-2">
           <p className="text-[10px] text-rose-700 uppercase">Plataforma ({Number(pagamento.comissao_percentual)}%)</p>
@@ -327,14 +327,14 @@ export default function PagamentoEtapaPanel({
           </p>
         </div>
       </div>
-      <p className="text-[10px] text-center text-gray-500">
+      <p className="text-[10px] text-center text-gray-500 dark:text-slate-400">
         Valor para prestador: {formatarValorBrl(Number(pagamento.valor_liquido_prestador))} | Comissão plataforma:{' '}
         {formatarValorBrl(Number(pagamento.valor_comissao))} ({Number(pagamento.comissao_percentual)}%)
       </p>
 
       {st === 'aguardando_pagamento' && meuTipo === 'cliente' && (
         <div className="space-y-2">
-          <p className="text-[11px] text-gray-600">
+          <p className="text-[11px] text-gray-600 dark:text-slate-400">
             <strong>Sandbox / demo:</strong> copie o código ou simule o webhook de confirmação.
           </p>
           {pagamento.qr_expires_at && (
@@ -344,16 +344,16 @@ export default function PagamentoEtapaPanel({
             </p>
           )}
           {pagamento.pix_payload_hash && (
-            <p className="text-[9px] text-gray-400 break-all">Hash Pix (rastreio): {pagamento.pix_payload_hash}</p>
+            <p className="text-[9px] text-gray-400 dark:text-slate-500 break-all">Hash Pix (rastreio): {pagamento.pix_payload_hash}</p>
           )}
-          <div className="rounded-lg border border-gray-200 bg-gray-50 p-2 max-h-24 overflow-y-auto">
-            <code className="text-[10px] leading-tight text-gray-700 break-all">{pagamento.pix_copia_e_cola}</code>
+          <div className="rounded-lg border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 p-2 max-h-24 overflow-y-auto">
+            <code className="text-[10px] leading-tight text-gray-700 dark:text-slate-300 break-all">{pagamento.pix_copia_e_cola}</code>
           </div>
           <div className="flex flex-col sm:flex-row gap-2">
             <button
               type="button"
               onClick={copiarPix}
-              className="flex-1 rounded-xl border border-violet-300 bg-white py-2.5 text-sm font-semibold text-violet-800 hover:bg-violet-50"
+              className="flex-1 rounded-xl border border-violet-300 dark:border-violet-800/60 bg-white dark:bg-slate-900 py-2.5 text-sm font-semibold text-violet-800 dark:text-violet-300 hover:bg-violet-50 dark:hover:bg-slate-800"
             >
               {copiou ? 'Copiado!' : 'Copiar código Pix'}
             </button>
@@ -371,7 +371,7 @@ export default function PagamentoEtapaPanel({
               type="button"
               disabled={processando}
               onClick={cancelarQr}
-              className="w-full text-xs font-semibold text-gray-600 underline-offset-2 hover:underline"
+              className="w-full text-xs font-semibold text-gray-600 dark:text-slate-400 underline-offset-2 hover:underline"
             >
               Cancelar QR / código não pago (sem custo)
             </button>
@@ -419,7 +419,7 @@ export default function PagamentoEtapaPanel({
                         setMostrarDisputa(false)
                         setMotivoDisputa('')
                       }}
-                      className="text-xs font-semibold text-gray-600 px-2"
+                      className="text-xs font-semibold text-gray-600 dark:text-slate-400 px-2"
                     >
                       Voltar
                     </button>
@@ -446,7 +446,7 @@ export default function PagamentoEtapaPanel({
                 value={evidenciaTxt}
                 onChange={e => setEvidenciaTxt(e.target.value)}
                 rows={2}
-                className="w-full text-xs rounded-lg border border-orange-200 px-2 py-1.5 bg-white"
+                className="w-full text-xs rounded-lg border border-orange-200 px-2 py-1.5 bg-white dark:bg-slate-900"
                 placeholder="Descreva provas; anexos pelo suporte se necessário."
               />
               <button
@@ -467,7 +467,7 @@ export default function PagamentoEtapaPanel({
                 value={replicaTxt}
                 onChange={e => setReplicaTxt(e.target.value)}
                 rows={2}
-                className="w-full text-xs rounded-lg border border-orange-200 px-2 py-1.5 bg-white"
+                className="w-full text-xs rounded-lg border border-orange-200 px-2 py-1.5 bg-white dark:bg-slate-900"
                 placeholder="Sua réplica…"
               />
               <button
@@ -490,7 +490,7 @@ export default function PagamentoEtapaPanel({
       )}
 
       {meuTipo === 'profissional' && st !== 'aguardando_pagamento' && (
-        <p className="text-[11px] text-gray-500">
+        <p className="text-[11px] text-gray-500 dark:text-slate-400">
           Entradas na carteira apenas por etapas pagas, reembolso admin ou estorno de disputa (RN24).
         </p>
       )}

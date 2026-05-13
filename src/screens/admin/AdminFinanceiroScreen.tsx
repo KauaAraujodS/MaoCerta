@@ -120,12 +120,12 @@ export default function AdminFinanceiroScreen() {
         </header>
 
         {msg && (
-          <p className="text-sm rounded-xl border border-slate-200 bg-white px-3 py-2 text-slate-800">{msg}</p>
+          <p className="text-sm rounded-xl border border-slate-200 bg-white dark:bg-slate-900 px-3 py-2 text-slate-800">{msg}</p>
         )}
 
         {carregando && <p className="text-sm text-slate-500">Carregando…</p>}
 
-        <section className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+        <section className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 p-4 shadow-sm">
           <h2 className="text-sm font-bold text-slate-900">Comissões (amostra recente)</h2>
           <p className="text-xs text-slate-500 mt-1">Soma comissões na lista: {formatarValor(totalComissao)}</p>
           <ul className="mt-3 space-y-2 max-h-48 overflow-y-auto text-xs">
@@ -138,7 +138,7 @@ export default function AdminFinanceiroScreen() {
           </ul>
         </section>
 
-        <section className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm space-y-2">
+        <section className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 p-4 shadow-sm space-y-2">
           <h2 className="text-sm font-bold text-slate-900">Liberações agendadas (48h)</h2>
           <p className="text-xs text-slate-600 leading-relaxed">
             Após a migração 021, valores em escrow com prazo vencido só creditam quando este job roda (cron ou manual).
@@ -154,7 +154,7 @@ export default function AdminFinanceiroScreen() {
           </button>
         </section>
 
-        <section className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm space-y-3">
+        <section className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 p-4 shadow-sm space-y-3">
           <h2 className="text-sm font-bold text-slate-900">Disputas em aberto</h2>
           {disputasAbertas.length === 0 && <p className="text-xs text-slate-500">Nenhuma disputa pendente.</p>}
           {disputasAbertas.map(d => (

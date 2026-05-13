@@ -36,7 +36,7 @@ export default function EtapaFinanceiraTimeline({ etapa, pagamento }: Props) {
             className={`text-[10px] font-semibold px-2 py-1 rounded-full border ${
               i <= si
                 ? 'bg-violet-100 dark:bg-violet-950 border-violet-300 text-violet-900 dark:text-violet-200'
-                : 'bg-white dark:bg-slate-900 border-gray-200 text-gray-400'
+                : 'bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700 text-gray-400 dark:text-slate-500'
             }`}
           >
             {i === 0 ? '1. Agendada' : i === 1 ? '2. Em progresso' : '3. Concluída'}
@@ -47,21 +47,21 @@ export default function EtapaFinanceiraTimeline({ etapa, pagamento }: Props) {
         <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-gray-200/80 dark:border-slate-700">
           <span
             className={`text-[10px] font-semibold px-2 py-1 rounded-full border ${
-              pixOk ? 'bg-sky-50 dark:bg-sky-950/40 border-sky-200 text-sky-900' : 'bg-white border-gray-200 text-gray-400'
+              pixOk ? 'bg-sky-50 dark:bg-sky-950/40 border-sky-200 text-sky-900' : 'bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700 text-gray-400 dark:text-slate-500'
             }`}
           >
             Pix confirmado
           </span>
           <span
             className={`text-[10px] font-semibold px-2 py-1 rounded-full border ${
-              escrowOk ? 'bg-amber-50 dark:bg-amber-950/40 border-amber-200 text-amber-900' : 'bg-white border-gray-200 text-gray-400'
+              escrowOk ? 'bg-amber-50 dark:bg-amber-950/40 border-amber-200 text-amber-900' : 'bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700 text-gray-400 dark:text-slate-500'
             }`}
           >
             Retenção
           </span>
           <span
             className={`text-[10px] font-semibold px-2 py-1 rounded-full border ${
-              disputaOuLiberado ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 text-emerald-900' : 'bg-white border-gray-200 text-gray-400'
+              disputaOuLiberado ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 text-emerald-900' : 'bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700 text-gray-400 dark:text-slate-500'
             }`}
           >
             {finalLabel}

@@ -131,7 +131,7 @@ function FormularioVerificar() {
           <button
             type="submit"
             disabled={codigo.join('').length < 8 || carregando}
-            className="w-full bg-white text-purple-700 font-semibold py-3 rounded-2xl text-sm hover:bg-white/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-white dark:bg-slate-900 text-purple-700 font-semibold py-3 rounded-2xl text-sm hover:bg-white/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {carregando ? 'Verificando...' : 'Confirmar código'}
           </button>

@@ -127,11 +127,11 @@ export default function AvaliarPrestadorCard({
 
   if (modo === 'carregando') {
     return (
-      <div className="rounded-2xl border border-gray-100 bg-white p-6 flex items-center gap-3 animate-pulse">
+      <div className="rounded-2xl border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 flex items-center gap-3 animate-pulse">
         <div className="h-10 w-10 rounded-full bg-violet-100" />
         <div className="flex-1 space-y-2">
-          <div className="h-3 bg-gray-100 rounded w-1/2" />
-          <div className="h-3 bg-gray-100 rounded w-3/4" />
+          <div className="h-3 bg-gray-100 dark:bg-slate-800 rounded w-1/2" />
+          <div className="h-3 bg-gray-100 dark:bg-slate-800 rounded w-3/4" />
         </div>
       </div>
     )
@@ -171,7 +171,7 @@ export default function AvaliarPrestadorCard({
         <h2 className="text-base font-bold">Avaliar {nomePrestador || 'o prestador'}</h2>
       </div>
       <form onSubmit={enviar} className="p-4 sm:p-5 space-y-4">
-        <p className="text-xs text-gray-600 leading-relaxed">
+        <p className="text-xs text-gray-600 dark:text-slate-400 leading-relaxed">
           Notas de 1 a 5 em três critérios. A média influencia prioridade em buscas (RF46.4).
         </p>
         {(['qualidade', 'prazo', 'comunicacao'] as const).map(campo => {
@@ -180,7 +180,7 @@ export default function AvaliarPrestadorCard({
           const label = campo === 'qualidade' ? 'Qualidade do serviço' : campo === 'prazo' ? 'Prazo' : 'Comunicação'
           return (
             <div key={campo}>
-              <p className="text-[11px] font-semibold text-gray-700 mb-1">{label}</p>
+              <p className="text-[11px] font-semibold text-gray-700 dark:text-slate-300 mb-1">{label}</p>
               <div className="flex gap-1">
                 {[1, 2, 3, 4, 5].map(n => (
                   <button
@@ -188,7 +188,7 @@ export default function AvaliarPrestadorCard({
                     type="button"
                     onClick={() => set(n)}
                     className={`flex-1 h-10 rounded-lg text-sm font-bold border-2 ${
-                      val >= n ? 'border-amber-400 bg-amber-100 text-amber-900' : 'border-gray-200 bg-white text-gray-400'
+                      val >= n ? 'border-amber-400 bg-amber-100 text-amber-900' : 'border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-400 dark:text-slate-500'
                     }`}
                   >
                     {n}
@@ -199,14 +199,14 @@ export default function AvaliarPrestadorCard({
           )
         })}
         <label className="block">
-          <span className="text-xs font-semibold text-gray-600">Comentário público (opcional)</span>
+          <span className="text-xs font-semibold text-gray-600 dark:text-slate-400">Comentário público (opcional)</span>
           <textarea
             value={comentario}
             onChange={e => setComentario(e.target.value)}
             rows={3}
             maxLength={500}
             placeholder="Destaque pontos positivos ou o que pode melhorar…"
-            className="mt-1 w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-violet-400 focus:bg-white resize-none"
+            className="mt-1 w-full rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-violet-400 focus:bg-white dark:bg-slate-900 resize-none"
           />
         </label>
         {erro && <p className="text-xs text-red-600 font-medium">{erro}</p>}
@@ -280,7 +280,7 @@ function RespostaPrestadorBloco({
 
   if (resposta) {
     return (
-      <section className="rounded-2xl border border-slate-200 bg-white p-4 space-y-2">
+      <section className="rounded-2xl border border-slate-200 bg-white dark:bg-slate-900 p-4 space-y-2">
         <p className="text-xs font-bold text-slate-600 uppercase">Sua réplica pública (RF46.5)</p>
         <p className="text-sm text-slate-800">{resposta}</p>
       </section>
@@ -288,9 +288,9 @@ function RespostaPrestadorBloco({
   }
 
   return (
-    <section className="rounded-2xl border border-violet-100 bg-white p-4 space-y-3 shadow-sm">
-      <p className="text-sm font-semibold text-gray-900">Avaliação recebida ({nota}★)</p>
-      {comentario && <p className="text-xs text-gray-600 italic">«{comentario}»</p>}
+    <section className="rounded-2xl border border-violet-100 bg-white dark:bg-slate-900 p-4 space-y-3 shadow-sm">
+      <p className="text-sm font-semibold text-gray-900 dark:text-slate-100">Avaliação recebida ({nota}★)</p>
+      {comentario && <p className="text-xs text-gray-600 dark:text-slate-400 italic">«{comentario}»</p>}
       <p className="text-[11px] text-slate-600">Uma única réplica pública (até {maxResp} caracteres).</p>
       <textarea
         value={texto}

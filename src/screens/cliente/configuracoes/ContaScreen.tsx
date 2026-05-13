@@ -223,7 +223,7 @@ export default function ContaScreen() {
       <CabecalhoAjuste titulo="Conta" subtitulo="Edite seus dados pessoais" voltarHref="/cliente/configuracoes" tema="cliente" />
       <div className="max-w-lg mx-auto px-4 -mt-6 space-y-4 relative z-10">
 
-      <section className="bg-white rounded-2xl p-5 flex flex-col items-center gap-3">
+      <section className="bg-white dark:bg-slate-900 rounded-2xl p-5 flex flex-col items-center gap-3">
         <div className="relative">
           <div className="w-24 h-24 rounded-full bg-gradient-to-br from-purple-700 to-indigo-600 text-white text-2xl font-bold flex items-center justify-center overflow-hidden">
             {avatarUrl ? (
@@ -275,11 +275,11 @@ export default function ContaScreen() {
             </>
           )}
         </div>
-        <p className="text-[11px] text-gray-400">JPG ou PNG · até {TAMANHO_MAX_MB} MB</p>
+        <p className="text-[11px] text-gray-400 dark:text-slate-500">JPG ou PNG · até {TAMANHO_MAX_MB} MB</p>
       </section>
 
       <form onSubmit={salvar} className="space-y-4">
-        <section className="bg-white rounded-2xl p-5 space-y-4">
+        <section className="bg-white dark:bg-slate-900 rounded-2xl p-5 space-y-4">
           <Campo
             label="Nome completo"
             valor={form.nome}
@@ -344,14 +344,14 @@ function Campo(props: {
 }) {
   return (
     <label className="block">
-      <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">{props.label}</span>
+      <span className="text-xs font-semibold text-gray-600 dark:text-slate-400 uppercase tracking-wide">{props.label}</span>
       <input
         type="text"
         value={props.valor}
         placeholder={props.placeholder}
         disabled={props.disabled}
         onChange={e => props.onChange(e.target.value)}
-        className="mt-1 w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-purple-600 focus:bg-white"
+        className="mt-1 w-full bg-gray-50 border border-gray-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm text-gray-900 dark:text-slate-100 focus:outline-none focus:border-purple-600 focus:bg-white dark:bg-slate-900"
       />
     </label>
   )
@@ -360,11 +360,11 @@ function Campo(props: {
 function CampoLeitura(props: { label: string; valor: string; dica?: string }) {
   return (
     <div>
-      <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">{props.label}</span>
-      <div className="mt-1 w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-500">
+      <span className="text-xs font-semibold text-gray-600 dark:text-slate-400 uppercase tracking-wide">{props.label}</span>
+      <div className="mt-1 w-full bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm text-gray-500 dark:text-slate-400">
         {props.valor || '—'}
       </div>
-      {props.dica && <p className="text-[11px] text-gray-400 mt-1">{props.dica}</p>}
+      {props.dica && <p className="text-[11px] text-gray-400 dark:text-slate-500 mt-1">{props.dica}</p>}
     </div>
   )
 }
@@ -378,14 +378,14 @@ function CampoTexto(props: {
 }) {
   return (
     <label className="block">
-      <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">{props.label}</span>
+      <span className="text-xs font-semibold text-gray-600 dark:text-slate-400 uppercase tracking-wide">{props.label}</span>
       <textarea
         value={props.valor}
         placeholder={props.placeholder}
         disabled={props.disabled}
         rows={3}
         onChange={e => props.onChange(e.target.value)}
-        className="mt-1 w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-purple-600 focus:bg-white resize-none"
+        className="mt-1 w-full bg-gray-50 border border-gray-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm text-gray-900 dark:text-slate-100 focus:outline-none focus:border-purple-600 focus:bg-white dark:bg-slate-900 resize-none"
       />
     </label>
   )

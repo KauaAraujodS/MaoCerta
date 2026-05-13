@@ -199,7 +199,7 @@ export default function ProfissionalDemandasScreen() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-emerald-50/30 pb-10">
+    <main className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-emerald-50/30 dark:from-slate-950 dark:via-slate-950 dark:to-slate-950 pb-10">
       <div className="min-h-[200px] flex items-end bg-gradient-to-br from-emerald-700 via-teal-600 to-cyan-600 text-white px-4 pt-8 pb-12 rounded-b-[2rem] shadow-lg">
         <div className="max-w-lg mx-auto space-y-3">
           <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/70">Marketplace</p>
@@ -239,9 +239,9 @@ export default function ProfissionalDemandasScreen() {
         )}
 
         {carregando && (
-          <div className="bg-white rounded-2xl p-6 shadow-md border border-gray-100 flex items-center gap-3">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-md border border-gray-100 dark:border-slate-800 flex items-center gap-3">
             <span className="inline-block w-5 h-5 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin" />
-            <p className="text-sm text-gray-600">Carregando demandas...</p>
+            <p className="text-sm text-gray-600 dark:text-slate-400">Carregando demandas...</p>
           </div>
         )}
 
@@ -259,7 +259,7 @@ export default function ProfissionalDemandasScreen() {
             return (
               <article
                 key={d.id}
-                className="rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden"
+                className="rounded-2xl border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden"
               >
                 <div className="p-4 space-y-3">
                   <div className="flex flex-wrap items-center gap-2">
@@ -269,22 +269,22 @@ export default function ProfissionalDemandasScreen() {
                     <span className="text-[11px] font-bold uppercase tracking-wide text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-full">
                       {catNome}
                     </span>
-                    <span className="text-[11px] text-gray-400 ml-auto">{formatarRelativoPt(d.created_at)}</span>
+                    <span className="text-[11px] text-gray-400 dark:text-slate-500 ml-auto">{formatarRelativoPt(d.created_at)}</span>
                   </div>
-                  <h2 className="text-base font-bold text-gray-900 leading-snug">{d.titulo}</h2>
-                  <p className="text-sm text-gray-600 leading-relaxed">{d.descricao}</p>
+                  <h2 className="text-base font-bold text-gray-900 dark:text-slate-100 leading-snug">{d.titulo}</h2>
+                  <p className="text-sm text-gray-600 dark:text-slate-400 leading-relaxed">{d.descricao}</p>
 
                   {cliente && (
                     <button
                       type="button"
                       onClick={() => setPerfilAberto(d.cliente_id)}
-                      className="text-left w-full bg-gray-50 hover:bg-gray-100 rounded-xl px-3 py-2 transition-colors"
+                      className="text-left w-full bg-gray-50 dark:bg-slate-800 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-xl px-3 py-2 transition-colors"
                     >
-                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Cliente</p>
-                      <p className="text-sm font-semibold text-gray-800">
+                      <p className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider">Cliente</p>
+                      <p className="text-sm font-semibold text-gray-800 dark:text-slate-200">
                         {cliente.nome}
                         {cliente.cidade && (
-                          <span className="text-xs font-normal text-gray-500"> · {cliente.cidade}</span>
+                          <span className="text-xs font-normal text-gray-500 dark:text-slate-400"> · {cliente.cidade}</span>
                         )}
                       </p>
                       <p className="text-[11px] text-emerald-700 font-semibold mt-0.5">Ver perfil completo ›</p>
@@ -309,7 +309,7 @@ export default function ProfissionalDemandasScreen() {
                         type="button"
                         onClick={() => recusar(d)}
                         disabled={acaoCarregando}
-                        className="flex-1 min-w-[120px] text-sm font-semibold bg-white border border-gray-200 text-gray-700 py-2.5 rounded-xl hover:bg-gray-50 disabled:opacity-50"
+                        className="flex-1 min-w-[120px] text-sm font-semibold bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-800 disabled:opacity-50"
                       >
                         Recusar
                       </button>
@@ -317,15 +317,15 @@ export default function ProfissionalDemandasScreen() {
                   )}
 
                   {demandaForm === d.id && (
-                    <form onSubmit={(e) => enviarProposta(e, d)} className="space-y-2 pt-2 border-t border-gray-100">
-                      <p className="text-xs font-bold text-gray-500 uppercase tracking-wide">Sua proposta</p>
+                    <form onSubmit={(e) => enviarProposta(e, d)} className="space-y-2 pt-2 border-t border-gray-100 dark:border-slate-800">
+                      <p className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide">Sua proposta</p>
                       <textarea
                         value={formMensagem}
                         onChange={(e) => setFormMensagem(e.target.value)}
                         placeholder="Como você executaria o serviço, materiais e disponibilidade"
                         rows={3}
                         required
-                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30 resize-none"
+                        className="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30 resize-none"
                       />
                       <div className="grid grid-cols-2 gap-2">
                         <input
@@ -335,7 +335,7 @@ export default function ProfissionalDemandasScreen() {
                           onChange={(e) => setFormValor(e.target.value)}
                           placeholder="Valor (R$)"
                           required
-                          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-sm"
+                          className="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl px-3 py-2 text-sm"
                         />
                         <input
                           type="text"
@@ -343,7 +343,7 @@ export default function ProfissionalDemandasScreen() {
                           onChange={(e) => setFormPrazo(e.target.value)}
                           placeholder="Prazo (ex.: 3 dias)"
                           required
-                          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-sm"
+                          className="w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl px-3 py-2 text-sm"
                         />
                       </div>
                       <div className="flex gap-2">
@@ -358,7 +358,7 @@ export default function ProfissionalDemandasScreen() {
                           type="button"
                           onClick={fecharFormulario}
                           disabled={acaoCarregando}
-                          className="px-3 bg-white border border-gray-200 text-gray-700 font-semibold rounded-xl text-sm hover:bg-gray-50"
+                          className="px-3 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 font-semibold rounded-xl text-sm hover:bg-gray-50 dark:hover:bg-slate-800"
                         >
                           Cancelar
                         </button>
@@ -371,10 +371,10 @@ export default function ProfissionalDemandasScreen() {
           })}
 
         {!carregando && demandas.length === 0 && (
-          <section className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm text-center space-y-2">
+          <section className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-gray-100 dark:border-slate-800 shadow-sm text-center space-y-2">
             <p className="text-4xl">📭</p>
-            <p className="text-sm font-semibold text-gray-800">Nenhuma demanda no momento</p>
-            <p className="text-xs text-gray-500 leading-relaxed max-w-sm mx-auto">
+            <p className="text-sm font-semibold text-gray-800 dark:text-slate-200">Nenhuma demanda no momento</p>
+            <p className="text-xs text-gray-500 dark:text-slate-400 leading-relaxed max-w-sm mx-auto">
               Quando algum cliente publicar uma demanda compatível com sua atuação, ela aparece aqui.
               Demandas que você recusou ou aceitou não voltam a aparecer.
             </p>

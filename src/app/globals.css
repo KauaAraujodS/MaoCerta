@@ -1,3 +1,68 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ============================================================
+   Tema claro/escuro — selects nativos e date pickers
+   color-scheme garante que os controles do navegador (date input,
+   scrollbar, dropdown nativo do <select>) sigam o tema do app.
+============================================================ */
+html {
+  color-scheme: light;
+}
+html.dark {
+  color-scheme: dark;
+}
+
+/* Garante que o body acompanhe o tema em paginas que
+   esquecerem de aplicar dark: nos containers principais. */
+html.dark body {
+  background-color: rgb(2 6 23); /* slate-950 */
+  color: rgb(241 245 249); /* slate-100 */
+}
+
+/* ============================================================
+   Componentes utilitarios — usar @layer pra coexistir bem
+   com Tailwind. Padronizam inputs, selects, textareas e cards.
+============================================================ */
+@layer components {
+  /* Campo de formulario base (input, select, textarea) */
+  .input-padrao {
+    @apply w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-900 placeholder:text-gray-400
+           focus:outline-none focus:border-purple-600 focus:bg-white
+           dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:placeholder:text-slate-500
+           dark:focus:border-purple-400 dark:focus:bg-slate-900
+           disabled:opacity-60;
+  }
+
+  /* Select nativo com seta visivel em ambos os temas */
+  .select-padrao {
+    @apply input-padrao appearance-none pr-9 bg-no-repeat;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' viewBox='0 0 24 24' stroke='%236b7280' stroke-width='2'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3e%3c/svg%3e");
+    background-position: right 0.75rem center;
+    background-size: 1rem;
+  }
+  html.dark .select-padrao {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' viewBox='0 0 24 24' stroke='%23cbd5e1' stroke-width='2'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3e%3c/svg%3e");
+  }
+
+  /* Card branco (com variante dark) */
+  .card-padrao {
+    @apply bg-white border border-gray-100 shadow-sm rounded-2xl
+           dark:bg-slate-900 dark:border-slate-800;
+  }
+
+  /* Botoes */
+  .btn-primario {
+    @apply bg-purple-700 hover:bg-purple-800 text-white font-semibold py-2.5 rounded-xl text-sm disabled:opacity-50
+           dark:bg-purple-600 dark:hover:bg-purple-500;
+  }
+  .btn-secundario {
+    @apply bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 font-semibold py-2.5 rounded-xl text-sm disabled:opacity-50
+           dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-700;
+  }
+  .btn-perigo {
+    @apply bg-red-50 hover:bg-red-100 text-red-600 font-semibold py-2.5 rounded-xl text-sm
+           dark:bg-red-950/40 dark:hover:bg-red-900/40 dark:text-red-400;
+  }
+}

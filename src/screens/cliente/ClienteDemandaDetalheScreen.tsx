@@ -221,20 +221,20 @@ export default function ClienteDemandaDetalheScreen({ id }: { id: string }) {
         )}
 
         {carregando && (
-          <div className="bg-white rounded-3xl p-6 shadow border border-gray-100 flex items-center gap-3">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow border border-gray-100 dark:border-slate-800 flex items-center gap-3">
             <span className="inline-block w-5 h-5 border-2 border-purple-600 border-t-transparent rounded-full animate-spin" />
-            <p className="text-sm text-gray-600">Carregando...</p>
+            <p className="text-sm text-gray-600 dark:text-slate-400">Carregando...</p>
           </div>
         )}
 
         {!carregando && demanda && (
           <>
-            <section className="bg-white rounded-2xl border border-gray-100 shadow-md p-5 space-y-2">
-              <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Descrição</p>
-              <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{demanda.descricao}</p>
-              <p className="text-[11px] text-gray-400 pt-2 border-t border-gray-100">
+            <section className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-md p-5 space-y-2">
+              <p className="text-[11px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider">Descrição</p>
+              <p className="text-sm text-gray-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">{demanda.descricao}</p>
+              <p className="text-[11px] text-gray-400 dark:text-slate-500 pt-2 border-t border-gray-100 dark:border-slate-800">
                 Aberta em {formatarDataPt(demanda.created_at)} · status:{' '}
-                <span className="font-semibold text-gray-600">{demanda.status.replace(/_/g, ' ')}</span>
+                <span className="font-semibold text-gray-600 dark:text-slate-400">{demanda.status.replace(/_/g, ' ')}</span>
               </p>
             </section>
 
@@ -256,19 +256,19 @@ export default function ClienteDemandaDetalheScreen({ id }: { id: string }) {
 
             <section className="space-y-2">
               <div className="flex items-center justify-between px-1">
-                <h2 className="text-xs font-bold text-gray-500 uppercase tracking-widest">
+                <h2 className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-widest">
                   Propostas recebidas ({propostas.length})
                 </h2>
-                <span className="text-[11px] text-gray-400">
+                <span className="text-[11px] text-gray-400 dark:text-slate-500">
                   Plano {nomePlano(plano)}: até {limites.maxPropostasPorDemanda}/demanda
                 </span>
               </div>
 
               {propostas.length === 0 && (
-                <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm text-center space-y-1">
+                <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-gray-100 dark:border-slate-800 shadow-sm text-center space-y-1">
                   <p className="text-3xl">⏳</p>
-                  <p className="text-sm font-semibold text-gray-800">Nenhuma proposta ainda</p>
-                  <p className="text-xs text-gray-500 leading-relaxed max-w-xs mx-auto">
+                  <p className="text-sm font-semibold text-gray-800 dark:text-slate-200">Nenhuma proposta ainda</p>
+                  <p className="text-xs text-gray-500 dark:text-slate-400 leading-relaxed max-w-xs mx-auto">
                     Aguarde — prestadores compatíveis com sua categoria vão enviar propostas com valor e prazo.
                   </p>
                 </div>
@@ -284,15 +284,15 @@ export default function ClienteDemandaDetalheScreen({ id }: { id: string }) {
                 return (
                   <article
                     key={p.id}
-                    className={`bg-white rounded-2xl border-2 p-4 space-y-3 ${
-                      p.status === 'aceita' ? 'border-emerald-300' : 'border-gray-100'
+                    className={`bg-white dark:bg-slate-900 rounded-2xl border-2 p-4 space-y-3 ${
+                      p.status === 'aceita' ? 'border-emerald-300' : 'border-gray-100 dark:border-slate-800'
                     }`}
                   >
                     <div className="flex items-start justify-between gap-2">
                       <button
                         type="button"
                         onClick={() => prest && setPerfilAberto(prest.id)}
-                        className="flex items-center gap-3 flex-1 min-w-0 text-left hover:bg-gray-50 rounded-xl p-1 -m-1"
+                        className="flex items-center gap-3 flex-1 min-w-0 text-left hover:bg-gray-50 dark:hover:bg-slate-800 dark:bg-slate-800 rounded-xl p-1 -m-1"
                       >
                         <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-200 to-indigo-200 flex items-center justify-center text-base font-bold text-purple-900 overflow-hidden shrink-0">
                           {prest?.avatar_url ? (
@@ -303,9 +303,9 @@ export default function ClienteDemandaDetalheScreen({ id }: { id: string }) {
                           )}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-bold text-gray-900 truncate">{prest?.nome || 'Prestador'}</p>
+                          <p className="text-sm font-bold text-gray-900 dark:text-slate-100 truncate">{prest?.nome || 'Prestador'}</p>
                           {(local || prest?.experiencia_anos) && (
-                            <p className="text-[11px] text-gray-500 truncate">
+                            <p className="text-[11px] text-gray-500 dark:text-slate-400 truncate">
                               {local && <>📍 {local}</>}
                               {prest?.experiencia_anos != null && <> · {prest.experiencia_anos}a exp.</>}
                             </p>
@@ -322,22 +322,22 @@ export default function ClienteDemandaDetalheScreen({ id }: { id: string }) {
                     <div className="grid grid-cols-2 gap-2">
                       <div className="bg-purple-50 rounded-xl p-3">
                         <p className="text-[10px] font-bold text-purple-700 uppercase tracking-wider">Valor</p>
-                        <p className="text-base font-bold text-gray-900 mt-0.5">
+                        <p className="text-base font-bold text-gray-900 dark:text-slate-100 mt-0.5">
                           {formatarValor(Number(p.valor_proposto))}
                         </p>
                       </div>
                       <div className="bg-indigo-50 rounded-xl p-3">
                         <p className="text-[10px] font-bold text-indigo-700 uppercase tracking-wider">Prazo</p>
-                        <p className="text-base font-bold text-gray-900 mt-0.5 truncate">{p.prazo}</p>
+                        <p className="text-base font-bold text-gray-900 dark:text-slate-100 mt-0.5 truncate">{p.prazo}</p>
                       </div>
                     </div>
 
-                    <div className="bg-gray-50 rounded-xl p-3">
-                      <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Mensagem</p>
-                      <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{p.mensagem}</p>
+                    <div className="bg-gray-50 dark:bg-slate-800 rounded-xl p-3">
+                      <p className="text-[10px] font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1">Mensagem</p>
+                      <p className="text-sm text-gray-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">{p.mensagem}</p>
                     </div>
 
-                    <p className="text-[10px] text-gray-400">{formatarRelativoPt(p.created_at)}</p>
+                    <p className="text-[10px] text-gray-400 dark:text-slate-500">{formatarRelativoPt(p.created_at)}</p>
 
                     {podeEscolher && (
                       <button

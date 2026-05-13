@@ -98,13 +98,13 @@ export default function ValidacaoProfissionalScreen() {
       />
       <div className="max-w-lg mx-auto px-4 -mt-6 space-y-4 relative z-10">
 
-      <section className="bg-white rounded-2xl p-4 space-y-3">
+      <section className="bg-white dark:bg-slate-900 rounded-2xl p-4 space-y-3">
         <label className="block">
-          <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Tipo de documento</span>
+          <span className="text-xs font-semibold text-gray-600 dark:text-slate-400 uppercase tracking-wide">Tipo de documento</span>
           <select
             value={tipo}
             onChange={(e) => setTipo(e.target.value)}
-            className="mt-1 w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-sm"
+            className="mt-1 w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm"
           >
             {TIPOS.map((item) => (
               <option key={item} value={item}>
@@ -120,13 +120,13 @@ export default function ValidacaoProfissionalScreen() {
         </label>
       </section>
 
-      <section className="bg-white rounded-2xl p-4 space-y-3">
-        <p className="text-xs font-bold text-gray-500 uppercase tracking-wide">Histórico de envios</p>
-        {documentos.length === 0 && <p className="text-sm text-gray-500">Nenhum documento enviado ainda.</p>}
+      <section className="bg-white dark:bg-slate-900 rounded-2xl p-4 space-y-3">
+        <p className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide">Histórico de envios</p>
+        {documentos.length === 0 && <p className="text-sm text-gray-500 dark:text-slate-400">Nenhum documento enviado ainda.</p>}
         {documentos.map((doc) => (
-          <div key={doc.id} className="border border-gray-100 rounded-xl p-3">
-            <p className="text-sm font-semibold text-gray-900">{doc.tipo_documento}</p>
-            <p className="text-xs text-gray-500 mt-1">Status: {doc.status}</p>
+          <div key={doc.id} className="border border-gray-100 dark:border-slate-800 rounded-xl p-3">
+            <p className="text-sm font-semibold text-gray-900 dark:text-slate-100">{doc.tipo_documento}</p>
+            <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">Status: {doc.status}</p>
             <a href={doc.arquivo_url} target="_blank" className="text-xs text-emerald-700 font-semibold mt-2 inline-block">
               Ver arquivo
             </a>

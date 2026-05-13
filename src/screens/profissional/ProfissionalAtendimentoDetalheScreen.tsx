@@ -121,10 +121,10 @@ export default function ProfissionalAtendimentoDetalheScreen({ id }: { id: strin
 
   if (carregando) {
     return (
-      <main className="min-h-screen bg-gray-50 p-6">
-        <div className="max-w-lg mx-auto bg-white rounded-2xl p-6 shadow-md flex items-center gap-3">
+      <main className="min-h-screen bg-gray-50 dark:bg-slate-800 p-6">
+        <div className="max-w-lg mx-auto bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-md flex items-center gap-3">
           <span className="inline-block w-5 h-5 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm text-gray-600">Carregando atendimento...</p>
+          <p className="text-sm text-gray-600 dark:text-slate-400">Carregando atendimento...</p>
         </div>
       </main>
     )
@@ -132,8 +132,8 @@ export default function ProfissionalAtendimentoDetalheScreen({ id }: { id: strin
 
   if (!atendimento || !meuId) {
     return (
-      <main className="min-h-screen bg-gray-50 p-6">
-        <div className="max-w-lg mx-auto bg-white rounded-2xl p-6 shadow-md space-y-3">
+      <main className="min-h-screen bg-gray-50 dark:bg-slate-800 p-6">
+        <div className="max-w-lg mx-auto bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-md space-y-3">
           <p className="text-sm text-red-700">{erro || 'Atendimento não encontrado.'}</p>
           <Link href="/profissional/atendimentos" className="text-sm font-semibold text-emerald-700">
             ‹ Voltar para Atendimentos
@@ -194,9 +194,9 @@ export default function ProfissionalAtendimentoDetalheScreen({ id }: { id: strin
 
       <div className="flex-1 w-full max-w-6xl mx-auto px-4 grid lg:grid-cols-[minmax(0,28rem)_288px] gap-6 pb-8 items-start">
         <div className="w-full min-w-0">
-      <section className="bg-white dark:bg-slate-900/80 border-b border-gray-100 dark:border-slate-800 px-4 py-4">
+      <section className="bg-white dark:bg-slate-900 dark:bg-slate-900/80 border-b border-gray-100 dark:border-slate-800 px-4 py-4">
         <div className="w-full space-y-2">
-          <p className="text-xs font-bold text-gray-500 uppercase tracking-wide">Detalhes</p>
+          <p className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide">Detalhes</p>
           <h2 className="text-base font-bold text-gray-900 dark:text-slate-100">{atendimento.titulo}</h2>
           <p className="text-sm text-gray-600 dark:text-slate-300 leading-relaxed">{atendimento.descricao}</p>
           <p className="text-[11px] text-gray-400 dark:text-slate-500">Aberto em {formatarDataPt(atendimento.created_at)}</p>
@@ -227,7 +227,7 @@ export default function ProfissionalAtendimentoDetalheScreen({ id }: { id: strin
                 type="button"
                 onClick={() => setConfirmandoCancelamento(true)}
                 disabled={acaoEmCurso}
-                className="text-xs font-semibold bg-white border border-red-200 text-red-700 px-3 py-2 rounded-lg hover:bg-red-50 disabled:opacity-50"
+                className="text-xs font-semibold bg-white dark:bg-slate-900 border border-red-200 text-red-700 px-3 py-2 rounded-lg hover:bg-red-50 disabled:opacity-50"
               >
                 Cancelar atendimento
               </button>
@@ -255,7 +255,7 @@ export default function ProfissionalAtendimentoDetalheScreen({ id }: { id: strin
                 type="button"
                 onClick={() => setConfirmandoCancelamento(false)}
                 disabled={acaoEmCurso}
-                className="text-xs font-semibold bg-white border border-gray-200 text-gray-700 px-3 py-2 rounded-lg hover:bg-gray-50"
+                className="text-xs font-semibold bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800"
               >
                 Voltar
               </button>
@@ -289,9 +289,9 @@ export default function ProfissionalAtendimentoDetalheScreen({ id }: { id: strin
       </section>
 
       {/* Seção de Etapas */}
-      <section className="bg-white dark:bg-slate-900/80 border-b border-gray-100 dark:border-slate-800 px-4 py-4">
+      <section className="bg-white dark:bg-slate-900 dark:bg-slate-900/80 border-b border-gray-100 dark:border-slate-800 px-4 py-4">
         <div className="w-full space-y-3">
-          <p className="text-xs font-bold text-gray-500 uppercase tracking-wide">📋 Etapas do Atendimento</p>
+          <p className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide">📋 Etapas do Atendimento</p>
           <GerenciadorEtapas
             solicitacaoId={atendimento.id}
             meuId={meuId}
@@ -302,9 +302,9 @@ export default function ProfissionalAtendimentoDetalheScreen({ id }: { id: strin
         </div>
       </section>
 
-      <section className="flex-1 w-full mx-auto bg-white dark:bg-slate-900/80 border-x border-gray-100 dark:border-slate-800 flex flex-col">
+      <section className="flex-1 w-full mx-auto bg-white dark:bg-slate-900 dark:bg-slate-900/80 border-x border-gray-100 dark:border-slate-800 flex flex-col">
         <div className="px-4 py-3 border-b border-gray-100 dark:border-slate-800">
-          <p className="text-xs font-bold text-gray-500 uppercase tracking-wide">💬 Chat</p>
+          <p className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide">💬 Chat</p>
         </div>
         <ChatAtendimento solicitacaoId={atendimento.id} meuId={meuId} podeEnviar={ativo} />
       </section>

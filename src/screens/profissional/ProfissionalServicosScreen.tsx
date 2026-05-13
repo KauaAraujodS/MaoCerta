@@ -158,7 +158,7 @@ export default function ProfissionalServicosScreen() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-50 to-white pb-10">
+    <main className="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-950 pb-10">
       <header className="min-h-[200px] flex items-end bg-gradient-to-br from-emerald-700 via-teal-600 to-cyan-600 text-white px-4 pt-8 pb-12 rounded-b-[2rem] shadow-lg">
         <div className="max-w-lg mx-auto space-y-2">
           <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/60">Seu negócio</p>
@@ -172,22 +172,22 @@ export default function ProfissionalServicosScreen() {
       </header>
 
       <div className="max-w-lg mx-auto px-4 -mt-6 space-y-4 relative z-10">
-        <section className="bg-white rounded-2xl p-5 shadow-md border border-gray-100 space-y-4">
+        <section className="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-md border border-gray-100 dark:border-slate-800 space-y-4">
           <div className="flex items-start justify-between gap-2">
             <div>
-              <h2 className="text-xs font-bold text-gray-500 uppercase tracking-wide">Áreas de atuação</h2>
-              <p className="text-[11px] text-gray-400 mt-0.5">
+              <h2 className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide">Áreas de atuação</h2>
+              <p className="text-[11px] text-gray-400 dark:text-slate-500 mt-0.5">
                 Selecionadas {categoriasSelecionadas.length}/{limites.maxCategorias} — clientes filtram por estas áreas.
               </p>
             </div>
           </div>
           <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">🔎</span>
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500 text-sm">🔎</span>
             <input
               value={buscaCat}
               onChange={(e) => setBuscaCat(e.target.value)}
               placeholder="Filtrar categorias..."
-              className="w-full rounded-xl border border-gray-200 bg-gray-50 pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/25"
+              className="w-full rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/25"
             />
           </div>
           <div className="max-h-56 overflow-y-auto pr-1 flex flex-wrap gap-2">
@@ -201,7 +201,7 @@ export default function ProfissionalServicosScreen() {
                   className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl border transition-all ${
                     ativo
                       ? 'bg-gradient-to-r from-emerald-600 to-teal-600 border-transparent text-white shadow-md'
-                      : 'bg-white border-gray-200 text-gray-700 hover:border-emerald-300'
+                      : 'bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 hover:border-emerald-300'
                   }`}
                 >
                   <span>{iconeCategoria(cat.nome)}</span>
@@ -211,12 +211,12 @@ export default function ProfissionalServicosScreen() {
             })}
           </div>
           {categoriasVisiveis.length === 0 && (
-            <p className="text-sm text-gray-500">Nenhuma categoria encontrada. Ajuste a busca ou rode a migração 010 no Supabase.</p>
+            <p className="text-sm text-gray-500 dark:text-slate-400">Nenhuma categoria encontrada. Ajuste a busca ou rode a migração 010 no Supabase.</p>
           )}
         </section>
 
-        <section className="bg-white rounded-2xl p-5 shadow-md border border-gray-100 space-y-4">
-          <h2 className="text-xs font-bold text-gray-500 uppercase tracking-wide">Novo serviço</h2>
+        <section className="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-md border border-gray-100 dark:border-slate-800 space-y-4">
+          <h2 className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide">Novo serviço</h2>
           <div className="flex flex-wrap gap-2">
             {DICAS_SERVICO.map((dica) => (
               <button
@@ -231,11 +231,11 @@ export default function ProfissionalServicosScreen() {
           </div>
           <form onSubmit={criarServico} className="space-y-3">
             <label className="block">
-              <span className="text-xs font-semibold text-gray-600">Categoria do serviço</span>
+              <span className="text-xs font-semibold text-gray-600 dark:text-slate-400">Categoria do serviço</span>
               <select
                 value={categoriaId}
                 onChange={(e) => setCategoriaId(e.target.value ? Number(e.target.value) : '')}
-                className="mt-1 w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/25"
+                className="mt-1 w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/25"
               >
                 <option value="">Escolha entre suas áreas selecionadas</option>
                 {categoriasSelecionadas.map((id) => (
@@ -246,21 +246,21 @@ export default function ProfissionalServicosScreen() {
               </select>
             </label>
             <label className="block">
-              <span className="text-xs font-semibold text-gray-600">Descrição do que você faz</span>
+              <span className="text-xs font-semibold text-gray-600 dark:text-slate-400">Descrição do que você faz</span>
               <input
                 value={descricao}
                 onChange={(e) => setDescricao(e.target.value)}
                 placeholder="Ex.: Instalação de chuveiros elétricos e troca de resistência"
-                className="mt-1 w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/25"
+                className="mt-1 w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/25"
               />
             </label>
             <label className="block">
-              <span className="text-xs font-semibold text-gray-600">Valor por hora (opcional)</span>
+              <span className="text-xs font-semibold text-gray-600 dark:text-slate-400">Valor por hora (opcional)</span>
               <input
                 value={valorHora}
                 onChange={(e) => setValorHora(e.target.value)}
                 placeholder="Ex.: 85 ou 120,50"
-                className="mt-1 w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-sm"
+                className="mt-1 w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm"
               />
             </label>
             <button
@@ -273,15 +273,15 @@ export default function ProfissionalServicosScreen() {
           </form>
         </section>
 
-        <section className="bg-white rounded-2xl p-5 shadow-md border border-gray-100 space-y-3">
+        <section className="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-md border border-gray-100 dark:border-slate-800 space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-xs font-bold text-gray-500 uppercase tracking-wide">Seu catálogo</h2>
+            <h2 className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide">Seu catálogo</h2>
             <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-1 rounded-full">
               {servicos.length}/{limites.maxServicos}
             </span>
           </div>
           {servicos.length === 0 && (
-            <p className="text-sm text-gray-500 leading-relaxed">
+            <p className="text-sm text-gray-500 dark:text-slate-400 leading-relaxed">
               Nenhum serviço ainda. Escolha categorias acima e cadastre pelo menos um serviço por área em que quer aparecer nas buscas.
             </p>
           )}
@@ -289,16 +289,16 @@ export default function ProfissionalServicosScreen() {
             {servicos.map((item) => (
               <li
                 key={item.id}
-                className="rounded-xl border border-gray-100 bg-gradient-to-br from-white to-slate-50/80 p-4 flex gap-3"
+                className="rounded-xl border border-gray-100 dark:border-slate-800 bg-gradient-to-br from-white to-slate-50/80 p-4 flex gap-3"
               >
                 <span className="text-2xl shrink-0">{iconeCategoria(nomeCategoria(item.categoria_id))}</span>
                 <div className="min-w-0 flex-1">
                   <p className="text-[11px] font-bold text-emerald-700 uppercase tracking-wide">{nomeCategoria(item.categoria_id)}</p>
-                  <p className="text-sm font-semibold text-gray-900 mt-0.5">{item.descricao}</p>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-slate-100 mt-0.5">{item.descricao}</p>
                   <div className="mt-2 flex items-center justify-between gap-2">
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-gray-500 dark:text-slate-400">
                       {item.valor_hora != null ? (
-                        <span className="font-semibold text-gray-800">R$ {Number(item.valor_hora).toFixed(2)}/h</span>
+                        <span className="font-semibold text-gray-800 dark:text-slate-200">R$ {Number(item.valor_hora).toFixed(2)}/h</span>
                       ) : (
                         'Valor a combinar'
                       )}

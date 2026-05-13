@@ -121,7 +121,7 @@ export default function GerenciadorEtapas({
       <div className="space-y-2">
         <div className="flex items-center gap-2">
           <span className="inline-block w-4 h-4 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm text-gray-600">Carregando etapas...</p>
+          <p className="text-sm text-gray-600 dark:text-slate-400">Carregando etapas...</p>
         </div>
       </div>
     )

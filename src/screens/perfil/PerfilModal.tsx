@@ -213,15 +213,15 @@ export default function PerfilModal({ perfilId, aberto, onFechar, rotulo = 'Perf
       onClick={onFechar}
     >
       <div
-        className="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-md max-h-[92vh] overflow-y-auto shadow-2xl"
+        className="bg-white dark:bg-slate-900 rounded-t-3xl sm:rounded-3xl w-full max-w-md max-h-[92vh] overflow-y-auto shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-100 px-4 py-3 flex items-center justify-between rounded-t-3xl">
-          <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">{rotulo}</p>
+        <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-100 dark:border-slate-800 px-4 py-3 flex items-center justify-between rounded-t-3xl">
+          <p className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider">{rotulo}</p>
           <button
             type="button"
             onClick={onFechar}
-            className="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center text-gray-500"
+            className="w-8 h-8 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 dark:bg-slate-800 flex items-center justify-center text-gray-500 dark:text-slate-400"
             aria-label="Fechar"
           >
             ✕
@@ -231,7 +231,7 @@ export default function PerfilModal({ perfilId, aberto, onFechar, rotulo = 'Perf
         {carregando && (
           <div className="p-8 flex items-center justify-center gap-3">
             <span className="inline-block w-5 h-5 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
-            <p className="text-sm text-gray-600">Carregando perfil...</p>
+            <p className="text-sm text-gray-600 dark:text-slate-400">Carregando perfil...</p>
           </div>
         )}
 
@@ -251,9 +251,9 @@ export default function PerfilModal({ perfilId, aberto, onFechar, rotulo = 'Perf
                 )}
               </div>
               <div className="flex-1 min-w-0">
-                <h2 className="text-lg font-bold text-gray-900 truncate">{perfil.nome}</h2>
-                <p className="text-xs text-gray-500 capitalize">{perfil.tipo}</p>
-                {localExibido && <p className="text-xs text-gray-600 mt-1">📍 {localExibido}</p>}
+                <h2 className="text-lg font-bold text-gray-900 dark:text-slate-100 truncate">{perfil.nome}</h2>
+                <p className="text-xs text-gray-500 dark:text-slate-400 capitalize">{perfil.tipo}</p>
+                {localExibido && <p className="text-xs text-gray-600 dark:text-slate-400 mt-1">📍 {localExibido}</p>}
               </div>
             </div>
 
@@ -275,32 +275,32 @@ export default function PerfilModal({ perfilId, aberto, onFechar, rotulo = 'Perf
                 titulo="Denúncias"
                 valor={`${denuncias}`}
                 dica={denuncias === 0 ? 'Limpo' : 'Recebidas'}
-                cor={denuncias === 0 ? 'text-gray-500' : 'text-red-600'}
+                cor={denuncias === 0 ? 'text-gray-500 dark:text-slate-400' : 'text-red-600'}
               />
             </section>
 
             {/* Currículo / Bio */}
             {(perfil.bio || perfil.experiencia_anos != null || perfil.historico_profissional) && (
               <section className="space-y-2">
-                <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+                <p className="text-[11px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider">
                   {ehProfissional ? 'Currículo' : 'Sobre'}
                 </p>
                 {perfil.bio && (
-                  <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{perfil.bio}</p>
+                  <p className="text-sm text-gray-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">{perfil.bio}</p>
                 )}
                 {perfil.experiencia_anos != null && (
                   <div className="bg-emerald-50 border border-emerald-100 rounded-2xl px-3 py-2">
-                    <p className="text-sm text-gray-800">
+                    <p className="text-sm text-gray-800 dark:text-slate-200">
                       <strong>{perfil.experiencia_anos}</strong> ano(s) de experiência profissional
                     </p>
                   </div>
                 )}
                 {perfil.historico_profissional && (
-                  <div className="bg-gray-50 rounded-2xl p-3">
-                    <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1">
+                  <div className="bg-gray-50 dark:bg-slate-800 rounded-2xl p-3">
+                    <p className="text-[11px] font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1">
                       Histórico
                     </p>
-                    <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">
+                    <p className="text-sm text-gray-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">
                       {perfil.historico_profissional}
                     </p>
                   </div>
@@ -308,7 +308,7 @@ export default function PerfilModal({ perfilId, aberto, onFechar, rotulo = 'Perf
               </section>
             )}
 
-            <p className="text-[11px] text-gray-400 text-center">
+            <p className="text-[11px] text-gray-400 dark:text-slate-500 text-center">
               Membro desde{' '}
               {new Date(perfil.created_at).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}
             </p>
@@ -332,7 +332,7 @@ export default function PerfilModal({ perfilId, aberto, onFechar, rotulo = 'Perf
                   value={denunciaMotivo}
                   onChange={(e) => setDenunciaMotivo(e.target.value)}
                   required
-                  className="w-full bg-white border border-amber-200 rounded-2xl px-3 py-2 text-sm"
+                  className="w-full bg-white dark:bg-slate-900 border border-amber-200 rounded-2xl px-3 py-2 text-sm"
                 >
                   <option value="">Selecione um motivo</option>
                   <option value="comportamento_inadequado">Comportamento inadequado</option>
@@ -346,7 +346,7 @@ export default function PerfilModal({ perfilId, aberto, onFechar, rotulo = 'Perf
                   onChange={(e) => setDenunciaDescricao(e.target.value)}
                   placeholder="Descreva o ocorrido (opcional)"
                   rows={3}
-                  className="w-full bg-white border border-amber-200 rounded-2xl px-3 py-2 text-sm resize-none"
+                  className="w-full bg-white dark:bg-slate-900 border border-amber-200 rounded-2xl px-3 py-2 text-sm resize-none"
                 />
                 <div className="flex gap-2">
                   <button
@@ -359,7 +359,7 @@ export default function PerfilModal({ perfilId, aberto, onFechar, rotulo = 'Perf
                   <button
                     type="button"
                     onClick={() => setDenunciaAberta(false)}
-                    className="px-3 bg-white border border-gray-200 text-gray-700 font-semibold rounded-2xl text-xs hover:bg-gray-50"
+                    className="px-3 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 font-semibold rounded-2xl text-xs hover:bg-gray-50 dark:hover:bg-slate-800"
                   >
                     Cancelar
                   </button>
@@ -369,7 +369,7 @@ export default function PerfilModal({ perfilId, aberto, onFechar, rotulo = 'Perf
 
             {/* Ações */}
             {podeAgir && !denunciaAberta && (
-              <section className="grid grid-cols-2 gap-2 pt-2 border-t border-gray-100">
+              <section className="grid grid-cols-2 gap-2 pt-2 border-t border-gray-100 dark:border-slate-800">
                 <button
                   type="button"
                   onClick={() => setDenunciaAberta(true)}
@@ -383,7 +383,7 @@ export default function PerfilModal({ perfilId, aberto, onFechar, rotulo = 'Perf
                   disabled={bloqueioInProgress}
                   className={`text-xs font-semibold py-2.5 rounded-2xl border ${
                     bloqueado
-                      ? 'border-gray-200 text-gray-700 bg-gray-50 hover:bg-gray-100'
+                      ? 'border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 bg-gray-50 dark:bg-slate-800 hover:bg-gray-100 dark:hover:bg-slate-700'
                       : 'border-red-200 text-red-700 bg-red-50 hover:bg-red-100'
                   } disabled:opacity-50`}
                 >
@@ -410,10 +410,10 @@ function CardMetrica({
   cor: string
 }) {
   return (
-    <div className="bg-white border border-gray-100 rounded-2xl p-3 shadow-sm">
-      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{titulo}</p>
+    <div className="bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-2xl p-3 shadow-sm">
+      <p className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider">{titulo}</p>
       <p className={`text-base font-bold mt-0.5 ${cor}`}>{valor}</p>
-      <p className="text-[10px] text-gray-400 mt-0.5">{dica}</p>
+      <p className="text-[10px] text-gray-400 dark:text-slate-500 mt-0.5">{dica}</p>
     </div>
   )
 }

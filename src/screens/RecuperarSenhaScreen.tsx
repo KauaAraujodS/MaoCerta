@@ -62,7 +62,7 @@ export default function RecuperarSenhaScreen() {
           <button
             type="submit"
             disabled={carregando}
-            className="w-full bg-white text-purple-700 font-semibold py-3 rounded-2xl text-sm hover:bg-white/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-white dark:bg-slate-900 text-purple-700 font-semibold py-3 rounded-2xl text-sm hover:bg-white/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {carregando ? 'Enviando...' : 'Enviar código'}
           </button>

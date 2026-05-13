@@ -251,11 +251,11 @@ export default function ClienteBuscarScreen() {
             onChange={(e) => setFiltroCategoria(e.target.value ? Number(e.target.value) : null)}
             className="w-full rounded-2xl bg-white/15 border border-white/25 px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-white/40"
           >
-            <option value="" className="text-gray-900">
+            <option value="" className="text-gray-900 dark:text-slate-100">
               Todas as categorias
             </option>
             {categorias.map((c) => (
-              <option key={c.id} value={c.id} className="text-gray-900">
+              <option key={c.id} value={c.id} className="text-gray-900 dark:text-slate-100">
                 {c.nome}
               </option>
             ))}
@@ -287,15 +287,15 @@ export default function ClienteBuscarScreen() {
         {erro && <p className="text-xs text-red-700 bg-red-50 border border-red-100 rounded-2xl p-3">{erro}</p>}
 
         {carregando && (
-          <div className="bg-white rounded-3xl p-6 shadow border border-gray-100 flex items-center gap-3">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow border border-gray-100 dark:border-slate-800 flex items-center gap-3">
             <span className="inline-block w-5 h-5 border-2 border-purple-600 border-t-transparent rounded-full animate-spin" />
-            <p className="text-sm text-gray-600">Carregando prestadores...</p>
+            <p className="text-sm text-gray-600 dark:text-slate-400">Carregando prestadores...</p>
           </div>
         )}
 
         {!carregando && (
           <>
-            <section className="bg-white rounded-2xl p-1 border border-gray-100 shadow-sm grid grid-cols-4 gap-1">
+            <section className="bg-white dark:bg-slate-900 rounded-2xl p-1 border border-gray-100 dark:border-slate-800 shadow-sm grid grid-cols-4 gap-1">
               <BotaoOrdem ativo={ordenacao === 'relevancia'} onClick={() => setOrdenacao('relevancia')}>Relevância</BotaoOrdem>
               <BotaoOrdem ativo={ordenacao === 'avaliacao'} onClick={() => setOrdenacao('avaliacao')}>★ Nota</BotaoOrdem>
               <BotaoOrdem ativo={ordenacao === 'demandas'} onClick={() => setOrdenacao('demandas')}>Demandas</BotaoOrdem>
@@ -312,7 +312,7 @@ export default function ClienteBuscarScreen() {
                           key={c.id}
                           type="button"
                           onClick={() => setFiltroCategoria(c.id)}
-                          className="bg-white border border-purple-100 rounded-full px-3 py-1.5 text-xs font-semibold text-purple-800 hover:bg-purple-50 flex items-center gap-1.5 shadow-sm"
+                          className="bg-white dark:bg-slate-900 border border-purple-100 dark:border-purple-900/40 rounded-full px-3 py-1.5 text-xs font-semibold text-purple-800 dark:text-purple-300 hover:bg-purple-50 dark:hover:bg-slate-800 flex items-center gap-1.5 shadow-sm"
                         >
                           <span>{iconeCategoria(c.nome)}</span>
                           <span>{c.nome}</span>
@@ -344,10 +344,10 @@ export default function ClienteBuscarScreen() {
                 />
               ) : temFiltroAtivo ? (
                 <>
-                  <section className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm text-center space-y-2">
+                  <section className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-gray-100 dark:border-slate-800 shadow-sm text-center space-y-2">
                     <p className="text-4xl">🤷</p>
-                    <p className="text-sm font-semibold text-gray-800">Nenhum prestador encontrado</p>
-                    <p className="text-xs text-gray-500 leading-relaxed max-w-sm mx-auto">
+                    <p className="text-sm font-semibold text-gray-800 dark:text-slate-200">Nenhum prestador encontrado</p>
+                    <p className="text-xs text-gray-500 dark:text-slate-400 leading-relaxed max-w-sm mx-auto">
                       Tente trocar a categoria, mudar a cidade ou usar termos mais gerais.
                     </p>
                   </section>
@@ -362,14 +362,14 @@ export default function ClienteBuscarScreen() {
                   )}
                 </>
               ) : (
-                <p className="text-xs text-gray-400 px-1">Sem prestadores cadastrados ainda.</p>
+                <p className="text-xs text-gray-400 dark:text-slate-500 px-1">Sem prestadores cadastrados ainda.</p>
               )}
             </Secao>
           </>
         )}
 
         {bloqueados.size > 0 && (
-          <p className="text-[11px] text-gray-400 text-center px-4">
+          <p className="text-[11px] text-gray-400 dark:text-slate-500 text-center px-4">
             {bloqueados.size} prestador(es) bloqueado(s) por você não aparecem aqui.
           </p>
         )}
@@ -392,7 +392,7 @@ export default function ClienteBuscarScreen() {
 function Secao({ titulo, children }: { titulo: string; children: React.ReactNode }) {
   return (
     <section className="space-y-2">
-      <h2 className="text-xs font-bold text-gray-500 uppercase tracking-widest px-1">{titulo}</h2>
+      <h2 className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-widest px-1">{titulo}</h2>
       {children}
     </section>
   )
@@ -412,7 +412,7 @@ function BotaoOrdem({
       type="button"
       onClick={onClick}
       className={`text-[11px] font-semibold py-2 rounded-xl transition-colors ${
-        ativo ? 'bg-purple-700 text-white' : 'text-gray-600 hover:bg-gray-50'
+        ativo ? 'bg-purple-700 text-white' : 'text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 dark:bg-slate-800'
       }`}
     >
       {children}
@@ -456,7 +456,7 @@ function CardPrestador({
   const principal = cats[0]
 
   return (
-    <li className="bg-white dark:bg-slate-900/90 rounded-3xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-hidden">
+    <li className="bg-white dark:bg-slate-900 dark:bg-slate-900/90 rounded-3xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-hidden">
       <div className="p-4 flex gap-3">
         <div className="w-14 h-14 shrink-0 rounded-full bg-gradient-to-br from-purple-200 to-indigo-200 flex items-center justify-center text-base font-bold text-purple-900 overflow-hidden">
           {prestador.avatar_url ? (
@@ -467,21 +467,21 @@ function CardPrestador({
           )}
         </div>
         <div className="flex-1 min-w-0 space-y-1">
-          <p className="text-sm font-bold text-gray-900 truncate">{prestador.nome}</p>
+          <p className="text-sm font-bold text-gray-900 dark:text-slate-100 truncate">{prestador.nome}</p>
           {principal && (
             <p className="text-[11px] text-purple-700 font-semibold truncate">
               {iconeCategoria(principal.nome)} {principal.nome}
-              {cats.length > 1 && <span className="text-gray-400 font-normal"> +{cats.length - 1}</span>}
+              {cats.length > 1 && <span className="text-gray-400 dark:text-slate-500 font-normal"> +{cats.length - 1}</span>}
             </p>
           )}
-          <div className="flex items-center gap-2 text-[11px] text-gray-500 flex-wrap">
+          <div className="flex items-center gap-2 text-[11px] text-gray-500 dark:text-slate-400 flex-wrap">
             {(prestador.cidade || prestador.estado) && <span>📍 {localStr(prestador)}</span>}
             <span className="text-amber-500">
               ★{' '}
               {prestador.notaMedia != null ? (
-                <span className="text-gray-700 font-semibold">{prestador.notaMedia.toFixed(1)}</span>
+                <span className="text-gray-700 dark:text-slate-300 font-semibold">{prestador.notaMedia.toFixed(1)}</span>
               ) : (
-                <span className="text-gray-400">novo</span>
+                <span className="text-gray-400 dark:text-slate-500">novo</span>
               )}
               {prestador.notaMedia != null && prestador.notaMedia >= 4.5 && prestador.qtdAvaliacoes >= 5 && (
                 <span className="ml-1 text-[9px] font-bold uppercase text-amber-900 bg-amber-100 px-1 rounded">
@@ -515,15 +515,15 @@ function CardPrestador({
           </div>
         </div>
       </div>
-      <div className="flex border-t border-gray-100">
+      <div className="flex border-t border-gray-100 dark:border-slate-800">
         <button
           type="button"
           onClick={onVerPerfil}
-          className="flex-1 text-xs font-semibold py-3 text-gray-700 hover:bg-gray-50"
+          className="flex-1 text-xs font-semibold py-3 text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 dark:bg-slate-800"
         >
           Ver perfil
         </button>
-        <span className="w-px bg-gray-100" />
+        <span className="w-px bg-gray-100 dark:bg-slate-800" />
         <button
           type="button"
           onClick={onSolicitar}
@@ -602,15 +602,15 @@ function SolicitarServicoModal({
       onClick={onFechar}
     >
       <div
-        className="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-md max-h-[90vh] overflow-y-auto shadow-2xl"
+        className="bg-white dark:bg-slate-900 rounded-t-3xl sm:rounded-3xl w-full max-w-md max-h-[90vh] overflow-y-auto shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-100 px-4 py-3 flex items-center justify-between rounded-t-3xl">
-          <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Solicitar serviço</p>
+        <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-100 dark:border-slate-800 px-4 py-3 flex items-center justify-between rounded-t-3xl">
+          <p className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Solicitar serviço</p>
           <button
             type="button"
             onClick={onFechar}
-            className="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center text-gray-500"
+            className="w-8 h-8 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 dark:bg-slate-800 flex items-center justify-center text-gray-500 dark:text-slate-400"
           >
             ✕
           </button>
@@ -627,32 +627,32 @@ function SolicitarServicoModal({
               )}
             </div>
             <div>
-              <p className="text-xs text-gray-500">Para</p>
-              <p className="text-sm font-bold text-gray-900">{prestador.nome}</p>
+              <p className="text-xs text-gray-500 dark:text-slate-400">Para</p>
+              <p className="text-sm font-bold text-gray-900 dark:text-slate-100">{prestador.nome}</p>
             </div>
           </div>
 
           <label className="block">
-            <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Título</span>
+            <span className="text-xs font-semibold text-gray-600 dark:text-slate-400 uppercase tracking-wide">Título</span>
             <input
               value={titulo}
               onChange={(e) => setTitulo(e.target.value)}
               placeholder="Ex.: Trocar resistência do chuveiro"
               required
               maxLength={120}
-              className="mt-1 w-full bg-gray-50 border border-gray-200 rounded-2xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/30"
+              className="mt-1 w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/30"
             />
           </label>
 
           <label className="block">
-            <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Descrição</span>
+            <span className="text-xs font-semibold text-gray-600 dark:text-slate-400 uppercase tracking-wide">Descrição</span>
             <textarea
               value={descricao}
               onChange={(e) => setDescricao(e.target.value)}
               placeholder="Descreva o problema, materiais, preferência de horário..."
               required
               rows={4}
-              className="mt-1 w-full bg-gray-50 border border-gray-200 rounded-2xl px-3 py-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-purple-500/30"
+              className="mt-1 w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl px-3 py-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-purple-500/30"
             />
           </label>
 

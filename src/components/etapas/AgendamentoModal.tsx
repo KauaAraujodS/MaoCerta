@@ -115,7 +115,7 @@ export default function AgendamentoModal({
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-end z-50">
-      <div className="w-full bg-white rounded-t-3xl shadow-2xl animate-in slide-in-from-bottom">
+      <div className="w-full bg-white dark:bg-slate-900 rounded-t-3xl shadow-2xl animate-in slide-in-from-bottom">
         {/* Header */}
         <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-6 py-4 rounded-t-3xl flex items-center justify-between">
           <div>
@@ -131,7 +131,7 @@ export default function AgendamentoModal({
         </div>
 
         {/* Abas */}
-        <div className="flex border-b border-gray-200 sticky top-16 bg-white">
+        <div className="flex border-b border-gray-200 dark:border-slate-700 sticky top-16 bg-white dark:bg-slate-900">
           <button
             onClick={() => {
               setAbas('propor')
@@ -141,7 +141,7 @@ export default function AgendamentoModal({
             className={`flex-1 py-3 font-semibold text-sm transition ${
               abas === 'propor'
                 ? 'border-b-2 border-blue-600 text-blue-600'
-                : 'text-gray-600'
+                : 'text-gray-600 dark:text-slate-400'
             }`}
           >
             📅 Propor Data
@@ -154,7 +154,7 @@ export default function AgendamentoModal({
             className={`flex-1 py-3 font-semibold text-sm transition ${
               abas === 'respostas'
                 ? 'border-b-2 border-blue-600 text-blue-600'
-                : 'text-gray-600'
+                : 'text-gray-600 dark:text-slate-400'
             }`}
           >
             💬 Respostas
@@ -180,27 +180,27 @@ export default function AgendamentoModal({
 
               <form onSubmit={handlePropor} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-2">
+                  <label className="block text-sm font-semibold text-gray-900 dark:text-slate-100 mb-2">
                     Data
                   </label>
                   <input
                     type="date"
                     value={dataProposta}
                     onChange={(e) => setDataProposta(e.target.value)}
-                    className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-600 transition"
+                    className="w-full border-2 border-gray-300 dark:border-slate-700 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-600 transition"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-2">
+                  <label className="block text-sm font-semibold text-gray-900 dark:text-slate-100 mb-2">
                     Horário
                   </label>
                   <input
                     type="time"
                     value={horaProposta}
                     onChange={(e) => setHoraProposta(e.target.value)}
-                    className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-600 transition"
+                    className="w-full border-2 border-gray-300 dark:border-slate-700 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-600 transition"
                     required
                   />
                 </div>
@@ -219,24 +219,24 @@ export default function AgendamentoModal({
               {carregandoPropostas && (
                 <div className="flex items-center gap-2 py-8">
                   <span className="inline-block w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
-                  <p className="text-sm text-gray-600">Carregando propostas...</p>
+                  <p className="text-sm text-gray-600 dark:text-slate-400">Carregando propostas...</p>
                 </div>
               )}
 
               {!carregandoPropostas && propostas.length === 0 && (
                 <div className="py-8 text-center">
-                  <p className="text-sm text-gray-500">Nenhuma proposta de agendamento ainda</p>
+                  <p className="text-sm text-gray-500 dark:text-slate-400">Nenhuma proposta de agendamento ainda</p>
                 </div>
               )}
 
               {!carregandoPropostas && propostas.map((proposta) => (
-                <div key={proposta.id} className="border-2 border-gray-200 rounded-lg p-4 space-y-2">
+                <div key={proposta.id} className="border-2 border-gray-200 dark:border-slate-700 rounded-lg p-4 space-y-2">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-semibold text-gray-900">
+                      <p className="text-sm font-semibold text-gray-900 dark:text-slate-100">
                         {formatarDataPt(proposta.data_proposta)} às {proposta.hora_proposta}
                       </p>
-                      <p className="text-xs text-gray-500 mt-1">
+                      <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
                         Proposto em {formatarDataPt(proposta.created_at)}
                       </p>
                     </div>
@@ -245,7 +245,7 @@ export default function AgendamentoModal({
                       proposta.status === 'proposto_cliente' ? 'bg-amber-100 text-amber-700' :
                       proposta.status === 'aceito_ambos' ? 'bg-emerald-100 text-emerald-700' :
                       proposta.status === 'rejeitado' ? 'bg-red-100 text-red-700' :
-                      'bg-gray-100 text-gray-700'
+                      'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300'
                     }`}>
                       {proposta.status === 'proposto_prestador' && '⏳ Aguardando resposta'}
                       {proposta.status === 'proposto_cliente' && '⏳ Aguardando confirmação'}

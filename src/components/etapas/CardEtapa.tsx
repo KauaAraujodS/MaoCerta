@@ -24,7 +24,7 @@ type Props = {
 }
 
 const statusBadges: Record<Etapa['status'], { label: string; bg: string; text: string }> = {
-  pendente: { label: '⏳ Pendente', bg: 'bg-gray-50', text: 'text-gray-700' },
+  pendente: { label: '⏳ Pendente', bg: 'bg-gray-50 dark:bg-slate-800', text: 'text-gray-700 dark:text-slate-300' },
   agendada: { label: '📅 Agendada', bg: 'bg-blue-50', text: 'text-blue-700' },
   em_progresso: { label: '⚙️ Em Progresso', bg: 'bg-amber-50', text: 'text-amber-700' },
   concluida: { label: '✅ Concluída', bg: 'bg-emerald-50', text: 'text-emerald-700' },
@@ -94,7 +94,7 @@ export default function CardEtapa({
         <div className="flex items-center gap-3 flex-1">
           <span className="text-2xl">{nomeEtapa.emoji}</span>
           <div>
-            <h3 className="font-semibold text-gray-900">{nomeEtapa.nome}</h3>
+            <h3 className="font-semibold text-gray-900 dark:text-slate-100">{nomeEtapa.nome}</h3>
             <p className={`text-xs font-medium ${badge.text}`}>{badge.label}</p>
             {valorEtapaNum > 0 && (
               <p className="text-[11px] font-semibold text-emerald-700 mt-1">
@@ -103,16 +103,16 @@ export default function CardEtapa({
             )}
           </div>
         </div>
-        <span className="text-2xl text-gray-400">{expandido ? '▼' : '▶'}</span>
+        <span className="text-2xl text-gray-400 dark:text-slate-500">{expandido ? '▼' : '▶'}</span>
       </button>
 
       {expandido && (
-        <div className="border-t border-gray-200 px-4 py-4 space-y-4">
+        <div className="border-t border-gray-200 dark:border-slate-700 px-4 py-4 space-y-4">
           {/* Informações de agendamento */}
           {etapa.data_proposta && (
-            <div className="bg-white rounded-lg p-3">
-              <p className="text-xs font-medium text-gray-500 mb-2">📅 DATA E HORÁRIO AGENDADO</p>
-              <p className="text-sm font-semibold text-gray-900">
+            <div className="bg-white dark:bg-slate-900 rounded-lg p-3">
+              <p className="text-xs font-medium text-gray-500 dark:text-slate-400 mb-2">📅 DATA E HORÁRIO AGENDADO</p>
+              <p className="text-sm font-semibold text-gray-900 dark:text-slate-100">
                 {formatarDataPt(etapa.data_proposta)} às {etapa.hora_proposta || '...:...'}
               </p>
             </div>
@@ -120,30 +120,30 @@ export default function CardEtapa({
 
           {/* Notas */}
           {etapa.notas_inicial && (
-            <div className="bg-white rounded-lg p-3">
-              <p className="text-xs font-medium text-gray-500 mb-2">📝 NOTAS INICIAIS</p>
-              <p className="text-sm text-gray-700">{etapa.notas_inicial}</p>
+            <div className="bg-white dark:bg-slate-900 rounded-lg p-3">
+              <p className="text-xs font-medium text-gray-500 dark:text-slate-400 mb-2">📝 NOTAS INICIAIS</p>
+              <p className="text-sm text-gray-700 dark:text-slate-300">{etapa.notas_inicial}</p>
             </div>
           )}
 
           {etapa.notas_conclusao && (
-            <div className="bg-white rounded-lg p-3">
-              <p className="text-xs font-medium text-gray-500 mb-2">✍️ NOTAS DE CONCLUSÃO</p>
-              <p className="text-sm text-gray-700">{etapa.notas_conclusao}</p>
+            <div className="bg-white dark:bg-slate-900 rounded-lg p-3">
+              <p className="text-xs font-medium text-gray-500 dark:text-slate-400 mb-2">✍️ NOTAS DE CONCLUSÃO</p>
+              <p className="text-sm text-gray-700 dark:text-slate-300">{etapa.notas_conclusao}</p>
             </div>
           )}
 
           {/* Confirmações */}
-          <div className="bg-white rounded-lg p-3 space-y-2">
+          <div className="bg-white dark:bg-slate-900 rounded-lg p-3 space-y-2">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-600">Prestador confirmou:</span>
-              <span className={etapa.profissional_confirmou ? 'text-emerald-600 font-semibold' : 'text-gray-400'}>
+              <span className="text-gray-600 dark:text-slate-400">Prestador confirmou:</span>
+              <span className={etapa.profissional_confirmou ? 'text-emerald-600 font-semibold' : 'text-gray-400 dark:text-slate-500'}>
                 {etapa.profissional_confirmou ? '✅ Sim' : '⏳ Não'}
               </span>
             </div>
             <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-600">Cliente confirmou:</span>
-              <span className={etapa.cliente_confirmou ? 'text-emerald-600 font-semibold' : 'text-gray-400'}>
+              <span className="text-gray-600 dark:text-slate-400">Cliente confirmou:</span>
+              <span className={etapa.cliente_confirmou ? 'text-emerald-600 font-semibold' : 'text-gray-400 dark:text-slate-500'}>
                 {etapa.cliente_confirmou ? '✅ Sim' : '⏳ Não'}
               </span>
             </div>

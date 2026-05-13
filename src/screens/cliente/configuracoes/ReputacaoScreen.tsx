@@ -52,31 +52,31 @@ export default function ReputacaoScreen() {
         />
       </section>
 
-      <section className="bg-white rounded-2xl p-5 space-y-3">
-        <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">Avaliações recebidas</h2>
+      <section className="bg-white dark:bg-slate-900 rounded-2xl p-5 space-y-3">
+        <h2 className="text-sm font-bold text-gray-900 dark:text-slate-100 uppercase tracking-wide">Avaliações recebidas</h2>
 
         {semHistorico ? (
           <div className="text-center py-8 space-y-2">
-            <div className="w-14 h-14 mx-auto bg-gray-100 rounded-full flex items-center justify-center text-2xl">
+            <div className="w-14 h-14 mx-auto bg-gray-100 dark:bg-slate-800 rounded-full flex items-center justify-center text-2xl">
               ⭐
             </div>
-            <p className="text-sm text-gray-600 font-medium">Você ainda não tem avaliações</p>
-            <p className="text-xs text-gray-400 max-w-[260px] mx-auto">
+            <p className="text-sm text-gray-600 dark:text-slate-400 font-medium">Você ainda não tem avaliações</p>
+            <p className="text-xs text-gray-400 dark:text-slate-500 max-w-[260px] mx-auto">
               Após contratar um prestador e concluir o atendimento, ele poderá avaliar você.
             </p>
           </div>
         ) : (
           <ul className="space-y-3">
             {AVALIACOES.map(av => (
-              <li key={av.id} className="border border-gray-100 rounded-2xl p-4 space-y-2">
+              <li key={av.id} className="border border-gray-100 dark:border-slate-800 rounded-2xl p-4 space-y-2">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-semibold text-sm text-gray-900">{av.prestador}</p>
-                    <p className="text-[11px] text-gray-400">{av.servico} · {av.data}</p>
+                    <p className="font-semibold text-sm text-gray-900 dark:text-slate-100">{av.prestador}</p>
+                    <p className="text-[11px] text-gray-400 dark:text-slate-500">{av.servico} · {av.data}</p>
                   </div>
                   <span className="text-amber-500 font-bold text-sm">{av.nota.toFixed(1)} ⭐</span>
                 </div>
-                <p className="text-sm text-gray-700">{av.comentario}</p>
+                <p className="text-sm text-gray-700 dark:text-slate-300">{av.comentario}</p>
               </li>
             ))}
           </ul>
@@ -109,10 +109,10 @@ function CardMetrica({
   alerta?: boolean
 }) {
   return (
-    <div className="bg-white rounded-2xl p-4 space-y-1">
-      <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-wide">{titulo}</p>
-      <p className={`text-2xl font-bold ${alerta ? 'text-red-600' : 'text-gray-900'}`}>{valor}</p>
-      <p className="text-[11px] text-gray-400">{dica}</p>
+    <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 space-y-1">
+      <p className="text-[11px] font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wide">{titulo}</p>
+      <p className={`text-2xl font-bold ${alerta ? 'text-red-600' : 'text-gray-900 dark:text-slate-100'}`}>{valor}</p>
+      <p className="text-[11px] text-gray-400 dark:text-slate-500">{dica}</p>
     </div>
   )
 }

@@ -132,7 +132,7 @@ export default function ClienteDemandasScreen() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-purple-50/40 via-white to-white pb-10">
+    <main className="min-h-screen bg-gradient-to-b from-purple-50/40 via-white to-white dark:from-slate-950 dark:via-slate-950 dark:to-slate-950 pb-10">
       <header className="min-h-[200px] flex items-end bg-gradient-to-br from-purple-700 via-indigo-600 to-blue-600 text-white px-4 pt-8 pb-12 rounded-b-[2rem] shadow-lg">
         <div className="max-w-lg mx-auto space-y-2">
           <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/65">Cliente</p>
@@ -154,7 +154,7 @@ export default function ClienteDemandasScreen() {
             {atingiuLimite && (
               <Link
                 href="/cliente/configuracoes/plano"
-                className="text-[11px] font-bold bg-white text-purple-700 px-3 py-1.5 rounded-xl hover:bg-purple-50"
+                className="text-[11px] font-bold bg-white dark:bg-slate-900 text-purple-700 px-3 py-1.5 rounded-xl hover:bg-purple-50"
               >
                 Fazer upgrade
               </Link>
@@ -164,11 +164,11 @@ export default function ClienteDemandasScreen() {
       </header>
 
       <div className="max-w-lg mx-auto px-4 -mt-6 space-y-4 relative z-10">
-        <section className="bg-white rounded-2xl p-5 shadow-md border border-gray-100 space-y-4">
-          <h2 className="text-xs font-bold text-gray-500 uppercase tracking-wide">Nova demanda pública</h2>
+        <section className="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-md border border-gray-100 dark:border-slate-800 space-y-4">
+          <h2 className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide">Nova demanda pública</h2>
 
           <div>
-            <p className="text-[11px] font-semibold text-gray-500 mb-2">Atalho — categorias populares</p>
+            <p className="text-[11px] font-semibold text-gray-500 dark:text-slate-400 mb-2">Atalho — categorias populares</p>
             <div className="flex flex-wrap gap-2">
               {destaques.map((cat) => (
                 <button
@@ -178,7 +178,7 @@ export default function ClienteDemandasScreen() {
                   className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-1.5 rounded-lg border transition-all ${
                     categoriaId === cat.id
                       ? 'border-indigo-600 bg-indigo-600 text-white shadow'
-                      : 'border-gray-200 bg-gray-50 text-gray-700 hover:border-indigo-300'
+                      : 'border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 text-gray-700 dark:text-slate-300 hover:border-indigo-300'
                   }`}
                 >
                   <span>{iconeCategoria(cat.nome)}</span>
@@ -189,22 +189,22 @@ export default function ClienteDemandasScreen() {
           </div>
 
           <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">🔎</span>
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500 text-sm">🔎</span>
             <input
               value={buscaCat}
               onChange={(e) => setBuscaCat(e.target.value)}
               placeholder="Buscar em todas as categorias..."
-              className="w-full rounded-xl border border-gray-200 bg-gray-50 pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/25"
+              className="w-full rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/25"
             />
           </div>
 
           <form onSubmit={publicarDemanda} className="space-y-3">
             <label className="block">
-              <span className="text-xs font-semibold text-gray-600">Categoria</span>
+              <span className="text-xs font-semibold text-gray-600 dark:text-slate-400">Categoria</span>
               <select
                 value={categoriaId}
                 onChange={(e) => setCategoriaId(e.target.value ? Number(e.target.value) : '')}
-                className="mt-1 w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/25"
+                className="mt-1 w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/25"
               >
                 <option value="">Selecione a categoria</option>
                 {categoriasFiltradas.map((cat) => (
@@ -216,7 +216,7 @@ export default function ClienteDemandasScreen() {
             </label>
 
             <div>
-              <span className="text-xs font-semibold text-gray-600">Ideias de título</span>
+              <span className="text-xs font-semibold text-gray-600 dark:text-slate-400">Ideias de título</span>
               <div className="mt-1 flex flex-wrap gap-1.5">
                 {MODELOS_TITULO.map((m) => (
                   <button
@@ -232,22 +232,22 @@ export default function ClienteDemandasScreen() {
             </div>
 
             <label className="block">
-              <span className="text-xs font-semibold text-gray-600">Título</span>
+              <span className="text-xs font-semibold text-gray-600 dark:text-slate-400">Título</span>
               <input
                 value={titulo}
                 onChange={(e) => setTitulo(e.target.value)}
                 placeholder="Resumo em uma linha"
-                className="mt-1 w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/25"
+                className="mt-1 w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/25"
               />
             </label>
             <label className="block">
-              <span className="text-xs font-semibold text-gray-600">Descrição</span>
+              <span className="text-xs font-semibold text-gray-600 dark:text-slate-400">Descrição</span>
               <textarea
                 rows={4}
                 value={descricao}
                 onChange={(e) => setDescricao(e.target.value)}
                 placeholder="Local, urgência, materiais que você já tem, horários para visita, fotos se quiser descrever..."
-                className="mt-1 w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/25 resize-none"
+                className="mt-1 w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/25 resize-none"
               />
             </label>
             <button
@@ -269,36 +269,36 @@ export default function ClienteDemandasScreen() {
           </form>
         </section>
 
-        <section className="bg-white rounded-2xl p-5 shadow-md border border-gray-100 space-y-3">
-          <h2 className="text-xs font-bold text-gray-500 uppercase tracking-wide">Minhas demandas</h2>
+        <section className="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-md border border-gray-100 dark:border-slate-800 space-y-3">
+          <h2 className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide">Minhas demandas</h2>
           {demandas.length === 0 && (
-            <p className="text-sm text-gray-500">Você ainda não publicou. Use os atalhos acima para ir mais rápido.</p>
+            <p className="text-sm text-gray-500 dark:text-slate-400">Você ainda não publicou. Use os atalhos acima para ir mais rápido.</p>
           )}
           <ul className="space-y-3">
             {demandas.map((item) => (
               <Link
                 key={item.id}
                 href={`/cliente/demandas/${item.id}`}
-                className="block rounded-xl border border-gray-100 p-4 bg-gradient-to-br from-white to-slate-50/80 hover:border-purple-200 transition-colors"
+                className="block rounded-xl border border-gray-100 dark:border-slate-800 p-4 bg-gradient-to-br from-white to-slate-50/80 hover:border-purple-200 transition-colors"
               >
                 <div className="flex items-start justify-between gap-2">
-                  <p className="text-sm font-bold text-gray-900 leading-snug">{item.titulo}</p>
+                  <p className="text-sm font-bold text-gray-900 dark:text-slate-100 leading-snug">{item.titulo}</p>
                   <span
                     className={`text-[10px] font-bold uppercase shrink-0 px-2 py-0.5 rounded-full ${
                       item.status === 'aberta'
                         ? 'bg-emerald-50 text-emerald-800'
                         : item.status === 'em_andamento'
                           ? 'bg-blue-50 text-blue-800'
-                          : 'bg-gray-100 text-gray-600'
+                          : 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-400'
                     }`}
                   >
                     {item.status.replace(/_/g, ' ')}
                   </span>
                 </div>
-                <p className="text-sm text-gray-600 mt-2 leading-relaxed line-clamp-2">{item.descricao}</p>
+                <p className="text-sm text-gray-600 dark:text-slate-400 mt-2 leading-relaxed line-clamp-2">{item.descricao}</p>
                 <div className="flex items-center justify-between gap-2 mt-3">
                   {item.created_at && (
-                    <p className="text-[11px] text-gray-400">{formatarRelativoPt(item.created_at)}</p>
+                    <p className="text-[11px] text-gray-400 dark:text-slate-500">{formatarRelativoPt(item.created_at)}</p>
                   )}
                   <span className="text-[11px] font-semibold text-purple-700">
                     {item.qtdPropostas ?? 0} proposta{(item.qtdPropostas ?? 0) === 1 ? '' : 's'} ›

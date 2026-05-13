@@ -75,22 +75,22 @@ export default function ValorServicoCard({
     <section
       className={`rounded-2xl border shadow-md overflow-hidden bg-gradient-to-br ${shell} p-[1px]`}
     >
-      <div className="rounded-2xl bg-white p-4 sm:p-5 space-y-4">
+      <div className="rounded-2xl bg-white dark:bg-slate-900 p-4 sm:p-5 space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Financeiro</p>
-            <h2 className="text-lg font-bold text-gray-900 mt-0.5">Valor total do serviço</h2>
-            <p className="text-xs text-gray-500 mt-1 max-w-md leading-relaxed">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">Financeiro</p>
+            <h2 className="text-lg font-bold text-gray-900 dark:text-slate-100 mt-0.5">Valor total do serviço</h2>
+            <p className="text-xs text-gray-500 dark:text-slate-400 mt-1 max-w-md leading-relaxed">
               O valor é dividido em <strong>três partes iguais</strong> (uma por etapa). O cliente paga cada etapa via{' '}
               <strong>Pix pela plataforma</strong> — sem transferência direta ao prestador (RN18).
             </p>
           </div>
           {num != null && num > 0 && (
-            <div className="shrink-0 rounded-xl bg-gray-50 border border-gray-100 px-4 py-3 text-right min-w-[140px]">
-              <p className="text-[10px] text-gray-500 uppercase font-semibold">Total acordado</p>
-              <p className="text-xl font-extrabold text-gray-900">{formatarValorBrl(num)}</p>
+            <div className="shrink-0 rounded-xl bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-800 px-4 py-3 text-right min-w-[140px]">
+              <p className="text-[10px] text-gray-500 dark:text-slate-400 uppercase font-semibold">Total acordado</p>
+              <p className="text-xl font-extrabold text-gray-900 dark:text-slate-100">{formatarValorBrl(num)}</p>
               {parte != null && (
-                <p className="text-[11px] text-gray-500 mt-1">~{formatarValorBrl(Math.round(parte * 100) / 100)} / etapa</p>
+                <p className="text-[11px] text-gray-500 dark:text-slate-400 mt-1">~{formatarValorBrl(Math.round(parte * 100) / 100)} / etapa</p>
               )}
             </div>
           )}
@@ -99,17 +99,17 @@ export default function ValorServicoCard({
         {podeEditar && ativo ? (
           <form onSubmit={salvar} className="space-y-3">
             <label className="block">
-              <span className="text-xs font-semibold text-gray-600">Valor (R$)</span>
+              <span className="text-xs font-semibold text-gray-600 dark:text-slate-400">Valor (R$)</span>
               <input
                 type="text"
                 inputMode="decimal"
                 value={valor}
                 onChange={e => setValor(e.target.value)}
                 placeholder="Ex.: 900,00"
-                className="mt-1 w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-3 text-base font-semibold text-gray-900 outline-none focus:border-gray-400 focus:bg-white transition"
+                className="mt-1 w-full rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 px-3 py-3 text-base font-semibold text-gray-900 dark:text-slate-100 outline-none focus:border-gray-400 focus:bg-white dark:bg-slate-900 transition"
               />
             </label>
-            <p className="text-[11px] text-gray-500">
+            <p className="text-[11px] text-gray-500 dark:text-slate-400">
               Só você (prestador) define o valor. O cliente vê o total e paga cada etapa.
             </p>
             <button
@@ -121,7 +121,7 @@ export default function ValorServicoCard({
             </button>
           </form>
         ) : (
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-500 dark:text-slate-400">
             {!ativo
               ? 'Valor bloqueado para edição neste status do atendimento.'
               : tema === 'cliente'

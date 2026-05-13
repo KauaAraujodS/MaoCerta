@@ -88,7 +88,7 @@ function FormularioCadastro() {
                 type="button"
                 onClick={() => setTipo('cliente')}
                 className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all ${
-                  tipo === 'cliente' ? 'bg-white shadow-lg' : 'bg-white/15 hover:bg-white/25'
+                  tipo === 'cliente' ? 'bg-white dark:bg-slate-900 shadow-lg' : 'bg-white/15 hover:bg-white/25'
                 }`}
               >
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center text-lg shrink-0 ${
@@ -97,10 +97,10 @@ function FormularioCadastro() {
                   👤
                 </div>
                 <div className="flex-1 text-left">
-                  <p className={`font-semibold text-sm ${tipo === 'cliente' ? 'text-gray-900' : 'text-white'}`}>
+                  <p className={`font-semibold text-sm ${tipo === 'cliente' ? 'text-gray-900 dark:text-slate-100' : 'text-white'}`}>
                     Cliente
                   </p>
-                  <p className={`text-xs ${tipo === 'cliente' ? 'text-gray-500' : 'text-white/70'}`}>
+                  <p className={`text-xs ${tipo === 'cliente' ? 'text-gray-500 dark:text-slate-400' : 'text-white/70'}`}>
                     Buscar e contratar profissionais
                   </p>
                 </div>
@@ -115,7 +115,7 @@ function FormularioCadastro() {
                 type="button"
                 onClick={() => setTipo('profissional')}
                 className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all ${
-                  tipo === 'profissional' ? 'bg-white shadow-lg' : 'bg-white/15 hover:bg-white/25'
+                  tipo === 'profissional' ? 'bg-white dark:bg-slate-900 shadow-lg' : 'bg-white/15 hover:bg-white/25'
                 }`}
               >
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center text-lg shrink-0 ${
@@ -124,10 +124,10 @@ function FormularioCadastro() {
                   💼
                 </div>
                 <div className="flex-1 text-left">
-                  <p className={`font-semibold text-sm ${tipo === 'profissional' ? 'text-gray-900' : 'text-white'}`}>
+                  <p className={`font-semibold text-sm ${tipo === 'profissional' ? 'text-gray-900 dark:text-slate-100' : 'text-white'}`}>
                     Profissional
                   </p>
-                  <p className={`text-xs ${tipo === 'profissional' ? 'text-gray-500' : 'text-white/70'}`}>
+                  <p className={`text-xs ${tipo === 'profissional' ? 'text-gray-500 dark:text-slate-400' : 'text-white/70'}`}>
                     Quero oferecer meus serviços
                   </p>
                 </div>
@@ -208,7 +208,7 @@ function FormularioCadastro() {
           <button
             type="submit"
             disabled={!tipo || carregando}
-            className="w-full bg-white text-purple-700 font-semibold py-3 rounded-2xl text-sm hover:bg-white/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-white dark:bg-slate-900 text-purple-700 font-semibold py-3 rounded-2xl text-sm hover:bg-white/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {carregando ? 'Criando conta...' : 'Criar minha conta'}
           </button>

@@ -61,7 +61,7 @@ export default function ProfissionalSolicitacoesScreen() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-emerald-50/40 via-white to-white pb-10">
+    <main className="min-h-screen bg-gradient-to-b from-emerald-50/40 via-white to-white dark:from-slate-950 dark:via-slate-950 dark:to-slate-950 pb-10">
       <header className="min-h-[200px] flex items-end bg-gradient-to-br from-emerald-700 via-teal-600 to-cyan-600 text-white px-4 pt-8 pb-12 rounded-b-[2rem] shadow-lg">
         <div className="max-w-lg mx-auto space-y-2">
           <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/65">Inbox</p>
@@ -74,9 +74,9 @@ export default function ProfissionalSolicitacoesScreen() {
 
       <div className="max-w-lg mx-auto px-4 -mt-6 space-y-4 relative z-10">
         {carregando && (
-          <div className="bg-white rounded-2xl p-6 shadow border border-gray-100 flex items-center gap-3">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow border border-gray-100 dark:border-slate-800 flex items-center gap-3">
             <span className="inline-block w-5 h-5 border-2 border-violet-600 border-t-transparent rounded-full animate-spin" />
-            <p className="text-sm text-gray-600">Carregando solicitações...</p>
+            <p className="text-sm text-gray-600 dark:text-slate-400">Carregando solicitações...</p>
           </div>
         )}
 
@@ -86,7 +86,7 @@ export default function ProfissionalSolicitacoesScreen() {
             return (
               <article
                 key={item.id}
-                className="bg-white rounded-2xl border border-gray-100 shadow-md overflow-hidden"
+                className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-md overflow-hidden"
               >
                 <div className="h-1 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500" />
                 <div className="p-5 space-y-3">
@@ -96,12 +96,12 @@ export default function ProfissionalSolicitacoesScreen() {
                     >
                       {badge.label}
                     </span>
-                    <time className="text-[11px] text-gray-400" dateTime={item.created_at}>
+                    <time className="text-[11px] text-gray-400 dark:text-slate-500" dateTime={item.created_at}>
                       {formatarRelativoPt(item.created_at)} · {formatarDataPt(item.created_at)}
                     </time>
                   </div>
-                  <h2 className="text-base font-bold text-gray-900 leading-snug">{item.titulo}</h2>
-                  <p className="text-sm text-gray-600 leading-relaxed">{item.descricao}</p>
+                  <h2 className="text-base font-bold text-gray-900 dark:text-slate-100 leading-snug">{item.titulo}</h2>
+                  <p className="text-sm text-gray-600 dark:text-slate-400 leading-relaxed">{item.descricao}</p>
                   {item.status === 'pendente' && (
                     <div className="flex flex-wrap gap-2 pt-1">
                       <button
@@ -114,7 +114,7 @@ export default function ProfissionalSolicitacoesScreen() {
                       <button
                         type="button"
                         onClick={() => atualizarStatus(item.id, 'recusada')}
-                        className="flex-1 min-w-[120px] text-sm font-semibold bg-white border border-gray-200 text-gray-700 py-2.5 rounded-xl hover:bg-gray-50"
+                        className="flex-1 min-w-[120px] text-sm font-semibold bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-800"
                       >
                         Recusar
                       </button>
@@ -127,10 +127,10 @@ export default function ProfissionalSolicitacoesScreen() {
 
         {!carregando && solicitacoes.length === 0 && (
           <>
-            <section className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm text-center space-y-2">
+            <section className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-gray-100 dark:border-slate-800 shadow-sm text-center space-y-2">
               <p className="text-4xl">📬</p>
-              <p className="text-sm font-semibold text-gray-800">Nenhuma solicitação real ainda</p>
-              <p className="text-xs text-gray-500 leading-relaxed max-w-sm mx-auto">
+              <p className="text-sm font-semibold text-gray-800 dark:text-slate-200">Nenhuma solicitação real ainda</p>
+              <p className="text-xs text-gray-500 dark:text-slate-400 leading-relaxed max-w-sm mx-auto">
                 Quando clientes usarem <strong>Buscar e solicitar</strong> com o seu ID de perfil, os pedidos aparecem aqui com status pendente.
               </p>
             </section>
@@ -154,10 +154,10 @@ export default function ProfissionalSolicitacoesScreen() {
                       >
                         {badge.label}
                       </span>
-                      <time className="text-[11px] text-gray-400">{formatarRelativoPt(item.created_at)}</time>
+                      <time className="text-[11px] text-gray-400 dark:text-slate-500">{formatarRelativoPt(item.created_at)}</time>
                     </div>
-                    <h3 className="text-sm font-bold text-gray-900">{item.titulo}</h3>
-                    <p className="text-xs text-gray-600 leading-relaxed">{item.descricao}</p>
+                    <h3 className="text-sm font-bold text-gray-900 dark:text-slate-100">{item.titulo}</h3>
+                    <p className="text-xs text-gray-600 dark:text-slate-400 leading-relaxed">{item.descricao}</p>
                     <p className="text-[10px] text-violet-600 font-medium">Exemplo fictício</p>
                   </article>
                 )

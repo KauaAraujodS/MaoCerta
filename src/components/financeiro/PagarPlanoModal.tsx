@@ -146,18 +146,18 @@ export default function PagarPlanoModal({ aberto, plano, nomePlano, tema, onFech
       onClick={onFechar}
     >
       <div
-        className="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-md max-h-[92vh] overflow-y-auto shadow-2xl"
+        className="bg-white dark:bg-slate-900 rounded-t-3xl sm:rounded-3xl w-full max-w-md max-h-[92vh] overflow-y-auto shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-100 px-4 py-3 flex items-center justify-between rounded-t-3xl">
+        <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-100 dark:border-slate-800 px-4 py-3 flex items-center justify-between rounded-t-3xl">
           <div>
-            <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Pagar plano</p>
+            <p className="text-[11px] font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Pagar plano</p>
             <p className={`text-sm font-bold ${corDestaque}`}>{nomePlano}</p>
           </div>
           <button
             type="button"
             onClick={onFechar}
-            className="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center text-gray-500"
+            className="w-8 h-8 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 dark:bg-slate-800 flex items-center justify-center text-gray-500 dark:text-slate-400"
             aria-label="Fechar"
           >
             ✕
@@ -167,8 +167,8 @@ export default function PagarPlanoModal({ aberto, plano, nomePlano, tema, onFech
         <div className="p-5 space-y-4">
           {carregando && (
             <div className="py-12 flex flex-col items-center gap-3">
-              <span className="inline-block w-8 h-8 border-3 border-gray-300 border-t-transparent rounded-full animate-spin" />
-              <p className="text-sm text-gray-600">Gerando Pix com o Mercado Pago...</p>
+              <span className="inline-block w-8 h-8 border-3 border-gray-300 dark:border-slate-700 border-t-transparent rounded-full animate-spin" />
+              <p className="text-sm text-gray-600 dark:text-slate-400">Gerando Pix com o Mercado Pago...</p>
             </div>
           )}
 
@@ -178,7 +178,7 @@ export default function PagarPlanoModal({ aberto, plano, nomePlano, tema, onFech
               <button
                 type="button"
                 onClick={onFechar}
-                className="w-full bg-gray-200 text-gray-700 font-semibold py-3 rounded-2xl text-sm hover:bg-gray-300"
+                className="w-full bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-slate-200 font-semibold py-3 rounded-2xl text-sm hover:bg-gray-300 dark:hover:bg-slate-600"
               >
                 Fechar
               </button>
@@ -191,7 +191,7 @@ export default function PagarPlanoModal({ aberto, plano, nomePlano, tema, onFech
                 ✓
               </div>
               <p className="text-lg font-bold text-emerald-700">Pagamento confirmado!</p>
-              <p className="text-sm text-gray-600">Seu plano foi atualizado pra <strong>{nomePlano}</strong>.</p>
+              <p className="text-sm text-gray-600 dark:text-slate-400">Seu plano foi atualizado pra <strong>{nomePlano}</strong>.</p>
               <button
                 type="button"
                 onClick={onFechar}
@@ -206,14 +206,14 @@ export default function PagarPlanoModal({ aberto, plano, nomePlano, tema, onFech
             <>
               {dados.valor != null && (
                 <div className="text-center">
-                  <p className="text-xs text-gray-500">Total a pagar</p>
-                  <p className="text-3xl font-extrabold text-gray-900 mt-1">{formatarReais(dados.valor)}</p>
+                  <p className="text-xs text-gray-500 dark:text-slate-400">Total a pagar</p>
+                  <p className="text-3xl font-extrabold text-gray-900 dark:text-slate-100 mt-1">{formatarReais(dados.valor)}</p>
                 </div>
               )}
 
               {dados.qr_code_base64 && (
                 <div className="flex justify-center">
-                  <div className="bg-white border border-gray-200 rounded-2xl p-3">
+                  <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-2xl p-3">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={`data:image/png;base64,${dados.qr_code_base64}`}
@@ -226,9 +226,9 @@ export default function PagarPlanoModal({ aberto, plano, nomePlano, tema, onFech
 
               {dados.pix_copia_e_cola && (
                 <div className="space-y-2">
-                  <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Pix copia e cola</p>
-                  <div className="bg-gray-50 border border-gray-200 rounded-xl p-2 flex items-stretch gap-2">
-                    <code className="flex-1 text-[10px] break-all px-2 py-1 text-gray-800 font-mono leading-snug">
+                  <p className="text-[11px] font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Pix copia e cola</p>
+                  <div className="bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl p-2 flex items-stretch gap-2">
+                    <code className="flex-1 text-[10px] break-all px-2 py-1 text-gray-800 dark:text-slate-200 font-mono leading-snug">
                       {dados.pix_copia_e_cola}
                     </code>
                     <button
@@ -256,7 +256,7 @@ export default function PagarPlanoModal({ aberto, plano, nomePlano, tema, onFech
                   href={dados.ticket_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block text-center text-xs font-semibold text-gray-500 hover:text-gray-700 underline"
+                  className="block text-center text-xs font-semibold text-gray-500 hover:text-gray-700 dark:text-slate-300 underline"
                 >
                   Abrir comprovante / página completa no Mercado Pago
                 </a>
