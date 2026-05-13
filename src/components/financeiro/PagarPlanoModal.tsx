@@ -246,7 +246,7 @@ export default function PagarPlanoModal({ aberto, plano, nomePlano, tema, onFech
                 <p className="text-xs text-amber-900 leading-relaxed">
                   <strong>Esperando pagamento...</strong>
                   <br />
-                  Abra o app do seu banco, escolha "Pagar com Pix", escaneie o QR Code ou cole a chave.
+                  Abra o app do seu banco, escolha &ldquo;Pagar com Pix&rdquo;, escaneie o QR Code ou cole a chave.
                   Seu plano vai mudar automaticamente assim que o pagamento for confirmado.
                 </p>
               </div>
