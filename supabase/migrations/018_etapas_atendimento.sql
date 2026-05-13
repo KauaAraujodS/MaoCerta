@@ -7,19 +7,20 @@
 -- - cancelamento_etapas: Registra por que uma etapa foi cancelada
 
 -- ============================================================
--- 1) Tipo enum para tipos de etapas
+-- 1-3) Tipos enum (idempotentes)
 -- ============================================================
-create type public.tipo_etapa as enum ('vistoria', 'orcamento', 'execucao');
-
--- ============================================================
--- 2) Status da etapa
--- ============================================================
-create type public.status_etapa as enum ('pendente', 'agendada', 'em_progresso', 'concluida', 'cancelada');
-
--- ============================================================
--- 3) Status do agendamento (proposta de data/horário)
--- ============================================================
-create type public.status_agendamento as enum ('proposto_prestador', 'proposto_cliente', 'aceito_ambos', 'rejeitado', 'cancelado');
+do $$
+begin
+  if not exists (select 1 from pg_type where typname = 'tipo_etapa') then
+    create type public.tipo_etapa as enum ('vistoria', 'orcamento', 'execucao');
+  end if;
+  if not exists (select 1 from pg_type where typname = 'status_etapa') then
+    create type public.status_etapa as enum ('pendente', 'agendada', 'em_progresso', 'concluida', 'cancelada');
+  end if;
+  if not exists (select 1 from pg_type where typname = 'status_agendamento') then
+    create type public.status_agendamento as enum ('proposto_prestador', 'proposto_cliente', 'aceito_ambos', 'rejeitado', 'cancelado');
+  end if;
+end$$;
 
 -- ============================================================
 -- 4) Tabela de tipos de etapas (referência)
