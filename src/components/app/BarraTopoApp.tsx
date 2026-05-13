@@ -70,7 +70,7 @@ export default function BarraTopoApp({ variant }: { variant: Variant }) {
         onClick={cycleTheme}
         title={`Tema: ${theme}`}
         aria-label="Alternar tema"
-        className="pointer-events-auto w-9 h-9 rounded-full border border-gray-200 dark:border-slate-700 bg-white/85 dark:bg-slate-900/85 backdrop-blur-md text-base shadow-md hover:bg-white dark:bg-slate-900 dark:hover:bg-slate-800 transition-colors flex items-center justify-center"
+        className="pointer-events-auto w-9 h-9 rounded-full border border-gray-200 dark:border-slate-700 bg-white/85 dark:bg-slate-900/85 backdrop-blur-md text-base shadow-md hover:bg-white dark:hover:bg-slate-800 transition-colors flex items-center justify-center"
       >
         <span aria-hidden>{iconeTema}</span>
       </button>
@@ -83,7 +83,7 @@ export default function BarraTopoApp({ variant }: { variant: Variant }) {
             if (!aberto) void carregar()
           }}
           aria-label="Alertas"
-          className="relative w-9 h-9 rounded-full border border-gray-200 dark:border-slate-700 bg-white/85 dark:bg-slate-900/85 backdrop-blur-md text-base shadow-md hover:bg-white dark:bg-slate-900 dark:hover:bg-slate-800 transition-colors flex items-center justify-center"
+          className="relative w-9 h-9 rounded-full border border-gray-200 dark:border-slate-700 bg-white/85 dark:bg-slate-900/85 backdrop-blur-md text-base shadow-md hover:bg-white dark:hover:bg-slate-800 transition-colors flex items-center justify-center"
         >
           <span aria-hidden>🔔</span>
           {naoLidas > 0 && (

@@ -456,7 +456,7 @@ function CardPrestador({
   const principal = cats[0]
 
   return (
-    <li className="bg-white dark:bg-slate-900 dark:bg-slate-900/90 rounded-3xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-hidden">
+    <li className="bg-white dark:bg-slate-900/90 rounded-3xl border border-gray-100 dark:border-slate-800 shadow-sm overflow-hidden">
       <div className="p-4 flex gap-3">
         <div className="w-14 h-14 shrink-0 rounded-full bg-gradient-to-br from-purple-200 to-indigo-200 flex items-center justify-center text-base font-bold text-purple-900 overflow-hidden">
           {prestador.avatar_url ? (

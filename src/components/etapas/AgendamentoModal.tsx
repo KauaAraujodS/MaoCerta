@@ -187,7 +187,7 @@ export default function AgendamentoModal({
                     type="date"
                     value={dataProposta}
                     onChange={(e) => setDataProposta(e.target.value)}
-                    className="w-full border-2 border-gray-300 dark:border-slate-700 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-600 transition"
+                    className="w-full border-2 border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-600 transition"
                     required
                   />
                 </div>
@@ -200,7 +200,7 @@ export default function AgendamentoModal({
                     type="time"
                     value={horaProposta}
                     onChange={(e) => setHoraProposta(e.target.value)}
-                    className="w-full border-2 border-gray-300 dark:border-slate-700 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-600 transition"
+                    className="w-full border-2 border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-600 transition"
                     required
                   />
                 </div>

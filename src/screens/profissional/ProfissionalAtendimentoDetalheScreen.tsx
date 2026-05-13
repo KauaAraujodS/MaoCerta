@@ -194,7 +194,7 @@ export default function ProfissionalAtendimentoDetalheScreen({ id }: { id: strin
 
       <div className="flex-1 w-full max-w-6xl mx-auto px-4 grid lg:grid-cols-[minmax(0,28rem)_288px] gap-6 pb-8 items-start">
         <div className="w-full min-w-0">
-      <section className="bg-white dark:bg-slate-900 dark:bg-slate-900/80 border-b border-gray-100 dark:border-slate-800 px-4 py-4">
+      <section className="bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 px-4 py-4">
         <div className="w-full space-y-2">
           <p className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide">Detalhes</p>
           <h2 className="text-base font-bold text-gray-900 dark:text-slate-100">{atendimento.titulo}</h2>
@@ -239,7 +239,7 @@ export default function ProfissionalAtendimentoDetalheScreen({ id }: { id: strin
       {confirmandoCancelamento && (
         <section className="bg-amber-50 dark:bg-amber-950/30 border-b border-amber-200 dark:border-amber-900 px-4 py-4">
           <div className="w-full space-y-3">
-            <p className="text-sm text-amber-900">
+            <p className="text-sm text-amber-900 dark:text-amber-200">
               Tem certeza? {atendimento.demanda_origem_id ? 'A demanda volta a aparecer pra outros prestadores.' : ''}
             </p>
             <div className="flex gap-2">
@@ -265,7 +265,7 @@ export default function ProfissionalAtendimentoDetalheScreen({ id }: { id: strin
       )}
 
       {erro && (
-        <p className="text-xs text-red-700 bg-red-50 border-b border-red-100 px-4 py-2 text-center">{erro}</p>
+        <p className="text-xs text-red-700 dark:text-red-300 bg-red-50 dark:bg-red-950/30 border-b border-red-100 dark:border-red-900/40 px-4 py-2 text-center">{erro}</p>
       )}
 
       <section className="bg-emerald-50/40 dark:bg-emerald-950/20 border-b border-emerald-100 dark:border-emerald-900 px-4 py-4">
@@ -289,7 +289,7 @@ export default function ProfissionalAtendimentoDetalheScreen({ id }: { id: strin
       </section>
 
       {/* Seção de Etapas */}
-      <section className="bg-white dark:bg-slate-900 dark:bg-slate-900/80 border-b border-gray-100 dark:border-slate-800 px-4 py-4">
+      <section className="bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 px-4 py-4">
         <div className="w-full space-y-3">
           <p className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide">📋 Etapas do Atendimento</p>
           <GerenciadorEtapas
@@ -302,7 +302,7 @@ export default function ProfissionalAtendimentoDetalheScreen({ id }: { id: strin
         </div>
       </section>
 
-      <section className="flex-1 w-full mx-auto bg-white dark:bg-slate-900 dark:bg-slate-900/80 border-x border-gray-100 dark:border-slate-800 flex flex-col">
+      <section className="flex-1 w-full mx-auto bg-white dark:bg-slate-900 border-x border-gray-100 dark:border-slate-800 flex flex-col">
         <div className="px-4 py-3 border-b border-gray-100 dark:border-slate-800">
           <p className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide">💬 Chat</p>
         </div>

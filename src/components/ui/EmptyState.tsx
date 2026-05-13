@@ -9,7 +9,7 @@ type Props = {
 
 export default function EmptyState({ emoji, titulo, texto, acao }: Props) {
   return (
-    <section className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 dark:bg-slate-900/80 p-6 text-center space-y-2 shadow-sm">
+    <section className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900/80 p-6 text-center space-y-2 shadow-sm">
       <p className="text-3xl" aria-hidden>
         {emoji}
       </p>

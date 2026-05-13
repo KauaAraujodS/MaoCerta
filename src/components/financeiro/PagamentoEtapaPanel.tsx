@@ -305,7 +305,7 @@ export default function PagamentoEtapaPanel({
     Date.now() - new Date(pagamento.created_at).getTime() <= 15 * 60 * 1000
 
   return (
-    <div className="rounded-2xl border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-900 dark:bg-slate-900/80 p-4 shadow-sm space-y-3">
+    <div className="rounded-2xl border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-900/80 p-4 shadow-sm space-y-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">Pagamento desta etapa</p>
         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${badge.cls}`}>{badge.txt}</span>

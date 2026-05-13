@@ -164,7 +164,7 @@ export default function ClienteAtendimentoDetalheScreen({ id }: { id: string }) 
 
       <div className="flex-1 w-full max-w-6xl mx-auto px-4 grid lg:grid-cols-[minmax(0,28rem)_288px] gap-6 pb-8 items-start">
         <div className="w-full min-w-0">
-      <section className="bg-white dark:bg-slate-900 dark:bg-slate-900/80 border-b border-gray-100 dark:border-slate-800 px-4 py-4">
+      <section className="bg-white dark:bg-slate-900/80 border-b border-gray-100 dark:border-slate-800 px-4 py-4">
         <div className="w-full space-y-2">
           <p className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide">Sua demanda</p>
           <h2 className="text-base font-bold text-gray-900 dark:text-slate-100">{atendimento.titulo}</h2>
@@ -237,7 +237,7 @@ export default function ClienteAtendimentoDetalheScreen({ id }: { id: string }) 
         </div>
       </section>
 
-      <section className="bg-white dark:bg-slate-900 dark:bg-slate-900/80 border-b border-gray-100 dark:border-slate-800 px-4 py-4">
+      <section className="bg-white dark:bg-slate-900/80 border-b border-gray-100 dark:border-slate-800 px-4 py-4">
         <div className="w-full space-y-3">
           <p className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide">📋 Etapas do atendimento</p>
           <GerenciadorEtapas
@@ -250,7 +250,7 @@ export default function ClienteAtendimentoDetalheScreen({ id }: { id: string }) 
         </div>
       </section>
 
-      <section className="bg-gray-50 dark:bg-slate-800 dark:bg-slate-950/50 border-b border-gray-100 dark:border-slate-800 px-4 py-4">
+      <section className="bg-gray-50 dark:bg-slate-950/50 border-b border-gray-100 dark:border-slate-800 px-4 py-4">
         <div className="w-full">
           <AvaliarPrestadorCard
             atendimentoId={atendimento.id}
@@ -261,7 +261,7 @@ export default function ClienteAtendimentoDetalheScreen({ id }: { id: string }) 
         </div>
       </section>
 
-      <section className="flex-1 w-full mx-auto bg-white dark:bg-slate-900 dark:bg-slate-900/80 border-x border-gray-100 dark:border-slate-800 flex flex-col">
+      <section className="flex-1 w-full mx-auto bg-white dark:bg-slate-900/80 border-x border-gray-100 dark:border-slate-800 flex flex-col">
         <div className="px-4 py-3 border-b border-gray-100 dark:border-slate-800">
           <p className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide">💬 Chat</p>
         </div>

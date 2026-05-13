@@ -20,7 +20,7 @@ export default function AtendimentoContextoSidebar({
   outroNome,
 }: Props) {
   return (
-    <div className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 dark:bg-slate-900/90 p-4 shadow-sm space-y-3 text-sm">
+    <div className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900/90 p-4 shadow-sm space-y-3 text-sm">
       <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400">Resumo</p>
       <h2 className="text-base font-bold text-gray-900 dark:text-slate-100 leading-snug">{titulo}</h2>
       <p className="text-xs text-gray-600 dark:text-slate-400 leading-relaxed line-clamp-6">{descricao}</p>

@@ -286,7 +286,7 @@ export default function ProfissionalInicioScreen() {
         )}
 
         <section className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          <div className="rounded-2xl border border-emerald-200 dark:border-emerald-900/60 bg-white dark:bg-slate-900 dark:bg-slate-900/80 p-4 shadow-sm">
+          <div className="rounded-2xl border border-emerald-200 dark:border-emerald-900/60 bg-white dark:bg-slate-900/80 p-4 shadow-sm">
             <p className="text-[10px] font-bold uppercase text-emerald-800 dark:text-emerald-300">Saldo disponível</p>
             <p className="text-xl font-bold text-emerald-900 dark:text-emerald-200 mt-1">{formatarReais(d.saldoCarteira)}</p>
             <Link href="/profissional/carteira" className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 mt-2 inline-block">

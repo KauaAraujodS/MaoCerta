@@ -320,15 +320,15 @@ export default function ClienteDemandaDetalheScreen({ id }: { id: string }) {
                     </div>
 
                     <div className="grid grid-cols-2 gap-2">
-                      <div className="bg-purple-50 rounded-xl p-3">
-                        <p className="text-[10px] font-bold text-purple-700 uppercase tracking-wider">Valor</p>
-                        <p className="text-base font-bold text-gray-900 dark:text-slate-100 mt-0.5">
+                      <div className="bg-purple-50 dark:bg-purple-950/40 border border-purple-100 dark:border-purple-900/40 rounded-xl p-3">
+                        <p className="text-[10px] font-bold text-purple-700 dark:text-purple-300 uppercase tracking-wider">Valor</p>
+                        <p className="text-base font-bold text-purple-900 dark:text-purple-100 mt-0.5">
                           {formatarValor(Number(p.valor_proposto))}
                         </p>
                       </div>
-                      <div className="bg-indigo-50 rounded-xl p-3">
-                        <p className="text-[10px] font-bold text-indigo-700 uppercase tracking-wider">Prazo</p>
-                        <p className="text-base font-bold text-gray-900 dark:text-slate-100 mt-0.5 truncate">{p.prazo}</p>
+                      <div className="bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/40 rounded-xl p-3">
+                        <p className="text-[10px] font-bold text-indigo-700 dark:text-indigo-300 uppercase tracking-wider">Prazo</p>
+                        <p className="text-base font-bold text-indigo-900 dark:text-indigo-100 mt-0.5 truncate">{p.prazo}</p>
                       </div>
                     </div>
 

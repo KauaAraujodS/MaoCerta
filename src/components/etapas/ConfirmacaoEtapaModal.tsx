@@ -37,15 +37,15 @@ export default function ConfirmacaoEtapaModal({
           </p>
         </div>
 
-        <div className="bg-blue-50 rounded-lg p-4">
-          <label className="block text-sm font-semibold text-gray-900 dark:text-slate-100 mb-2">
+        <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900/40 rounded-lg p-4">
+          <label className="block text-sm font-semibold text-blue-900 dark:text-blue-200 mb-2">
             Notas de Conclusão (opcional)
           </label>
           <textarea
             placeholder="Descreva o que foi feito nesta etapa..."
             value={notas}
             onChange={(e) => setNotas(e.target.value)}
-            className="w-full text-sm border-2 border-blue-200 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-600 transition resize-none"
+            className="w-full text-sm border-2 border-blue-200 dark:border-blue-900/60 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-600 transition resize-none"
             rows={3}
           />
         </div>
@@ -54,7 +54,7 @@ export default function ConfirmacaoEtapaModal({
           <button
             onClick={onCancelado}
             disabled={confirmando}
-            className="flex-1 border-2 border-gray-300 dark:border-slate-700 text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 dark:bg-slate-800 disabled:opacity-50 font-semibold py-2 px-4 rounded-lg transition"
+            className="flex-1 border-2 border-gray-300 dark:border-slate-700 text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 disabled:opacity-50 font-semibold py-2 px-4 rounded-lg transition"
           >
             Cancelar
           </button>
